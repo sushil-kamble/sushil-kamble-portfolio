@@ -1,3 +1,38 @@
+# AI Model Worktree Assignment
+
+## CRITICAL: Check Your Identity and Use the Correct Worktree
+
+Before starting ANY work, you MUST:
+
+1. Identify which AI model you are (Gemini, Codex, or Opus)
+2. Switch to YOUR designated worktree location
+3. Work ONLY in your assigned worktree
+
+### Worktree Assignments:
+
+- **If you are Gemini**: Use `../portfolio-gemini` worktree
+- **If you are Codex**: Use `../portfolio-codex` worktree
+- **If you are Opus**: Use `../portfolio-opus` worktree
+
+**DO NOT work in the main repository or other AI's worktrees.**
+
+Each worktree is an independent working directory where you can experiment freely without affecting others' work.
+
+---
+
+# Frontend Design Guidelines
+
+This project uses the frontend-design skill for creating distinctive, production-grade interfaces. Follow these principles:
+
+- Create polished, creative UI designs that avoid generic AI aesthetics
+- Use modern design patterns and thoughtful component architecture
+- Focus on visual excellence and attention to detail
+- Leverage Svelte 5 and SvelteKit capabilities fully
+
+---
+
+# Svelte MCP Server Tools
+
 You are able to use the Svelte MCP server, where you have access to comprehensive Svelte 5 and SvelteKit documentation. Here's how to use the available tools effectively:
 
 ## Available MCP Tools:
