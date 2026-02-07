@@ -11,9 +11,11 @@
 	const editor = getContext<EditorState>(CONTEXT_KEYS.EDITOR_STATE);
 </script>
 
+<!-- MADE IT HIDDEN INTENTIONALLY -->
+
 {#if editor.isMobile}
 	<!-- Mobile: compact single-row bar -->
-	<div class="flex items-center gap-3 border-b border-vsc-border px-3 py-2">
+	<div class="hidden items-center gap-3 border-b border-vsc-border px-3 py-2">
 		<div class="flex items-center gap-1.5 text-xs text-vsc-text-muted">
 			<Briefcase size={12} class="text-vsc-blue" />
 			<span class="font-medium text-vsc-text">{calculateExperience(data.careers)}</span>
@@ -31,7 +33,7 @@
 	</div>
 {:else}
 	<!-- Desktop: full metric cards -->
-	<div class="grid grid-cols-3 gap-3 p-4">
+	<div class="hidden grid-cols-3 gap-3 p-4">
 		<MetricCard label="Experience" value={calculateExperience(data.careers)} icon={Briefcase} />
 		<MetricCard label="Projects" value={projectCount(data)} icon={Rocket} />
 		<MetricCard label="Tech Stack" value={skillCount(data)} icon={Cpu} />
