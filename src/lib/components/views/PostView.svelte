@@ -60,8 +60,9 @@
 	</div>
 
 	{#if post.description}
-		<p class="mt-3 whitespace-pre-wrap leading-relaxed text-vsc-text">
-			{post.description}</p>
+		<p class="mt-3 leading-relaxed whitespace-pre-wrap text-vsc-text">
+			{post.description}
+		</p>
 	{/if}
 
 	{#if post.tags.length > 0}

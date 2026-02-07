@@ -239,7 +239,10 @@
 						style="animation-delay: {i * 80}ms"
 					>
 						<!-- Stretched card link -->
-						<a href="/projects/{project.slug}" class="absolute inset-0 z-0" aria-label={project.title}
+						<a
+							href="/projects/{project.slug}"
+							class="absolute inset-0 z-0"
+							aria-label={project.title}
 						></a>
 
 						<!-- Subtle gradient overlay on hover -->
