@@ -40,13 +40,14 @@
 	role="tab"
 	tabindex="0"
 	aria-selected={isActive}
-	class="group flex h-full cursor-pointer items-center gap-2 border-r border-vsc-border px-3 text-[13px] transition-colors
+	class="group flex h-full max-w-50 cursor-pointer items-center gap-2 border-r border-vsc-border px-3 text-[13px] transition-colors
 		{isActive
 		? 'border-t-2 border-t-vsc-tab-accent bg-vsc-bg text-vsc-text'
 		: 'border-t-2 border-t-transparent bg-vsc-panel text-vsc-text-muted hover:bg-vsc-bg/50'}"
 	onclick={() => editor.setActive(entry.id)}
 	onkeydown={(e) => e.key === 'Enter' && editor.setActive(entry.id)}
+	title={displayName}
 >
-	<IconComponent size={14} class={isActive ? 'text-vsc-blue' : ''} />
-	<span class="whitespace-nowrap">{displayName}</span>
+	<IconComponent size={14} class="{isActive ? 'text-vsc-blue' : ''} shrink-0" />
+	<span class="min-w-0 truncate">{displayName}</span>
 </div>
