@@ -14,9 +14,7 @@
 </script>
 
 {#if editor.sidebarExpanded}
-	<aside
-		class="flex w-[260px] flex-col overflow-hidden border-r border-vsc-border bg-vsc-sidebar"
-	>
+	<aside class="flex w-65 flex-col overflow-hidden border-r border-vsc-border bg-vsc-sidebar">
 		<SidebarHeader />
 		<div class="flex-1 overflow-y-auto">
 			<FileTree nodes={tree} />

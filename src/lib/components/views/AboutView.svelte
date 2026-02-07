@@ -25,14 +25,19 @@
 		{#each data.careers as career, i}
 			<div class="relative border-l-2 border-vsc-blue/20 pl-5">
 				<!-- Timeline dot -->
-				<div class="absolute -left-[5px] top-1 h-2 w-2 rounded-full bg-vsc-blue"></div>
+				<div class="absolute top-1 -left-1.25 h-2 w-2 rounded-full bg-vsc-blue"></div>
 
 				<div class="flex items-start justify-between">
 					<div>
 						<h3 class="font-bold text-vsc-orange">{career.designation}</h3>
 						<div class="mt-0.5 flex items-center gap-2 text-sm">
 							{#if career.link}
-								<a href={career.link} target="_blank" rel="noopener" class="flex items-center gap-1 text-vsc-blue hover:underline">
+								<a
+									href={career.link}
+									target="_blank"
+									rel="noopener"
+									class="flex items-center gap-1 text-vsc-blue hover:underline"
+								>
 									{career.company}
 									<ExternalLink size={11} />
 								</a>
@@ -52,8 +57,9 @@
 					</div>
 				</div>
 
+				<!-- As of now it should be hidden -->
 				{#if career.details}
-					<p class="mt-2 text-sm leading-relaxed text-vsc-text-muted">{career.details}</p>
+					<p class="mt-2 hidden text-sm leading-relaxed text-vsc-text-muted">{career.details}</p>
 				{/if}
 
 				{#if career.detailsList.length > 0}
@@ -70,10 +76,6 @@
 							<Badge text={skill} variant="purple" />
 						{/each}
 					</div>
-				{/if}
-
-				{#if i < data.careers.length - 1}
-					<p class="mt-3 text-sm text-vsc-text-muted">,</p>
 				{/if}
 			</div>
 		{/each}
