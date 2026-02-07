@@ -81,7 +81,7 @@
 				{#if career.detailsList.length > 0}
 					<ul class="mt-2 space-y-1 pl-4">
 						{#each career.detailsList as detail (detail)}
-							<li class="list-disc text-sm text-vsc-text-muted">{detail}</li>
+							<li class="list-disc text-sm text-vsc-text">{detail}</li>
 						{/each}
 					</ul>
 				{/if}
