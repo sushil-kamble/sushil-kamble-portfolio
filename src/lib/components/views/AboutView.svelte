@@ -33,6 +33,10 @@
 							src={career.logo}
 							alt="{career.company} logo"
 							class="h-full w-full object-contain"
+							loading="lazy"
+							decoding="async"
+							width="32"
+							height="32"
 						/>
 					</div>
 				{:else}

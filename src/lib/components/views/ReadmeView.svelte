@@ -73,7 +73,18 @@
 	<!-- Hero section with floating portrait -->
 	<div class="hero-section relative">
 		<!-- Portrait — absolutely positioned, bottom-aligned to hero -->
-		<img src="/me_img.png" alt="Sushil Kamble" class="portrait-img" />
+		<picture>
+			<source srcset="/me_img.webp" type="image/webp" />
+			<img
+				src="/me_img.png"
+				alt="Sushil Kamble"
+				class="portrait-img"
+				width="614"
+				height="614"
+				fetchpriority="high"
+				decoding="async"
+			/>
+		</picture>
 
 		<!-- Heading -->
 		<div class="relative z-10 flex items-center gap-3">
@@ -162,6 +173,10 @@
 									src={career.logo}
 									alt="{career.company} logo"
 									class="h-full w-full object-contain"
+									loading="lazy"
+									decoding="async"
+									width="40"
+									height="40"
 								/>
 							{:else}
 								<Briefcase size={18} class="text-vsc-yellow" />

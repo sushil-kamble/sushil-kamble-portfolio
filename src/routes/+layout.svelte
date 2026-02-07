@@ -138,7 +138,7 @@
 
 <svelte:head>
 	<link rel="icon" href="/favicon.ico" sizes="48x48" />
-	<title>Sushil Kamble — Developer Portfolio</title>
+	<title>Sushil Kamble</title>
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -- Safe: hardcoded JSON-LD -->
 	{@html jsonLd}
 </svelte:head>

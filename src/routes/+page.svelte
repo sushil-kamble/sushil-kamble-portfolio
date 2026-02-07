@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Sushil Kamble — Developer Portfolio</title>
+	<title>Sushil Kamble</title>
 	<meta
 		name="description"
 		content="Sushil Kamble's developer portfolio — explore projects, blog posts, skills, and career journey in an interactive VS Code-themed experience."

@@ -79,6 +79,7 @@
 						alt="{project.title} screenshot"
 						class="rounded border border-vsc-border"
 						loading="lazy"
+						decoding="async"
 					/>
 				{/each}
 			</div>
