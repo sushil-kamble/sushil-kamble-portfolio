@@ -50,7 +50,7 @@
 
 		// Absolute timestamp from app.html — independent of hydration speed
 		const born = (window as unknown as { __splashBorn: number }).__splashBorn || Date.now();
-		const GUARANTEED_MS = 1800; // Always visible for at least 1.8 seconds
+		const GUARANTEED_MS = 3800; // Always visible for at least 3.8 seconds
 		const wait = Math.max(0, GUARANTEED_MS - (Date.now() - born));
 
 		setTimeout(() => {
