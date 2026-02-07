@@ -12,13 +12,11 @@
 		Newspaper
 	} from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
-	import type { EditorState } from '$lib/state/editor.svelte';
 	import type { PageData } from '$lib/types';
 	import TechBadge from '$lib/components/ui/TechBadge.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import CalloutBox from '$lib/components/ui/CalloutBox.svelte';
 
-	const editor = getContext<EditorState>(CONTEXT_KEYS.EDITOR_STATE);
 	const data = getContext<PageData>(CONTEXT_KEYS.PORTFOLIO_DATA);
 
 	const variants: Array<'blue' | 'green' | 'purple' | 'orange' | 'yellow'> = [
@@ -107,11 +105,14 @@
 
 			<div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
 				{#each featuredProjects as project, i (project.id)}
-					<button
-						onclick={() => editor.navigateToProject(project.id)}
+					<div
 						class="group relative overflow-hidden rounded-lg border border-vsc-border bg-vsc-panel p-4 text-left transition-all duration-300 hover:border-vsc-blue/60 hover:shadow-lg hover:shadow-vsc-blue/10"
 						style="animation-delay: {i * 80}ms"
 					>
+						<!-- Stretched card link -->
+						<a href="/projects/{project.id}" class="absolute inset-0 z-0" aria-label={project.title}
+						></a>
+
 						<!-- Subtle gradient overlay on hover -->
 						<div
 							class="pointer-events-none absolute inset-0 bg-linear-to-br from-vsc-blue/0 to-vsc-blue/0 transition-all duration-300 group-hover:from-vsc-blue/5 group-hover:to-transparent"
@@ -152,13 +153,12 @@
 						{/if}
 
 						<!-- External links -->
-						<div class="relative mt-3 flex gap-2">
+						<div class="relative z-10 mt-3 flex gap-2">
 							{#if project.github}
 								<a
 									href={project.github}
 									target="_blank"
 									rel="noopener"
-									onclick={(e) => e.stopPropagation()}
 									class="text-vsc-text-muted transition-colors hover:text-vsc-text"
 									title="Source code"
 								>
@@ -170,7 +170,6 @@
 									href={project.direct}
 									target="_blank"
 									rel="noopener"
-									onclick={(e) => e.stopPropagation()}
 									class="text-vsc-text-muted transition-colors hover:text-vsc-green"
 									title="Live demo"
 								>
@@ -183,18 +182,18 @@
 						<div
 							class="absolute bottom-0 left-0 h-0.5 w-0 bg-linear-to-r from-vsc-blue to-vsc-purple transition-all duration-300 group-hover:w-full"
 						></div>
-					</button>
+					</div>
 				{/each}
 			</div>
 
 			<!-- View all link -->
-			<button
-				onclick={() => editor.showProjectsList()}
-				class="mt-3 flex items-center gap-1.5 text-sm text-vsc-blue transition-colors hover:text-vsc-text"
+			<a
+				href="/projects"
+				class="mt-3 flex items-center gap-1.5 text-sm text-vsc-blue no-underline transition-colors hover:text-vsc-text"
 			>
 				View all {data.projects.length} projects
 				<ArrowRight size={14} />
-			</button>
+			</a>
 		</div>
 	{/if}
 
@@ -213,9 +212,9 @@
 
 			<div class="mt-4 space-y-2.5">
 				{#each recentPosts as post, i (post.id)}
-					<button
-						onclick={() => editor.navigateToPost(post.id)}
-						class="group flex w-full items-start gap-3 rounded-lg border border-vsc-border bg-vsc-panel p-3 text-left transition-all duration-200 hover:border-vsc-green/50 hover:bg-vsc-bg"
+					<a
+						href="/posts/{post.id}"
+						class="group flex w-full items-start gap-3 rounded-lg border border-vsc-border bg-vsc-panel p-3 text-left no-underline transition-all duration-200 hover:border-vsc-green/50 hover:bg-vsc-bg"
 						style="animation-delay: {i * 80}ms"
 					>
 						<!-- Index number -->
@@ -247,18 +246,18 @@
 							size={14}
 							class="mt-1 shrink-0 text-vsc-text-muted opacity-0 transition-all group-hover:translate-x-0.5 group-hover:text-vsc-green group-hover:opacity-100"
 						/>
-					</button>
+					</a>
 				{/each}
 			</div>
 
 			<!-- View all link -->
-			<button
-				onclick={() => editor.showPostsList()}
-				class="mt-3 flex items-center gap-1.5 text-sm text-vsc-green transition-colors hover:text-vsc-text"
+			<a
+				href="/posts"
+				class="mt-3 flex items-center gap-1.5 text-sm text-vsc-green no-underline transition-colors hover:text-vsc-text"
 			>
 				View all {data.blogs.length} posts
 				<ArrowRight size={14} />
-			</button>
+			</a>
 		</div>
 	{/if}
 
@@ -282,10 +281,10 @@
 					<span class="text-vsc-blue">"email"</span>
 					<span class="text-vsc-text">:</span>
 					<a
-						href="mailto:sushil@sushil.dev"
+						href="mailto:iamsushil303@gmail.com"
 						class="text-vsc-orange transition-colors hover:text-vsc-yellow"
 					>
-						"sushil@sushil.dev"
+						"iamsushil303@gmail.com"
 					</a>
 				</div>
 				<div class="flex items-center gap-2 text-vsc-text-muted">
@@ -293,24 +292,50 @@
 					<span class="text-vsc-blue">"github"</span>
 					<span class="text-vsc-text">:</span>
 					<a
-						href="https://github.com/sushil"
+						href="https://github.com/sushil-kamble"
 						target="_blank"
 						rel="noopener"
 						class="text-vsc-orange transition-colors hover:text-vsc-yellow"
 					>
-						"github.com/sushil"
+						"github.com/sushil-kamble"
+					</a>
+				</div>
+				<div class="flex items-center gap-2 text-vsc-text-muted">
+					<ExternalLink size={14} class="text-vsc-text" />
+					<span class="text-vsc-blue">"linkedin"</span>
+					<span class="text-vsc-text">:</span>
+					<a
+						href="https://www.linkedin.com/in/sushil-kamble/"
+						target="_blank"
+						rel="noopener"
+						class="text-vsc-orange transition-colors hover:text-vsc-yellow"
+					>
+						"linkedin.com/in/sushil-kamble"
+					</a>
+				</div>
+				<div class="flex items-center gap-2 text-vsc-text-muted">
+					<Send size={14} class="text-vsc-text" />
+					<span class="text-vsc-blue">"x"</span>
+					<span class="text-vsc-text">:</span>
+					<a
+						href="https://x.com/SushilK28005811"
+						target="_blank"
+						rel="noopener"
+						class="text-vsc-orange transition-colors hover:text-vsc-yellow"
+					>
+						"x.com/SushilK28005811"
 					</a>
 				</div>
 			</div>
 
-			<button
-				onclick={() => editor.setActive('contact')}
-				class="mt-4 flex items-center gap-2 rounded-md border border-vsc-border bg-vsc-bg px-4 py-2 text-sm text-vsc-text transition-all hover:border-vsc-orange/50 hover:text-vsc-orange"
+			<a
+				href="/contact"
+				class="mt-4 flex items-center gap-2 rounded-md border border-vsc-border bg-vsc-bg px-4 py-2 text-sm text-vsc-text no-underline transition-all hover:border-vsc-orange/50 hover:text-vsc-orange"
 			>
 				<Send size={14} />
 				Open full contact form
 				<ArrowRight size={14} />
-			</button>
+			</a>
 		</div>
 	</div>
 

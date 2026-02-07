@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { Search, FileText, Braces, User, Mail, FolderCode } from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
 	import type { EditorState } from '$lib/state/editor.svelte';
@@ -31,16 +32,8 @@
 	};
 
 	function select(entry: FileEntry) {
-		if (entry.type === 'project' && entry.dataId) {
-			editor.navigateToProject(entry.dataId);
-		} else if (entry.type === 'post' && entry.dataId) {
-			editor.navigateToPost(entry.dataId);
-		} else if (entry.type === 'about') {
-			editor.setActive('about');
-		} else if (entry.type === 'contact') {
-			editor.setActive('contact');
-		} else {
-			editor.setActive(entry.id);
+		if (entry.href) {
+			goto(entry.href);
 		}
 		editor.commandPaletteOpen = false;
 		query = '';

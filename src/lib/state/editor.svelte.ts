@@ -1,5 +1,6 @@
 import { SvelteSet } from 'svelte/reactivity';
 import type { FileEntry } from '$lib/types';
+import { pathToTabId, TAB_HREFS } from '$lib/utils/navigation';
 
 /** The 5 fixed tabs that are always open and cannot be closed */
 export const FIXED_TABS: FileEntry[] = [
@@ -42,16 +43,15 @@ export const FIXED_TABS: FileEntry[] = [
 
 export class EditorState {
 	openTabs = $state<FileEntry[]>(FIXED_TABS);
-	activeTabId = $state<string>('readme');
 	sidebarExpanded = $state<boolean>(true);
 	expandedFolders = $state<Set<string>>(new SvelteSet(['portfolio', 'projects', 'posts']));
 	commandPaletteOpen = $state<boolean>(false);
 
-	/** Currently selected project ID (shown inside the Projects tab) */
-	selectedProjectId = $state<string | null>(null);
-	/** Currently selected post ID (shown inside the Posts tab) */
-	selectedPostId = $state<string | null>(null);
+	/** Current pathname, synced from the layout via $app/state */
+	pathname = $state<string>('/');
 
+	/** Derived active tab ID from URL */
+	activeTabId = $derived(pathToTabId(this.pathname));
 	activeTab = $derived(this.openTabs.find((t) => t.id === this.activeTabId) ?? null);
 
 	/** True when viewport is below md breakpoint (768px) */
@@ -64,43 +64,18 @@ export class EditorState {
 		}
 	}
 
-	/** Navigate to a specific fixed tab */
-	setActive(id: string) {
-		this.activeTabId = id;
-		// Auto-close sidebar on mobile
-		if (this.isMobile) {
-			this.sidebarExpanded = false;
-		}
+	/** Called by layout to sync URL into state */
+	updatePathname(p: string) {
+		this.pathname = p;
 	}
 
-	/** Navigate to the Projects tab and show a specific project's detail */
-	navigateToProject(projectId: string) {
-		this.selectedProjectId = projectId;
-		this.activeTabId = 'projects';
-		if (this.isMobile) {
-			this.sidebarExpanded = false;
-		}
-	}
-
-	/** Navigate to the Posts tab and show a specific post's detail */
-	navigateToPost(postId: string) {
-		this.selectedPostId = postId;
-		this.activeTabId = 'posts';
-		if (this.isMobile) {
-			this.sidebarExpanded = false;
-		}
-	}
-
-	/** Show the projects list (clear selected project) */
-	showProjectsList() {
-		this.selectedProjectId = null;
-		this.activeTabId = 'projects';
-	}
-
-	/** Show the posts list (clear selected post) */
-	showPostsList() {
-		this.selectedPostId = null;
-		this.activeTabId = 'posts';
+	/** Returns the href for the next/previous tab (for Ctrl+Tab cycling) */
+	getNextTabHref(direction: 1 | -1 = 1): string {
+		if (this.openTabs.length < 2) return '/';
+		const idx = this.openTabs.findIndex((t) => t.id === this.activeTabId);
+		const next = (idx + direction + this.openTabs.length) % this.openTabs.length;
+		const nextTab = this.openTabs[next];
+		return TAB_HREFS[nextTab.id as keyof typeof TAB_HREFS] ?? '/';
 	}
 
 	handleResize() {
@@ -123,12 +98,5 @@ export class EditorState {
 
 	toggleCommandPalette() {
 		this.commandPaletteOpen = !this.commandPaletteOpen;
-	}
-
-	cycleTab(direction: 1 | -1 = 1) {
-		if (this.openTabs.length < 2) return;
-		const idx = this.openTabs.findIndex((t) => t.id === this.activeTabId);
-		const next = (idx + direction + this.openTabs.length) % this.openTabs.length;
-		this.activeTabId = this.openTabs[next].id;
 	}
 }

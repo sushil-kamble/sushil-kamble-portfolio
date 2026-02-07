@@ -1,5 +1,6 @@
 import type { FileEntry, PageData } from '$lib/types';
 import { FIXED_TABS } from '$lib/state/editor.svelte';
+import { fileEntryHref } from '$lib/utils/navigation';
 
 /**
  * Build the complete file registry.
@@ -9,28 +10,30 @@ import { FIXED_TABS } from '$lib/state/editor.svelte';
 export function buildFileRegistry(data: PageData): FileEntry[] {
 	const files: FileEntry[] = [
 		// Fixed tabs first (for command palette)
-		...FIXED_TABS,
+		...FIXED_TABS.map((tab) => ({ ...tab, href: fileEntryHref(tab) })),
 		// Individual sidebar entries
 		{
 			id: 'about-sidebar',
 			name: 'about_me.ts',
-			type: 'about',
+			type: 'about' as const,
 			icon: 'user',
 			language: 'TypeScript',
-			folder: 'portfolio'
+			folder: 'portfolio',
+			href: '/about'
 		},
 		{
 			id: 'contact-sidebar',
 			name: 'contact.tsx',
-			type: 'contact',
+			type: 'contact' as const,
 			icon: 'mail',
 			language: 'TSX',
-			folder: 'portfolio'
+			folder: 'portfolio',
+			href: '/contact'
 		}
 	];
 
 	for (const project of data.projects) {
-		files.push({
+		const entry: FileEntry = {
 			id: `project-${project.id}`,
 			name: `${slugify(project.title)}.ts`,
 			type: 'project',
@@ -38,11 +41,13 @@ export function buildFileRegistry(data: PageData): FileEntry[] {
 			language: 'TypeScript',
 			folder: 'projects',
 			dataId: project.id
-		});
+		};
+		entry.href = fileEntryHref(entry);
+		files.push(entry);
 	}
 
 	for (const blog of data.blogs) {
-		files.push({
+		const entry: FileEntry = {
 			id: `post-${blog.id}`,
 			name: `${slugify(blog.title)}.md`,
 			type: 'post',
@@ -50,7 +55,9 @@ export function buildFileRegistry(data: PageData): FileEntry[] {
 			language: 'Markdown',
 			folder: 'posts',
 			dataId: blog.id
-		});
+		};
+		entry.href = fileEntryHref(entry);
+		files.push(entry);
 	}
 
 	return files;

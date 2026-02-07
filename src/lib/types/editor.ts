@@ -15,6 +15,7 @@ export interface FileEntry {
 	language: string;
 	folder?: string;
 	dataId?: string;
+	href?: string;
 }
 
 export type TreeNode = TreeFolder | TreeFile;

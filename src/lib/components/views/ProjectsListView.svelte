@@ -2,11 +2,9 @@
 	import { getContext } from 'svelte';
 	import { ExternalLink, Github, ArrowRight, FolderCode } from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
-	import type { EditorState } from '$lib/state/editor.svelte';
 	import type { PageData } from '$lib/types';
 	import TechBadge from '$lib/components/ui/TechBadge.svelte';
 
-	const editor = getContext<EditorState>(CONTEXT_KEYS.EDITOR_STATE);
 	const data = getContext<PageData>(CONTEXT_KEYS.PORTFOLIO_DATA);
 </script>
 
@@ -21,12 +19,15 @@
 
 	<div class="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
 		{#each data.projects as project (project.id)}
-			<button
-				onclick={() => editor.navigateToProject(project.id)}
+			<div
 				class="group relative cursor-pointer rounded-lg border border-vsc-border bg-vsc-panel p-4 text-left transition-all duration-200 hover:border-vsc-blue/50 hover:bg-vsc-bg hover:shadow-lg hover:shadow-vsc-blue/5"
 			>
+				<!-- Stretched card link -->
+				<a href="/projects/{project.id}" class="absolute inset-0 z-0" aria-label={project.title}
+				></a>
+
 				<!-- Title row -->
-				<div class="flex items-start justify-between gap-2">
+				<div class="relative flex items-start justify-between gap-2">
 					<h3 class="font-semibold text-vsc-text transition-colors group-hover:text-vsc-blue">
 						{project.title}
 					</h3>
@@ -38,14 +39,14 @@
 
 				<!-- Description -->
 				{#if project.description}
-					<p class="mt-2 line-clamp-2 text-sm leading-relaxed text-vsc-text-muted">
+					<p class="relative mt-2 line-clamp-2 text-sm leading-relaxed text-vsc-text-muted">
 						{project.description}
 					</p>
 				{/if}
 
 				<!-- Stack -->
 				{#if project.stack.length > 0}
-					<div class="mt-3 flex flex-wrap gap-1.5">
+					<div class="relative mt-3 flex flex-wrap gap-1.5">
 						{#each project.stack.slice(0, 4) as tech (tech)}
 							<TechBadge name={tech} variant="blue" />
 						{/each}
@@ -58,13 +59,12 @@
 				{/if}
 
 				<!-- Links -->
-				<div class="mt-3 flex gap-3">
+				<div class="relative z-10 mt-3 flex gap-3">
 					{#if project.github}
 						<a
 							href={project.github}
 							target="_blank"
 							rel="noopener"
-							onclick={(e) => e.stopPropagation()}
 							class="flex items-center gap-1 text-xs text-vsc-text-muted transition-colors hover:text-vsc-blue"
 						>
 							<Github size={12} />
@@ -76,7 +76,6 @@
 							href={project.direct}
 							target="_blank"
 							rel="noopener"
-							onclick={(e) => e.stopPropagation()}
 							class="flex items-center gap-1 text-xs text-vsc-text-muted transition-colors hover:text-vsc-green"
 						>
 							<ExternalLink size={12} />
@@ -89,7 +88,7 @@
 				<div
 					class="absolute bottom-0 left-0 h-0.5 w-0 rounded-full bg-vsc-blue transition-all duration-300 group-hover:w-full"
 				></div>
-			</button>
+			</div>
 		{/each}
 	</div>
 </div>
