@@ -126,13 +126,13 @@
 	<link rel="icon" href="/favicon.ico" sizes="48x48" />
 	<title>Sushil Kamble — Developer Portfolio</title>
 	{@html `<script type="application/ld+json">${JSON.stringify({
-		"@context": "https://schema.org",
-		"@type": "Person",
-		"name": "Sushil Kamble",
-		"url": "https://sushilkamble.com",
-		"jobTitle": "Full-Stack Developer",
-		"sameAs": [],
-		"knowsAbout": ["Web Development", "JavaScript", "TypeScript", "Svelte", "React", "Node.js"]
+		'@context': 'https://schema.org',
+		'@type': 'Person',
+		name: 'Sushil Kamble',
+		url: 'https://sushilkamble.com',
+		jobTitle: 'Full-Stack Developer',
+		sameAs: [],
+		knowsAbout: ['Web Development', 'JavaScript', 'TypeScript', 'Svelte', 'React', 'Node.js']
 	})}</script>`}
 </svelte:head>
 

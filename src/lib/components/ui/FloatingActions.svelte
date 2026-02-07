@@ -104,7 +104,7 @@
 		<Tooltip label="Scroll to top">
 			<button
 				onclick={() => scrollToTop()}
-				class="animate-fade-in rounded-full bg-vsc-panel p-3 text-vsc-text-muted shadow-lg ring-1 ring-vsc-border transition-all hover:text-vsc-text hover:ring-vsc-blue active:ring-vsc-blue active:bg-vsc-border"
+				class="animate-fade-in rounded-full bg-vsc-panel p-3 text-vsc-text-muted shadow-lg ring-1 ring-vsc-border transition-all hover:text-vsc-text hover:ring-vsc-blue active:bg-vsc-border active:ring-vsc-blue"
 				aria-label="Scroll to top"
 			>
 				<ArrowUp size={18} />
@@ -115,7 +115,7 @@
 	<Tooltip label="Toggle Sidebar" shortcut={formatShortcut(SHORTCUTS.TOGGLE_SIDEBAR)}>
 		<button
 			onclick={() => editor.toggleSidebar()}
-			class="rounded-full bg-vsc-panel p-3 text-vsc-text-muted shadow-lg ring-1 ring-vsc-border transition-all hover:text-vsc-text hover:ring-vsc-blue active:ring-vsc-blue active:bg-vsc-border"
+			class="rounded-full bg-vsc-panel p-3 text-vsc-text-muted shadow-lg ring-1 ring-vsc-border transition-all hover:text-vsc-text hover:ring-vsc-blue active:bg-vsc-border active:ring-vsc-blue"
 			aria-label="Toggle sidebar"
 		>
 			<PanelLeft size={18} />
@@ -149,7 +149,7 @@
 					if (showHint) dismissHint();
 					editor.toggleSettings();
 				}}
-				class="relative rounded-full bg-vsc-panel p-3 shadow-lg ring-1 transition-all hover:text-vsc-text hover:ring-vsc-purple active:ring-vsc-purple active:bg-vsc-border
+				class="relative rounded-full bg-vsc-panel p-3 shadow-lg ring-1 transition-all hover:text-vsc-text hover:ring-vsc-purple active:bg-vsc-border active:ring-vsc-purple
 					{showHint ? 'text-vsc-purple ring-vsc-purple/40' : 'text-vsc-text-muted ring-vsc-border'}"
 				aria-label="Customize appearance"
 			>

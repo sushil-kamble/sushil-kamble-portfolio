@@ -70,30 +70,36 @@
 </script>
 
 <div>
-	<!-- Heading -->
-	<div class="flex items-center gap-3">
-		<Terminal size={24} class="text-vsc-green" />
-		<h1 class="text-2xl font-bold text-vsc-blue">
-			Hello World! <span class="text-vsc-yellow">I'm Sushil</span>
-		</h1>
-	</div>
+	<!-- Hero section with floating portrait -->
+	<div class="hero-section relative">
+		<!-- Portrait — absolutely positioned, bottom-aligned to hero -->
+		<img src="/me_img.png" alt="Sushil Kamble" class="portrait-img" />
 
-	<!-- Comment block -->
-	<div class="mt-4 text-sm leading-relaxed text-vsc-green">
-		<p>/**</p>
-		<p class="pl-2">* Full-stack developer crafting elegant solutions.</p>
-		<p class="pl-2">* Passionate about clean code, great UX, and shipping fast.</p>
-		<p>*/</p>
-	</div>
+		<!-- Heading -->
+		<div class="relative z-10 flex items-center gap-3">
+			<Terminal size={24} class="text-vsc-green" />
+			<h1 class="text-2xl font-bold text-vsc-blue">
+				Hello World! <span class="text-vsc-yellow">I'm Sushil</span>
+			</h1>
+		</div>
 
-	<!-- About -->
-	{#if data.about_me}
-		<p class="mt-4 leading-relaxed text-vsc-text">{data.about_me}</p>
-	{/if}
+		<!-- Comment block -->
+		<div class="relative z-10 mt-4 text-sm leading-relaxed text-vsc-green">
+			<p>/**</p>
+			<p class="pl-2">* Full-stack developer crafting elegant solutions.</p>
+			<p class="pl-2">* Passionate about clean code, great UX, and shipping fast.</p>
+			<p>*/</p>
+		</div>
+
+		<!-- About -->
+		{#if data.about_me}
+			<p class="relative z-10 mt-4 max-w-3xl leading-relaxed text-vsc-text">{data.about_me}</p>
+		{/if}
+	</div>
 
 	<!-- Skills heading -->
 	<h2 class="mt-4 text-lg font-semibold text-vsc-green">
-		<span class="text-vsc-purple">##</span> SKILL.md
+		<span class="text-vsc-purple">##</span> SKILL.json
 	</h2>
 
 	<!-- Tech stack — categorized badges -->
@@ -240,7 +246,9 @@
 
 						<!-- Description -->
 						{#if project.description}
-							<p class="pointer-events-none relative mt-2 line-clamp-2 text-xs leading-relaxed text-vsc-text-muted">
+							<p
+								class="pointer-events-none relative mt-2 line-clamp-2 text-xs leading-relaxed text-vsc-text-muted"
+							>
 								{project.description}
 							</p>
 						{/if}
@@ -425,3 +433,37 @@
 		</CalloutBox>
 	</div>
 </div>
+
+<style>
+	.portrait-img {
+		display: none;
+	}
+
+	@media (min-width: 768px) {
+		.portrait-img {
+			display: block;
+			position: absolute;
+			bottom: 0;
+			top: 0;
+			right: 4%;
+			width: 320px;
+			object-fit: cover;
+			object-position: top;
+			z-index: 1;
+			opacity: 0.35;
+			pointer-events: none;
+			filter: drop-shadow(0 0 30px rgba(86, 156, 214, 0.1));
+			mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+			-webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.portrait-img {
+			top: -10px;
+			width: 400px;
+			right: 2%;
+			opacity: 0.45;
+		}
+	}
+</style>

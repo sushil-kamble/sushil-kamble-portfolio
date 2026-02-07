@@ -1,4 +1,5 @@
 <!-- Typing SVG -->
+
 <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=28&duration=1000&pause=100&color=569CD6&center=false&vCenter=true&multiline=true&repeat=false&random=false&width=620&height=80&lines=%3E+Hello+World!+I'm+Sushil.;%3E+I+build+things+for+the+web." alt="Typing SVG" /></a>
 
 <br/>
@@ -19,17 +20,17 @@
 // sushil.config.js
 
 const sushil = {
-  location: "India 🇮🇳",
-  role: "Full-Stack Software Engineer",
-  passions: ["clean code", "great UX", "shipping fast"],
-  philosophy: "Craft software that feels inevitable — elegant, intuitive, right.",
-  currentlyExploring: ["AI-assisted dev workflows", "Svelte 5", "system design"],
+	location: 'India 🇮🇳',
+	role: 'Full-Stack Software Engineer',
+	passions: ['clean code', 'great UX', 'shipping fast'],
+	philosophy: 'Craft software that feels inevitable — elegant, intuitive, right.',
+	currentlyExploring: ['AI-assisted dev workflows', 'Svelte 5', 'system design']
 };
 ```
 
 <br/>
 
-I'm a full-stack developer who treats code like a craft, not a chore. I obsess over the details — the naming, the abstractions, the edge cases — because the best software is the kind where someone reads the source and thinks *"of course, how else would you do it?"*
+I'm a full-stack developer who treats code like a craft, not a chore. I obsess over the details — the naming, the abstractions, the edge cases — because the best software is the kind where someone reads the source and thinks _"of course, how else would you do it?"_
 
 I believe in shipping early, iterating relentlessly, and building tools that make people's lives easier. When I'm not writing code, I'm probably mentoring teammates, tinkering with AI-powered workflows, or diving into a rabbit hole about some obscure web API.
 

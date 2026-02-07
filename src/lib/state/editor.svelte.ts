@@ -109,7 +109,17 @@ export class EditorState {
 	}
 
 	handleResize() {
+		const wasMobile = this.isMobile;
 		this.isMobile = window.innerWidth < 768;
+
+		// Auto-close sidebar when crossing MD breakpoint to mobile
+		if (!wasMobile && this.isMobile) {
+			this.sidebarExpanded = false;
+		}
+		// Auto-open sidebar when crossing MD breakpoint to desktop
+		else if (wasMobile && !this.isMobile) {
+			this.sidebarExpanded = true;
+		}
 	}
 
 	toggleFolder(path: string) {

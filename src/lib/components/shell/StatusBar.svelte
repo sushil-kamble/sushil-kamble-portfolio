@@ -17,7 +17,7 @@
 </script>
 
 <footer
-	class="hidden md:flex h-6 items-center justify-between border-t border-vsc-border bg-vsc-statusbar px-3 text-[11px] text-vsc-text-muted select-none"
+	class="hidden h-6 items-center justify-between border-t border-vsc-border bg-vsc-statusbar px-3 text-[11px] text-vsc-text-muted select-none md:flex"
 >
 	<div class="flex items-center gap-3">
 		<span class="flex items-center gap-1">
