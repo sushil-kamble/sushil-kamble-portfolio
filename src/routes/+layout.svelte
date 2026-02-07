@@ -23,7 +23,7 @@
 	import './layout.css';
 	import '$lib/assets/themes.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import { setContext } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 	import { page } from '$app/state';
 	import { goto, afterNavigate } from '$app/navigation';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
@@ -49,6 +49,37 @@
 	// Sync URL → EditorState
 	$effect(() => {
 		editor.updatePathname(page.url.pathname);
+	});
+
+	// Dismiss splash screen after hydration with cinematic reveal
+	onMount(() => {
+		const splash = document.getElementById('splash');
+		const appContent = document.getElementById('app-content');
+		if (!splash) {
+			// No splash — reveal content immediately
+			appContent?.classList.add('revealed');
+			return;
+		}
+
+		// Let all boot animations play out (dots, typing, progress bar fill)
+		const MIN_SPLASH_MS = 2800;
+		const elapsed = performance.now();
+		const remaining = Math.max(0, MIN_SPLASH_MS - elapsed);
+
+		setTimeout(() => {
+			// Phase 1: "Complete" state — progress bar turns green, cursor stops
+			splash.classList.add('splash-complete');
+
+			// Phase 2: After a beat, exit splash + reveal content simultaneously
+			setTimeout(() => {
+				splash.classList.add('splash-exit');
+				// Stagger the content reveal slightly behind the splash exit
+				setTimeout(() => appContent?.classList.add('revealed'), 100);
+				// Clean up splash from DOM after transition
+				splash.addEventListener('transitionend', () => splash.remove(), { once: true });
+				setTimeout(() => splash.remove(), 800);
+			}, 400);
+		}, remaining);
 	});
 
 	// Auto-close mobile sidebar on navigation

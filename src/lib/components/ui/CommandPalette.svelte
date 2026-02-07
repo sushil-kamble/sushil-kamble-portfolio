@@ -13,7 +13,7 @@
 		Check
 	} from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
-	import { THEMES, FONTS, DEFAULT_THEME, DEFAULT_FONT } from '$lib/constants/themes';
+	import { THEMES, FONTS } from '$lib/constants/themes';
 	import type { EditorState } from '$lib/state/editor.svelte';
 	import type { FileEntry } from '$lib/types';
 	import type { ThemeId, FontId, PaletteCommand } from '$lib/types/editor';
@@ -256,7 +256,7 @@
 
 	// Reset selectedIndex when query changes
 	$effect(() => {
-		query; // track
+		void query;
 		selectedIndex = 0;
 	});
 </script>

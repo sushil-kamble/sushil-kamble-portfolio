@@ -71,7 +71,7 @@
 						>
 							<!-- Color swatches -->
 							<div class="flex gap-0.5">
-								{#each swatches as color}
+								{#each swatches as color (color)}
 									<div
 										class="h-4 w-4 rounded-sm first:rounded-l-md last:rounded-r-md"
 										style="background-color: {color}"
