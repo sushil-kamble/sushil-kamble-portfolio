@@ -1,9 +1,9 @@
-<div align="center">
-
 <!-- Typing SVG -->
-<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=28&duration=3000&pause=1000&color=569CD6&center=true&vCenter=true&multiline=true&repeat=true&random=false&width=620&height=80&lines=%3E+Hello+World!+I'm+Sushil.;%3E+I+build+things+for+the+web." alt="Typing SVG" /></a>
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=28&duration=1000&pause=100&color=569CD6&center=false&vCenter=true&multiline=true&repeat=false&random=false&width=620&height=80&lines=%3E+Hello+World!+I'm+Sushil.;%3E+I+build+things+for+the+web." alt="Typing SVG" /></a>
 
 <br/>
+
+<div align="center">
 
 <a href="https://sushilkamble.com"><img src="https://img.shields.io/badge/sushilkamble.com-0078D4?style=flat-square&logo=google-chrome&logoColor=white" /></a>
 <a href="mailto:iamsushil303@gmail.com"><img src="https://img.shields.io/badge/iamsushil303@gmail.com-EA4335?style=flat-square&logo=gmail&logoColor=white" /></a>
