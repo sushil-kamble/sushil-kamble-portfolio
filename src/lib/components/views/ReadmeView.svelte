@@ -9,7 +9,10 @@
 		Mail,
 		Send,
 		FolderCode,
-		Newspaper
+		Newspaper,
+		Briefcase,
+		MapPin,
+		Calendar
 	} from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
 	import type { PageData } from '$lib/types';
@@ -89,6 +92,76 @@
 
 		<p class="text-sm text-vsc-yellow">&rbrace;</p>
 	</div>
+
+	<!-- ═══════════════════════════════════════════ -->
+	<!-- WORK EXPERIENCE                             -->
+	<!-- ═══════════════════════════════════════════ -->
+	{#if data.careers.length > 0}
+		<div class="mt-8">
+			<div class="flex items-center gap-2">
+				<Briefcase size={18} class="text-vsc-yellow" />
+				<h2 class="text-lg font-semibold text-vsc-yellow">
+					<span class="text-vsc-purple">##</span> EXPERIENCE.log
+				</h2>
+			</div>
+			<p class="mt-1 text-sm text-vsc-green">// git log --oneline --career</p>
+
+			<div class="mt-4 rounded-lg border border-vsc-border bg-vsc-panel p-4">
+				{#each data.careers as career, i (career.id)}
+					<div class="group relative flex gap-4" style="animation-delay: {i * 80}ms">
+						<!-- Timeline spine -->
+						<div class="flex flex-col items-center">
+							<div
+								class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-vsc-yellow/40 bg-vsc-yellow/10 transition-colors group-hover:border-vsc-yellow/70 group-hover:bg-vsc-yellow/20"
+							>
+								<Briefcase size={13} class="text-vsc-yellow" />
+							</div>
+							{#if i < data.careers.length - 1}
+								<div
+									class="w-px flex-1 bg-vsc-border transition-colors group-hover:bg-vsc-yellow/30"
+								></div>
+							{/if}
+						</div>
+
+						<!-- Career entry -->
+						<div class="pb-6 {i === data.careers.length - 1 ? 'pb-0' : ''}">
+							<!-- Company & Role -->
+							<div class="flex flex-wrap items-baseline gap-x-2">
+								{#if career.link}
+									<a
+										href={career.link}
+										target="_blank"
+										rel="noopener"
+										class="text-sm font-semibold text-vsc-yellow no-underline transition-colors hover:text-vsc-text"
+									>
+										{career.company}
+									</a>
+								{:else}
+									<span class="text-sm font-semibold text-vsc-yellow">{career.company}</span>
+								{/if}
+								<span class="text-sm text-vsc-text-muted">—</span>
+								<span class="text-sm text-vsc-text">{career.designation}</span>
+							</div>
+
+							<!-- Location & Period -->
+							<div class="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-vsc-text-muted">
+								{#if career.location}
+									<span class="flex items-center gap-1">
+										<MapPin size={11} class="text-vsc-text-muted" />
+										{career.location}
+									</span>
+								{/if}
+								<span class="flex items-center gap-1">
+									<Calendar size={11} class="text-vsc-text-muted" />
+									{career.start} → {career.end || 'Present'}
+								</span>
+							</div>
+						</div>
+					</div>
+				{/each}
+			</div>
+		</div>
+	{/if}
 
 	<!-- ═══════════════════════════════════════════ -->
 	<!-- FEATURED PROJECTS                           -->
