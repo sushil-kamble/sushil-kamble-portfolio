@@ -106,26 +106,29 @@
 			</div>
 			<p class="mt-1 text-sm text-vsc-green">// git log --oneline --career</p>
 
-			<div class="mt-4 rounded-lg border border-vsc-border bg-vsc-panel p-4">
+			<div class="mt-4 space-y-2">
 				{#each data.careers as career, i (career.id)}
-					<div class="group relative flex gap-4" style="animation-delay: {i * 80}ms">
-						<!-- Timeline spine -->
-						<div class="flex flex-col items-center">
-							<div
-								class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-vsc-yellow/40 bg-vsc-yellow/10 transition-colors group-hover:border-vsc-yellow/70 group-hover:bg-vsc-yellow/20"
-							>
-								<Briefcase size={13} class="text-vsc-yellow" />
-							</div>
-							{#if i < data.careers.length - 1}
-								<div
-									class="w-px flex-1 bg-vsc-border transition-colors group-hover:bg-vsc-yellow/30"
-								></div>
+					<div
+						class="group flex items-center gap-4 rounded-lg border border-vsc-border bg-vsc-panel p-3 transition-all duration-200 hover:border-vsc-yellow/40 hover:bg-vsc-bg"
+						style="animation-delay: {i * 80}ms"
+					>
+						<!-- Company logo -->
+						<div
+							class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-vsc-border bg-vsc-bg p-1.5 transition-colors group-hover:border-vsc-yellow/30"
+						>
+							{#if career.logo}
+								<img
+									src={career.logo}
+									alt="{career.company} logo"
+									class="h-full w-full object-contain"
+								/>
+							{:else}
+								<Briefcase size={18} class="text-vsc-yellow" />
 							{/if}
 						</div>
 
-						<!-- Career entry -->
-						<div class="pb-6 {i === data.careers.length - 1 ? 'pb-0' : ''}">
-							<!-- Company & Role -->
+						<!-- Career info -->
+						<div class="min-w-0 flex-1">
 							<div class="flex flex-wrap items-baseline gap-x-2">
 								{#if career.link}
 									<a
@@ -139,20 +142,18 @@
 								{:else}
 									<span class="text-sm font-semibold text-vsc-yellow">{career.company}</span>
 								{/if}
-								<span class="text-sm text-vsc-text-muted">—</span>
+								<span class="text-xs text-vsc-text-muted">—</span>
 								<span class="text-sm text-vsc-text">{career.designation}</span>
 							</div>
-
-							<!-- Location & Period -->
-							<div class="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-vsc-text-muted">
+							<div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-vsc-text-muted">
 								{#if career.location}
 									<span class="flex items-center gap-1">
-										<MapPin size={11} class="text-vsc-text-muted" />
+										<MapPin size={10} class="text-vsc-text-muted" />
 										{career.location}
 									</span>
 								{/if}
 								<span class="flex items-center gap-1">
-									<Calendar size={11} class="text-vsc-text-muted" />
+									<Calendar size={10} class="text-vsc-text-muted" />
 									{career.start} → {career.end || 'Present'}
 								</span>
 							</div>

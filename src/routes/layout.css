@@ -113,3 +113,26 @@ body {
 .animate-fade-out {
 	animation: fadeOut 0.3s ease-in forwards;
 }
+
+/* Tooltip entrance */
+@keyframes tooltipIn {
+	from {
+		opacity: 0;
+		scale: 0.96;
+	}
+	to {
+		opacity: 1;
+		scale: 1;
+	}
+}
+
+.animate-tooltip-in {
+	animation: tooltipIn 0.15s ease-out;
+}
+
+/* Hide tooltips on touch-only devices */
+@media (hover: none) {
+	.tooltip-panel {
+		display: none !important;
+	}
+}

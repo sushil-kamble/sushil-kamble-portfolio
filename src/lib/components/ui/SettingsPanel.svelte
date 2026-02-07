@@ -3,6 +3,7 @@
 	import { X, Palette, Type, Check, Monitor } from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
 	import { THEMES, FONTS } from '$lib/constants/themes';
+	import { formatShortcut, SHORTCUTS } from '$lib/utils/platform';
 	import type { EditorState } from '$lib/state/editor.svelte';
 
 	const editor = getContext<EditorState>(CONTEXT_KEYS.EDITOR_STATE);
@@ -155,7 +156,7 @@
 		>
 			<kbd
 				class="rounded border border-vsc-border bg-vsc-panel px-1.5 py-0.5 text-[10px] font-medium"
-				>⌘K</kbd
+				>{formatShortcut(SHORTCUTS.COMMAND_PALETTE)}</kbd
 			>
 			<span>then type</span>
 			<kbd

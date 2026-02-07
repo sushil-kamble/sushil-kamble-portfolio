@@ -24,8 +24,20 @@
 	<div class="mt-4 space-y-6 pl-4">
 		{#each data.careers as career (career.company + career.start)}
 			<div class="relative border-l-2 border-vsc-blue/20 pl-5">
-				<!-- Timeline dot -->
-				<div class="absolute top-1 -left-1.25 h-2 w-2 rounded-full bg-vsc-blue"></div>
+				<!-- Timeline marker -->
+				{#if career.logo}
+					<div
+						class="absolute top-0 -left-5 flex h-8 w-8 items-center justify-center rounded-md border border-vsc-border bg-vsc-bg p-1"
+					>
+						<img
+							src={career.logo}
+							alt="{career.company} logo"
+							class="h-full w-full object-contain"
+						/>
+					</div>
+				{:else}
+					<div class="absolute top-1 -left-1.25 h-2 w-2 rounded-full bg-vsc-blue"></div>
+				{/if}
 
 				<div class="flex items-start justify-between">
 					<div>
