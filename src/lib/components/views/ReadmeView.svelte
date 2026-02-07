@@ -17,7 +17,6 @@
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
 	import type { PageData } from '$lib/types';
 	import TechBadge from '$lib/components/ui/TechBadge.svelte';
-	import Badge from '$lib/components/ui/Badge.svelte';
 	import CalloutBox from '$lib/components/ui/CalloutBox.svelte';
 
 	const data = getContext<PageData>(CONTEXT_KEYS.PORTFOLIO_DATA);
@@ -240,7 +239,7 @@
 						style="animation-delay: {i * 80}ms"
 					>
 						<!-- Stretched card link -->
-						<a href="/projects/{project.id}" class="absolute inset-0 z-0" aria-label={project.title}
+						<a href="/projects/{project.slug}" class="absolute inset-0 z-0" aria-label={project.title}
 						></a>
 
 						<!-- Subtle gradient overlay on hover -->
@@ -345,7 +344,7 @@
 			<div class="mt-4 space-y-2.5">
 				{#each recentPosts as post, i (post.id)}
 					<a
-						href="/posts/{post.id}"
+						href="/posts/{post.slug}"
 						class="group flex w-full items-start gap-3 rounded-lg border border-vsc-border bg-vsc-panel p-3 text-left no-underline transition-all duration-200 hover:border-vsc-green/50 hover:bg-vsc-bg"
 						style="animation-delay: {i * 80}ms"
 					>
@@ -368,7 +367,7 @@
 							{#if post.tags.length > 0}
 								<div class="mt-1.5 flex flex-wrap gap-1">
 									{#each post.tags.slice(0, 3) as tag (tag)}
-										<Badge text={tag} variant="green" />
+										<TechBadge name={tag} variant="green" />
 									{/each}
 								</div>
 							{/if}

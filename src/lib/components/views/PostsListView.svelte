@@ -3,7 +3,7 @@
 	import { BookOpen, ExternalLink, Github, ArrowRight } from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
 	import type { PageData } from '$lib/types';
-	import Badge from '$lib/components/ui/Badge.svelte';
+	import TechBadge from '$lib/components/ui/TechBadge.svelte';
 
 	const data = getContext<PageData>(CONTEXT_KEYS.PORTFOLIO_DATA);
 </script>
@@ -23,7 +23,7 @@
 				class="group relative w-full cursor-pointer rounded-lg border border-vsc-border bg-vsc-panel p-4 text-left transition-all duration-200 hover:border-vsc-green/50 hover:bg-vsc-bg hover:shadow-lg hover:shadow-vsc-green/5"
 			>
 				<!-- Stretched card link -->
-				<a href="/posts/{post.id}" class="absolute inset-0 z-0" aria-label={post.title}></a>
+				<a href="/posts/{post.slug}" class="absolute inset-0 z-0" aria-label={post.title}></a>
 
 				<div class="pointer-events-none flex items-start justify-between gap-3">
 					<div class="flex-1">
@@ -42,7 +42,7 @@
 						<!-- Tags + Links row -->
 						<div class="pointer-events-auto relative z-10 mt-3 flex flex-wrap items-center gap-2">
 							{#each post.tags.slice(0, 3) as tag (tag)}
-								<Badge text={tag} variant="green" />
+								<TechBadge name={tag} variant="green" />
 							{/each}
 							{#if post.tags.length > 3}
 								<span class="text-xs text-vsc-text-muted">+{post.tags.length - 3}</span>

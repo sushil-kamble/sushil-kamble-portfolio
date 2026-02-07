@@ -8,7 +8,7 @@
 <svelte:head>
 	<title>{data.post.title} — Sushil Kamble</title>
 	<meta name="description" content={data.post.description} />
-	<link rel="canonical" href={`https://sushilkamble.com/posts/${data.post.id}`} />
+	<link rel="canonical" href={`https://sushilkamble.com/posts/${data.post.slug}`} />
 	<meta property="og:title" content={data.post.title} />
 	<meta property="og:description" content={data.post.description} />
 	<meta property="og:type" content="article" />

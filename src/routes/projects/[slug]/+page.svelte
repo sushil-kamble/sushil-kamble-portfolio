@@ -8,7 +8,7 @@
 <svelte:head>
 	<title>{data.project.title} — Sushil Kamble</title>
 	<meta name="description" content={data.project.description} />
-	<link rel="canonical" href={`https://sushilkamble.com/projects/${data.project.id}`} />
+	<link rel="canonical" href={`https://sushilkamble.com/projects/${data.project.slug}`} />
 	<meta property="og:title" content={data.project.title} />
 	<meta property="og:description" content={data.project.description} />
 	<meta property="og:type" content="article" />

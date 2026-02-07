@@ -4,15 +4,28 @@
 	import type { Project } from '$lib/types';
 
 	let { project }: { project: Project } = $props();
+
+	const titleHref = $derived(project.direct || project.github || '');
 </script>
 
 <div>
 	<div class="flex items-start justify-between">
 		<div>
 			<p class="text-sm text-vsc-green">
-				// projects/{project.title.toLowerCase().replace(/\s+/g, '-')}.ts
+				// projects/{project.slug}.ts
 			</p>
-			<h2 class="mt-2 text-xl font-bold text-vsc-blue">{project.title}</h2>
+			{#if titleHref}
+				<a
+					href={titleHref}
+					target="_blank"
+					rel="noopener"
+					class="mt-2 block text-xl font-bold text-vsc-blue no-underline decoration-vsc-blue/50 underline-offset-4 transition-all hover:underline"
+				>
+					{project.title}
+				</a>
+			{:else}
+				<h2 class="mt-2 text-xl font-bold text-vsc-blue">{project.title}</h2>
+			{/if}
 		</div>
 		<div class="flex gap-2">
 			{#if project.direct}
@@ -41,7 +54,7 @@
 	</div>
 
 	{#if project.description}
-		<p class="mt-3 leading-relaxed text-vsc-text-muted">{project.description}</p>
+		<p class="mt-3 leading-relaxed text-vsc-text">{project.description}</p>
 	{/if}
 
 	<!-- Stack -->
@@ -62,7 +75,7 @@
 			<p class="text-sm font-medium text-vsc-yellow">Features</p>
 			<ul class="mt-2 space-y-1 pl-5">
 				{#each project.features as feature (feature)}
-					<li class="list-disc text-sm text-vsc-text-muted">{feature}</li>
+					<li class="list-disc text-sm text-vsc-text">{feature}</li>
 				{/each}
 			</ul>
 		</div>

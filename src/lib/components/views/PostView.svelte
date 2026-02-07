@@ -1,16 +1,27 @@
 <script lang="ts">
 	import { ExternalLink, Github, BookOpen } from 'lucide-svelte';
-	import Badge from '$lib/components/ui/Badge.svelte';
+	import TechBadge from '$lib/components/ui/TechBadge.svelte';
 	import type { Blog } from '$lib/types';
 
 	let { post }: { post: Blog } = $props();
 </script>
 
 <div>
-	<p class="text-sm text-vsc-green">// posts/{post.title.toLowerCase().replace(/\s+/g, '-')}.md</p>
+	<p class="text-sm text-vsc-green">// posts/{post.slug}.md</p>
 
 	<div class="mt-2 flex items-start justify-between">
-		<h2 class="text-xl font-bold text-vsc-blue">{post.title}</h2>
+		{#if post.blog}
+			<a
+				href={post.blog}
+				target="_blank"
+				rel="noopener"
+				class="text-xl font-bold text-vsc-blue no-underline decoration-vsc-blue/50 underline-offset-4 transition-all hover:underline"
+			>
+				{post.title}
+			</a>
+		{:else}
+			<h2 class="text-xl font-bold text-vsc-blue">{post.title}</h2>
+		{/if}
 		<div class="flex gap-2">
 			{#if post.blog}
 				<a
@@ -49,13 +60,14 @@
 	</div>
 
 	{#if post.description}
-		<p class="mt-3 leading-relaxed text-vsc-text-muted">{post.description}</p>
+		<p class="mt-3 whitespace-pre-wrap leading-relaxed text-vsc-text">
+			{post.description}</p>
 	{/if}
 
 	{#if post.tags.length > 0}
 		<div class="mt-4 flex flex-wrap gap-2">
 			{#each post.tags as tag (tag)}
-				<Badge text={tag} variant="green" />
+				<TechBadge name={tag} variant="green" />
 			{/each}
 		</div>
 	{/if}

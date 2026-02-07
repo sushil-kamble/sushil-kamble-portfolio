@@ -14,6 +14,7 @@ export interface Career {
 
 export interface Project {
 	id: string;
+	slug: string;
 	title: string;
 	stack: string[];
 	features: string[];
@@ -31,6 +32,7 @@ export interface Skill {
 
 export interface Blog {
 	id: string;
+	slug: string;
 	title: string;
 	description: string;
 	tags: string[];

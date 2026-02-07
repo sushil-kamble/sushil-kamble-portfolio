@@ -4,7 +4,7 @@ import type { FileEntry, TreeNode, TreeFolder, TreeFile } from '$lib/types';
  * Build a nested sidebar tree from flat file entries.
  * Supports slash-separated folder paths (e.g. "sushilkamble-com/projects").
  *
- * VS Code ordering: folders first (alphabetical), then files (alphabetical).
+ * Folders first (alphabetical), then files in their original order (Notion API ordering).
  */
 export function buildSidebarTree(files: FileEntry[]): TreeNode[] {
 	const root: TreeNode[] = [];
@@ -57,9 +57,11 @@ function sortChildren(nodes: TreeNode[]) {
 	nodes.sort((a, b) => {
 		// Folders before files
 		if (a.kind !== b.kind) return a.kind === 'folder' ? -1 : 1;
-		// Alphabetical within same kind
-		const nameA = a.kind === 'folder' ? a.name : a.entry.name;
-		const nameB = b.kind === 'folder' ? b.name : b.entry.name;
-		return nameA.localeCompare(nameB);
+		// Folders: alphabetical
+		if (a.kind === 'folder' && b.kind === 'folder') {
+			return a.name.localeCompare(b.name);
+		}
+		// Files: preserve insertion order (Notion API ordering)
+		return 0;
 	});
 }

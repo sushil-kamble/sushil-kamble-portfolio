@@ -23,7 +23,7 @@
 				class="group relative cursor-pointer rounded-lg border border-vsc-border bg-vsc-panel p-4 text-left transition-all duration-200 hover:border-vsc-blue/50 hover:bg-vsc-bg hover:shadow-lg hover:shadow-vsc-blue/5"
 			>
 				<!-- Stretched card link -->
-				<a href="/projects/{project.id}" class="absolute inset-0 z-0" aria-label={project.title}
+				<a href="/projects/{project.slug}" class="absolute inset-0 z-0" aria-label={project.title}
 				></a>
 
 				<!-- Title row -->

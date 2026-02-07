@@ -77,13 +77,13 @@ export function buildFileRegistry(data: PageData): FileEntry[] {
 	// ── Individual project files ──
 	for (const project of data.projects) {
 		const entry: FileEntry = {
-			id: `project-${project.id}`,
+			id: `project-${project.slug}`,
 			name: `${slugify(project.title)}.ts`,
 			type: 'project',
 			icon: 'folder-code',
 			language: 'TypeScript',
 			folder: 'sushilkamble-com/projects',
-			dataId: project.id
+			dataId: project.slug
 		};
 		entry.href = fileEntryHref(entry);
 		files.push(entry);
@@ -92,13 +92,13 @@ export function buildFileRegistry(data: PageData): FileEntry[] {
 	// ── Individual post files ──
 	for (const blog of data.blogs) {
 		const entry: FileEntry = {
-			id: `post-${blog.id}`,
+			id: `post-${blog.slug}`,
 			name: `${slugify(blog.title)}.md`,
 			type: 'post',
 			icon: 'file-text',
 			language: 'Markdown',
 			folder: 'sushilkamble-com/posts',
-			dataId: blog.id
+			dataId: blog.slug
 		};
 		entry.href = fileEntryHref(entry);
 		files.push(entry);

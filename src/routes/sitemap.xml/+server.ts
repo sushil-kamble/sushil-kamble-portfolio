@@ -16,13 +16,13 @@ export async function GET() {
 	];
 
 	const blogPages = blogs.map((b) => ({
-		loc: `/posts/${b.id}`,
+		loc: `/posts/${b.slug}`,
 		priority: '0.7',
 		changefreq: 'monthly'
 	}));
 
 	const projectPages = projects.map((p) => ({
-		loc: `/projects/${p.id}`,
+		loc: `/projects/${p.slug}`,
 		priority: '0.7',
 		changefreq: 'monthly'
 	}));

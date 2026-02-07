@@ -10,7 +10,8 @@ const BLOGS_DB = '106fce9b3e304e28a7c38c1856e27501';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const richText = (item: any, field: string): string =>
-	item.properties[field]?.rich_text?.[0]?.plain_text || '';
+	item.properties[field]?.rich_text?.map((r: { plain_text: string }) => r.plain_text).join('') ||
+	'';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const multiSelect = (item: any, field: string): string[] =>
@@ -22,6 +23,13 @@ const titleText = (item: any, field: string): string =>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const urlProp = (item: any, field: string): string => item.properties[field]?.url || '';
+
+function slugify(text: string): string {
+	return text
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/(^-|-$)/g, '');
+}
 
 export async function fetchAboutMe(): Promise<string> {
 	const api = useAxios();
@@ -69,16 +77,20 @@ export async function fetchProjects(): Promise<Project[]> {
 		sorts: [{ property: 'ordering', direction: 'ascending' }]
 	});
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	return res.data.results.map((item: any) => ({
-		id: item.id,
-		title: titleText(item, 'title'),
-		stack: multiSelect(item, 'stack'),
-		features: multiSelect(item, 'features'),
-		screenshots: multiSelect(item, 'screenshots'),
-		direct: urlProp(item, 'direct'),
-		github: urlProp(item, 'github'),
-		description: richText(item, 'description')
-	}));
+	return res.data.results.map((item: any) => {
+		const title = titleText(item, 'title');
+		return {
+			id: item.id,
+			slug: slugify(title),
+			title,
+			stack: multiSelect(item, 'stack'),
+			features: multiSelect(item, 'features'),
+			screenshots: multiSelect(item, 'screenshots'),
+			direct: urlProp(item, 'direct'),
+			github: urlProp(item, 'github'),
+			description: richText(item, 'description')
+		};
+	});
 }
 
 export async function fetchBlogs(): Promise<Blog[]> {
@@ -87,15 +99,19 @@ export async function fetchBlogs(): Promise<Blog[]> {
 		sorts: [{ property: 'ordering', direction: 'ascending' }]
 	});
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	return res.data.results.map((item: any) => ({
-		id: item.id,
-		title: titleText(item, 'title'),
-		description: richText(item, 'description'),
-		tags: multiSelect(item, 'tags'),
-		blog: urlProp(item, 'blog'),
-		github: urlProp(item, 'github'),
-		live: urlProp(item, 'live')
-	}));
+	return res.data.results.map((item: any) => {
+		const title = titleText(item, 'title');
+		return {
+			id: item.id,
+			slug: slugify(title),
+			title,
+			description: richText(item, 'description'),
+			tags: multiSelect(item, 'tags'),
+			blog: urlProp(item, 'blog'),
+			github: urlProp(item, 'github'),
+			live: urlProp(item, 'live')
+		};
+	});
 }
 
 export async function fetchAllData(): Promise<PageData> {
