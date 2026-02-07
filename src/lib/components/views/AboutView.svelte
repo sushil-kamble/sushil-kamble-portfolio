@@ -9,7 +9,7 @@
 </script>
 
 <div>
-	<p class="text-sm text-vsc-green">// about_me.ts — Career Timeline</p>
+	<p class="text-sm text-vsc-green">// career.ts — Career Timeline</p>
 
 	<div class="mt-2">
 		<p class="text-sm">

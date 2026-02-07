@@ -24,7 +24,7 @@
 		{isActive
 		? 'bg-vsc-panel text-vsc-text'
 		: 'text-vsc-text-muted hover:bg-vsc-panel/50 hover:text-vsc-text'}"
-	style="padding-left: {depth * 16 + 8}px"
+	style="padding-left: {depth * 16 + 24}px"
 >
 	<IconComponent size={14} class="shrink-0 {isActive ? 'text-vsc-blue' : ''}" />
 	<span class="truncate">{entry.name}</span>

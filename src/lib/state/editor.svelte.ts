@@ -22,7 +22,7 @@ export const FIXED_TABS: FileEntry[] = [
 	},
 	{
 		id: 'about',
-		name: 'about_me.ts',
+		name: 'career.ts',
 		type: 'about',
 		icon: 'user',
 		language: 'TypeScript'

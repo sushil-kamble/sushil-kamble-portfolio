@@ -215,7 +215,7 @@
 			<div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
 				{#each featuredProjects as project, i (project.id)}
 					<div
-						class="group relative overflow-hidden rounded-lg border border-vsc-border bg-vsc-panel p-4 text-left transition-all duration-300 hover:border-vsc-blue/60 hover:shadow-lg hover:shadow-vsc-blue/10"
+						class="group relative cursor-pointer overflow-hidden rounded-lg border border-vsc-border bg-vsc-panel p-4 text-left transition-all duration-300 hover:border-vsc-blue/60 hover:shadow-lg hover:shadow-vsc-blue/10"
 						style="animation-delay: {i * 80}ms"
 					>
 						<!-- Stretched card link -->
@@ -228,7 +228,7 @@
 						></div>
 
 						<!-- Project title -->
-						<div class="relative flex items-center justify-between">
+						<div class="pointer-events-none relative flex items-center justify-between">
 							<h3 class="text-sm font-semibold text-vsc-text group-hover:text-vsc-blue">
 								{project.title}
 							</h3>
@@ -240,14 +240,14 @@
 
 						<!-- Description -->
 						{#if project.description}
-							<p class="relative mt-2 line-clamp-2 text-xs leading-relaxed text-vsc-text-muted">
+							<p class="pointer-events-none relative mt-2 line-clamp-2 text-xs leading-relaxed text-vsc-text-muted">
 								{project.description}
 							</p>
 						{/if}
 
 						<!-- Stack badges -->
 						{#if project.stack.length > 0}
-							<div class="relative mt-3 flex flex-wrap gap-1">
+							<div class="pointer-events-none relative mt-3 flex flex-wrap gap-1">
 								{#each project.stack.slice(0, 3) as tech (tech)}
 									<span class="rounded bg-vsc-blue/10 px-1.5 py-0.5 text-[10px] text-vsc-blue">
 										{tech}
@@ -262,7 +262,7 @@
 						{/if}
 
 						<!-- External links -->
-						<div class="relative z-10 mt-3 flex gap-2">
+						<div class="pointer-events-auto relative z-10 mt-3 flex gap-2">
 							{#if project.github}
 								<a
 									href={project.github}
@@ -385,10 +385,10 @@
 			<p class="text-sm text-vsc-green">// Quick ways to reach me</p>
 
 			<div class="mt-3 flex flex-col gap-2 text-sm">
-				{#each contactLinks as { icon, iconColor, label, href, displayText, isExternal }}
+				{#each contactLinks as { icon: Icon, iconColor, label, href, displayText, isExternal }}
 					<div class="flex flex-col gap-1 text-vsc-text-muted md:flex-row md:items-center md:gap-2">
 						<div class="flex items-center gap-2">
-							<svelte:component this={icon} size={14} class={iconColor} />
+							<Icon size={14} class={iconColor} />
 							<span class="text-vsc-blue">"{label}"</span>
 							<span class="text-vsc-text">:</span>
 						</div>

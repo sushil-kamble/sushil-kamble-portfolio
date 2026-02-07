@@ -10,7 +10,7 @@ import { fileEntryHref } from '$lib/utils/navigation';
  * Tree structure:
  *   sushilkamble-com/
  *     README.md
- *     about_me.ts
+ *     career.ts
  *     contact.tsx
  *     projects/
  *       index.ts
@@ -36,7 +36,7 @@ export function buildFileRegistry(data: PageData): FileEntry[] {
 		},
 		{
 			id: 'about-sidebar',
-			name: 'about_me.ts',
+			name: 'career.ts',
 			type: 'about' as const,
 			icon: 'user',
 			language: 'TypeScript',
