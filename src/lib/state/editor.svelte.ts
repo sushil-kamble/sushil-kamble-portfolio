@@ -29,14 +29,14 @@ export const FIXED_TABS: FileEntry[] = [
 	},
 	{
 		id: 'projects',
-		name: 'projects.md',
+		name: 'projects',
 		type: 'projects',
 		icon: 'folder-code',
-		language: 'Markdown'
+		language: 'TypeScript'
 	},
 	{
 		id: 'posts',
-		name: 'posts.md',
+		name: 'posts',
 		type: 'posts',
 		icon: 'newspaper',
 		language: 'Markdown'
