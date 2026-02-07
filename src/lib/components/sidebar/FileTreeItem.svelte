@@ -20,7 +20,7 @@
 
 <a
 	href={entry.href ?? '/'}
-	class="flex w-full items-center gap-2 rounded-sm px-2 py-0.5 text-left text-[13px] no-underline transition-colors
+	class="flex w-full items-center gap-2 rounded-sm px-2 py-0.5 text-left text-[13px] no-underline transition-colors active:bg-vsc-panel
 		{isActive
 		? 'bg-vsc-panel text-vsc-text'
 		: 'text-vsc-text-muted hover:bg-vsc-panel/50 hover:text-vsc-text'}"

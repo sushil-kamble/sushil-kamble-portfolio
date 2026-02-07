@@ -32,6 +32,41 @@
 
 	const featuredProjects = $derived(data.projects.slice(0, 3));
 	const recentPosts = $derived(data.blogs.slice(0, 3));
+
+	const contactLinks = [
+		{
+			icon: Mail,
+			iconColor: 'text-vsc-orange',
+			label: 'email',
+			href: 'mailto:iamsushil303@gmail.com',
+			displayText: 'iamsushil303@gmail.com',
+			isExternal: false
+		},
+		{
+			icon: Github,
+			iconColor: 'text-vsc-text',
+			label: 'github',
+			href: 'https://github.com/sushil-kamble',
+			displayText: 'github.com/sushil-kamble',
+			isExternal: true
+		},
+		{
+			icon: ExternalLink,
+			iconColor: 'text-vsc-text',
+			label: 'linkedin',
+			href: 'https://www.linkedin.com/in/sushil-kamble/',
+			displayText: 'linkedin.com/in/sushil-kamble',
+			isExternal: true
+		},
+		{
+			icon: Send,
+			iconColor: 'text-vsc-text',
+			label: 'x',
+			href: 'https://x.com/SushilK28005811',
+			displayText: 'x.com/SushilK28005811',
+			isExternal: true
+		}
+	];
 </script>
 
 <div>
@@ -350,56 +385,22 @@
 			<p class="text-sm text-vsc-green">// Quick ways to reach me</p>
 
 			<div class="mt-3 flex flex-col gap-2 text-sm">
-				<div class="flex items-center gap-2 text-vsc-text-muted">
-					<Mail size={14} class="text-vsc-orange" />
-					<span class="text-vsc-blue">"email"</span>
-					<span class="text-vsc-text">:</span>
-					<a
-						href="mailto:iamsushil303@gmail.com"
-						class="text-vsc-orange transition-colors hover:text-vsc-yellow"
-					>
-						"iamsushil303@gmail.com"
-					</a>
-				</div>
-				<div class="flex items-center gap-2 text-vsc-text-muted">
-					<Github size={14} class="text-vsc-text" />
-					<span class="text-vsc-blue">"github"</span>
-					<span class="text-vsc-text">:</span>
-					<a
-						href="https://github.com/sushil-kamble"
-						target="_blank"
-						rel="noopener"
-						class="text-vsc-orange transition-colors hover:text-vsc-yellow"
-					>
-						"github.com/sushil-kamble"
-					</a>
-				</div>
-				<div class="flex items-center gap-2 text-vsc-text-muted">
-					<ExternalLink size={14} class="text-vsc-text" />
-					<span class="text-vsc-blue">"linkedin"</span>
-					<span class="text-vsc-text">:</span>
-					<a
-						href="https://www.linkedin.com/in/sushil-kamble/"
-						target="_blank"
-						rel="noopener"
-						class="text-vsc-orange transition-colors hover:text-vsc-yellow"
-					>
-						"linkedin.com/in/sushil-kamble"
-					</a>
-				</div>
-				<div class="flex items-center gap-2 text-vsc-text-muted">
-					<Send size={14} class="text-vsc-text" />
-					<span class="text-vsc-blue">"x"</span>
-					<span class="text-vsc-text">:</span>
-					<a
-						href="https://x.com/SushilK28005811"
-						target="_blank"
-						rel="noopener"
-						class="text-vsc-orange transition-colors hover:text-vsc-yellow"
-					>
-						"x.com/SushilK28005811"
-					</a>
-				</div>
+				{#each contactLinks as { icon, iconColor, label, href, displayText, isExternal }}
+					<div class="flex flex-col gap-1 text-vsc-text-muted md:flex-row md:items-center md:gap-2">
+						<div class="flex items-center gap-2">
+							<svelte:component this={icon} size={14} class={iconColor} />
+							<span class="text-vsc-blue">"{label}"</span>
+							<span class="text-vsc-text">:</span>
+						</div>
+						<a
+							{href}
+							{...isExternal ? { target: '_blank', rel: 'noopener' } : {}}
+							class="ml-6 break-all text-vsc-orange transition-colors hover:text-vsc-yellow md:ml-0"
+						>
+							"{displayText}"
+						</a>
+					</div>
+				{/each}
 			</div>
 
 			<a

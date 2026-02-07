@@ -11,7 +11,7 @@
 	<span class="text-[11px] font-semibold tracking-widest text-vsc-text-muted">EXPLORER</span>
 	<button
 		onclick={() => editor.toggleSidebar()}
-		class="rounded p-0.5 text-vsc-text-muted transition-colors hover:text-vsc-text"
+		class="rounded p-2 text-vsc-text-muted transition-colors hover:text-vsc-text active:bg-vsc-panel/50"
 		aria-label="Toggle sidebar"
 	>
 		{#if editor.sidebarExpanded}

@@ -60,10 +60,10 @@
 			<!-- Close button -->
 			<button
 				onclick={dismiss}
-				class="absolute top-2 right-2 rounded p-1 text-vsc-text-muted transition-colors hover:bg-vsc-border/50 hover:text-vsc-text"
+				class="absolute top-2 right-2 rounded p-2 text-vsc-text-muted transition-colors hover:bg-vsc-border/50 hover:text-vsc-text active:bg-vsc-border"
 				aria-label="Dismiss"
 			>
-				<X size={12} />
+				<X size={16} />
 			</button>
 
 			<!-- Content -->

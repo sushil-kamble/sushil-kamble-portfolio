@@ -97,12 +97,16 @@
 					: filteredFiles.length
 	);
 
-	/** Placeholder text per mode */
+	/** Placeholder text per mode (mobile-friendly) */
 	const placeholder = $derived(
 		editor.paletteMode === 'themes'
-			? 'Select Color Theme (↑↓ to preview)'
+			? editor.isMobile
+				? 'Select Color Theme'
+				: 'Select Color Theme (↑↓ to preview)'
 			: editor.paletteMode === 'fonts'
-				? 'Select Font Family (↑↓ to preview)'
+				? editor.isMobile
+					? 'Select Font Family'
+					: 'Select Font Family (↑↓ to preview)'
 				: 'Type > for commands, or search files...'
 	);
 
@@ -299,12 +303,14 @@
 					{#each filteredThemes as theme, i (theme.id)}
 						<button
 							data-palette-item
-							class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[13px] transition-colors
+							class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[13px] transition-colors active:bg-vsc-blue/30
 								{i === selectedIndex ? 'bg-vsc-blue/20 text-vsc-text' : 'text-vsc-text-muted hover:bg-vsc-blue/10'}"
 							onclick={() => selectTheme(theme.id)}
 							onmouseenter={() => {
-								selectedIndex = i;
-								previewThemeById(theme.id);
+								if (!editor.isMobile) {
+									selectedIndex = i;
+									previewThemeById(theme.id);
+								}
 							}}
 						>
 							{#if editor.currentTheme === theme.id && previewTheme === null}
@@ -325,12 +331,14 @@
 					{#each filteredFonts as font, i (font.id)}
 						<button
 							data-palette-item
-							class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[13px] transition-colors
+							class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[13px] transition-colors active:bg-vsc-blue/30
 								{i === selectedIndex ? 'bg-vsc-blue/20 text-vsc-text' : 'text-vsc-text-muted hover:bg-vsc-blue/10'}"
 							onclick={() => selectFont(font.id)}
 							onmouseenter={() => {
-								selectedIndex = i;
-								previewFontById(font.id);
+								if (!editor.isMobile) {
+									selectedIndex = i;
+									previewFontById(font.id);
+								}
 							}}
 						>
 							{#if editor.currentFont === font.id && previewFont === null}
@@ -399,11 +407,15 @@
 				{/if}
 			</div>
 
-			<!-- Mode hint -->
+			<!-- Mode hint (mobile-friendly) -->
 			<div class="flex items-center justify-between border-t border-vsc-border px-3 py-1.5">
 				<span class="text-[11px] text-vsc-text-muted">
 					{#if editor.paletteMode === 'themes' || editor.paletteMode === 'fonts'}
-						↑↓ preview · Enter confirm · Esc cancel
+						{#if editor.isMobile}
+							Tap to select · Swipe to dismiss
+						{:else}
+							↑↓ preview · Enter confirm · Esc cancel
+						{/if}
 					{:else}
 						Type &gt; for commands
 					{/if}

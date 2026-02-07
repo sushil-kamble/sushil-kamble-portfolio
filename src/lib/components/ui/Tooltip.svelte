@@ -1,5 +1,8 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { getContext } from 'svelte';
+	import { CONTEXT_KEYS } from '$lib/constants/theme';
+	import type { EditorState } from '$lib/state/editor.svelte';
 
 	interface Props {
 		label: string;
@@ -11,8 +14,13 @@
 
 	const { label, shortcut, description, position = 'left', children }: Props = $props();
 
+	const editor = getContext<EditorState>(CONTEXT_KEYS.EDITOR_STATE);
+
 	let visible = $state(false);
 	let hoverTimer: ReturnType<typeof setTimeout> | undefined;
+
+	// Hide keyboard shortcuts on mobile
+	const displayShortcut = $derived(!editor.isMobile && shortcut);
 
 	function show() {
 		hoverTimer = setTimeout(() => {
@@ -24,6 +32,19 @@
 		clearTimeout(hoverTimer);
 		visible = false;
 	}
+
+	// Touch support: toggle on click for mobile devices
+	function handleClick() {
+		if (editor.isMobile) {
+			visible = !visible;
+			// Auto-hide after 2 seconds on mobile
+			if (visible) {
+				setTimeout(() => {
+					visible = false;
+				}, 2000);
+			}
+		}
+	}
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -33,6 +54,7 @@
 	onmouseleave={hide}
 	onfocusin={show}
 	onfocusout={hide}
+	onclick={handleClick}
 >
 	{@render children()}
 
@@ -46,11 +68,11 @@
 		>
 			<div class="flex items-center gap-2">
 				<span class="text-[11px] font-medium text-vsc-text">{label}</span>
-				{#if shortcut}
+				{#if displayShortcut}
 					<kbd
 						class="rounded border border-vsc-border bg-vsc-bg px-1.5 py-0.5 text-[10px] font-medium text-vsc-text-muted"
 					>
-						{shortcut}
+						{displayShortcut}
 					</kbd>
 				{/if}
 			</div>

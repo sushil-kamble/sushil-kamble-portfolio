@@ -104,7 +104,7 @@
 		<Tooltip label="Scroll to top">
 			<button
 				onclick={() => scrollToTop()}
-				class="animate-fade-in rounded-full bg-vsc-panel p-2.5 text-vsc-text-muted shadow-lg ring-1 ring-vsc-border transition-all hover:text-vsc-text hover:ring-vsc-blue"
+				class="animate-fade-in rounded-full bg-vsc-panel p-3 text-vsc-text-muted shadow-lg ring-1 ring-vsc-border transition-all hover:text-vsc-text hover:ring-vsc-blue active:ring-vsc-blue active:bg-vsc-border"
 				aria-label="Scroll to top"
 			>
 				<ArrowUp size={18} />
@@ -115,7 +115,7 @@
 	<Tooltip label="Toggle Sidebar" shortcut={formatShortcut(SHORTCUTS.TOGGLE_SIDEBAR)}>
 		<button
 			onclick={() => editor.toggleSidebar()}
-			class="rounded-full bg-vsc-panel p-2.5 text-vsc-text-muted shadow-lg ring-1 ring-vsc-border transition-all hover:text-vsc-text hover:ring-vsc-blue"
+			class="rounded-full bg-vsc-panel p-3 text-vsc-text-muted shadow-lg ring-1 ring-vsc-border transition-all hover:text-vsc-text hover:ring-vsc-blue active:ring-vsc-blue active:bg-vsc-border"
 			aria-label="Toggle sidebar"
 		>
 			<PanelLeft size={18} />
@@ -149,7 +149,7 @@
 					if (showHint) dismissHint();
 					editor.toggleSettings();
 				}}
-				class="relative rounded-full bg-vsc-panel p-2.5 shadow-lg ring-1 transition-all hover:text-vsc-text hover:ring-vsc-purple
+				class="relative rounded-full bg-vsc-panel p-3 shadow-lg ring-1 transition-all hover:text-vsc-text hover:ring-vsc-purple active:ring-vsc-purple active:bg-vsc-border
 					{showHint ? 'text-vsc-purple ring-vsc-purple/40' : 'text-vsc-text-muted ring-vsc-border'}"
 				aria-label="Customize appearance"
 			>
@@ -197,7 +197,7 @@
 					if (showSearchHint) dismissSearchHint();
 					editor.toggleCommandPalette();
 				}}
-				class="relative rounded-full bg-vsc-blue p-2.5 text-white shadow-lg transition-all hover:bg-vsc-blue/80"
+				class="relative rounded-full bg-vsc-blue p-3 text-white shadow-lg transition-all hover:bg-vsc-blue/80 active:bg-vsc-blue/60"
 				aria-label="Open command palette"
 			>
 				<Search size={18} />

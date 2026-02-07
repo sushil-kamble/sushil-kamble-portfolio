@@ -33,7 +33,7 @@
 	<div class="flex items-center gap-3">
 		<Tooltip label="Change Color Theme" position="top">
 			<button
-				class="flex items-center gap-1 transition-colors hover:text-vsc-text"
+				class="flex items-center gap-1 transition-colors hover:text-vsc-text active:text-vsc-blue"
 				onclick={() => editor.openThemePicker()}
 			>
 				<Palette size={12} />
@@ -42,7 +42,7 @@
 		</Tooltip>
 		<Tooltip label="Change Font Family" position="top">
 			<button
-				class="flex items-center gap-1 transition-colors hover:text-vsc-text"
+				class="flex items-center gap-1 transition-colors hover:text-vsc-text active:text-vsc-purple"
 				onclick={() => editor.openFontPicker()}
 			>
 				<Type size={12} />

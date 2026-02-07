@@ -43,7 +43,7 @@
 			</div>
 			<button
 				onclick={() => (editor.settingsOpen = false)}
-				class="rounded p-1 text-vsc-text-muted transition-colors hover:bg-vsc-panel hover:text-vsc-text"
+				class="rounded p-2 text-vsc-text-muted transition-colors hover:bg-vsc-panel hover:text-vsc-text active:bg-vsc-border"
 				aria-label="Close settings"
 			>
 				<X size={16} />
@@ -150,21 +150,23 @@
 			</div>
 		</div>
 
-		<!-- Footer with keyboard shortcut hint -->
-		<div
-			class="flex items-center gap-2 border-t border-vsc-border px-4 py-2.5 text-[11px] text-vsc-text-muted"
-		>
-			<kbd
-				class="rounded border border-vsc-border bg-vsc-panel px-1.5 py-0.5 text-[10px] font-medium"
-				>{formatShortcut(SHORTCUTS.COMMAND_PALETTE)}</kbd
+		<!-- Footer with keyboard shortcut hint (hidden on mobile) -->
+		{#if !editor.isMobile}
+			<div
+				class="flex items-center gap-2 border-t border-vsc-border px-4 py-2.5 text-[11px] text-vsc-text-muted"
 			>
-			<span>then type</span>
-			<kbd
-				class="rounded border border-vsc-border bg-vsc-panel px-1.5 py-0.5 text-[10px] font-medium"
-				>&gt;theme</kbd
-			>
-			<span>for quick access</span>
-		</div>
+				<kbd
+					class="rounded border border-vsc-border bg-vsc-panel px-1.5 py-0.5 text-[10px] font-medium"
+					>{formatShortcut(SHORTCUTS.COMMAND_PALETTE)}</kbd
+				>
+				<span>then type</span>
+				<kbd
+					class="rounded border border-vsc-border bg-vsc-panel px-1.5 py-0.5 text-[10px] font-medium"
+					>&gt;theme</kbd
+				>
+				<span>for quick access</span>
+			</div>
+		{/if}
 	</div>
 {/if}
 
