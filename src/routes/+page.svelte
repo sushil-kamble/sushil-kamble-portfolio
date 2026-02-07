@@ -13,8 +13,7 @@
 	const props: { data: PageData } = $props();
 
 	const files = buildFileRegistry(props.data);
-	const readmeFile = files.find((f) => f.id === 'readme')!;
-	const editor = new EditorState(readmeFile);
+	const editor = new EditorState();
 
 	setContext(CONTEXT_KEYS.EDITOR_STATE, editor);
 	setContext(CONTEXT_KEYS.PORTFOLIO_DATA, props.data);
@@ -27,14 +26,6 @@
 		if (meta && e.key === 'k') {
 			e.preventDefault();
 			editor.toggleCommandPalette();
-		}
-
-		// Cmd+W — Close active tab
-		if (meta && e.key === 'w') {
-			e.preventDefault();
-			if (editor.activeTabId) {
-				editor.closeTab(editor.activeTabId);
-			}
 		}
 
 		// Ctrl+Tab / Ctrl+Shift+Tab — Cycle tabs

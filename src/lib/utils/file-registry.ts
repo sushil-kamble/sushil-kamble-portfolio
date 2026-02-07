@@ -1,16 +1,18 @@
 import type { FileEntry, PageData } from '$lib/types';
+import { FIXED_TABS } from '$lib/state/editor.svelte';
 
+/**
+ * Build the complete file registry.
+ * Includes the 5 fixed tabs (for command palette search) plus
+ * individual project/post entries (for sidebar tree display).
+ */
 export function buildFileRegistry(data: PageData): FileEntry[] {
 	const files: FileEntry[] = [
+		// Fixed tabs first (for command palette)
+		...FIXED_TABS,
+		// Individual sidebar entries
 		{
-			id: 'readme',
-			name: 'README.md',
-			type: 'readme',
-			icon: 'file-text',
-			language: 'Markdown'
-		},
-		{
-			id: 'about',
+			id: 'about-sidebar',
 			name: 'about_me.ts',
 			type: 'about',
 			icon: 'user',
@@ -18,7 +20,7 @@ export function buildFileRegistry(data: PageData): FileEntry[] {
 			folder: 'portfolio'
 		},
 		{
-			id: 'contact',
+			id: 'contact-sidebar',
 			name: 'contact.tsx',
 			type: 'contact',
 			icon: 'mail',

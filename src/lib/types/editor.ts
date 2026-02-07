@@ -1,4 +1,11 @@
-export type FileType = 'readme' | 'project' | 'post' | 'about' | 'contact';
+/** Types for the 5 fixed tabs */
+export type FixedTabType = 'readme' | 'about' | 'projects' | 'posts' | 'contact';
+
+/** Types for individual sidebar file entries */
+export type SidebarFileType = 'project' | 'post';
+
+/** Union of all file types */
+export type FileType = FixedTabType | SidebarFileType;
 
 export interface FileEntry {
 	id: string;

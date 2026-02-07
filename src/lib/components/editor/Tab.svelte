@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { X, FileText, Braces, User, Mail, FolderCode } from 'lucide-svelte';
+	import { FileText, Braces, User, Mail, FolderCode, Newspaper } from 'lucide-svelte';
 	import { getContext } from 'svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
 	import type { EditorState } from '$lib/state/editor.svelte';
-	import type { FileEntry } from '$lib/types';
+	import type { FileEntry, PageData } from '$lib/types';
 
 	let { entry }: { entry: FileEntry } = $props();
 
 	const editor = getContext<EditorState>(CONTEXT_KEYS.EDITOR_STATE);
+	const data = getContext<PageData>(CONTEXT_KEYS.PORTFOLIO_DATA);
 	const isActive = $derived(editor.activeTabId === entry.id);
 
 	const iconMap: Record<string, typeof FileText> = {
@@ -15,10 +16,24 @@
 		braces: Braces,
 		user: User,
 		mail: Mail,
-		'folder-code': FolderCode
+		'folder-code': FolderCode,
+		newspaper: Newspaper
 	};
 
 	const IconComponent = $derived(iconMap[entry.icon] ?? FileText);
+
+	/** Dynamic tab label: append selected project/post name after a pipe */
+	const displayName = $derived.by(() => {
+		if (entry.id === 'projects' && editor.selectedProjectId) {
+			const project = data.projects.find((p) => p.id === editor.selectedProjectId);
+			return project ? `${entry.name} | ${project.title}` : entry.name;
+		}
+		if (entry.id === 'posts' && editor.selectedPostId) {
+			const post = data.blogs.find((b) => b.id === editor.selectedPostId);
+			return post ? `${entry.name} | ${post.title}` : entry.name;
+		}
+		return entry.name;
+	});
 </script>
 
 <div
@@ -33,16 +48,5 @@
 	onkeydown={(e) => e.key === 'Enter' && editor.setActive(entry.id)}
 >
 	<IconComponent size={14} class={isActive ? 'text-vsc-blue' : ''} />
-	<span class="whitespace-nowrap">{entry.name}</span>
-	<button
-		class="ml-1 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-vsc-border/50
-			{isActive ? 'opacity-100' : ''}"
-		onclick={(e) => {
-			e.stopPropagation();
-			editor.closeTab(entry.id);
-		}}
-		aria-label="Close {entry.name}"
-	>
-		<X size={14} />
-	</button>
+	<span class="whitespace-nowrap">{displayName}</span>
 </div>

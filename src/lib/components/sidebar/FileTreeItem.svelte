@@ -9,7 +9,21 @@
 
 	const editor = getContext<EditorState>(CONTEXT_KEYS.EDITOR_STATE);
 
-	const isActive = $derived(editor.activeTabId === entry.id);
+	const isActive = $derived.by(() => {
+		if (entry.type === 'project' && entry.dataId) {
+			return editor.activeTabId === 'projects' && editor.selectedProjectId === entry.dataId;
+		}
+		if (entry.type === 'post' && entry.dataId) {
+			return editor.activeTabId === 'posts' && editor.selectedPostId === entry.dataId;
+		}
+		if (entry.type === 'about') {
+			return editor.activeTabId === 'about';
+		}
+		if (entry.type === 'contact') {
+			return editor.activeTabId === 'contact';
+		}
+		return editor.activeTabId === entry.id;
+	});
 
 	const iconMap: Record<string, typeof FileText> = {
 		'file-text': FileText,
@@ -23,7 +37,19 @@
 </script>
 
 <button
-	onclick={() => editor.openFile(entry)}
+	onclick={() => {
+		if (entry.type === 'project' && entry.dataId) {
+			editor.navigateToProject(entry.dataId);
+		} else if (entry.type === 'post' && entry.dataId) {
+			editor.navigateToPost(entry.dataId);
+		} else if (entry.type === 'about') {
+			editor.setActive('about');
+		} else if (entry.type === 'contact') {
+			editor.setActive('contact');
+		} else {
+			editor.setActive(entry.id);
+		}
+	}}
 	class="flex w-full items-center gap-2 rounded-sm px-2 py-0.5 text-left text-[13px] transition-colors
 		{isActive
 		? 'bg-vsc-panel text-vsc-text'

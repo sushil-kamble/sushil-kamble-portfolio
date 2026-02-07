@@ -10,7 +10,10 @@
 	const editor = getContext<EditorState>(CONTEXT_KEYS.EDITOR_STATE);
 	const files = getContext<FileEntry[]>(CONTEXT_KEYS.FILE_REGISTRY);
 
-	const tree = $derived(buildSidebarTree(files));
+	// Filter out fixed tab entries that shouldn't show in sidebar tree
+	// Keep: readme (root file), sidebar entries with folders, project/post entries
+	const sidebarFiles = $derived(files.filter((f) => f.id === 'readme' || f.folder));
+	const tree = $derived(buildSidebarTree(sidebarFiles));
 </script>
 
 {#if editor.sidebarExpanded}

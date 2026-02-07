@@ -31,7 +31,17 @@
 	};
 
 	function select(entry: FileEntry) {
-		editor.openFile(entry);
+		if (entry.type === 'project' && entry.dataId) {
+			editor.navigateToProject(entry.dataId);
+		} else if (entry.type === 'post' && entry.dataId) {
+			editor.navigateToPost(entry.dataId);
+		} else if (entry.type === 'about') {
+			editor.setActive('about');
+		} else if (entry.type === 'contact') {
+			editor.setActive('contact');
+		} else {
+			editor.setActive(entry.id);
+		}
 		editor.commandPaletteOpen = false;
 		query = '';
 	}
@@ -86,7 +96,7 @@
 					onkeydown={onKeydown}
 					type="text"
 					placeholder="Search files..."
-					class="w-full border-none bg-transparent text-sm text-vsc-text placeholder:text-vsc-text-muted focus:outline-none"
+					class="w-full appearance-none border-none bg-transparent text-sm text-vsc-text shadow-none ring-0 outline-none placeholder:text-vsc-text-muted focus:border-none focus:shadow-none focus:ring-0 focus:outline-none"
 				/>
 			</div>
 
