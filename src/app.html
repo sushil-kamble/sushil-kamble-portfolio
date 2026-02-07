@@ -13,6 +13,8 @@
 					if (f && f !== 'jetbrains-mono') document.documentElement.setAttribute('data-font', f);
 				} catch (e) {}
 			})();
+			// Stamp splash birth — used to guarantee minimum display time
+			window.__splashBorn = Date.now();
 		</script>
 		<style>
 			/* ── Splash Screen ── */
@@ -25,16 +27,25 @@
 				justify-content: center;
 				background: #1e1e1e;
 			}
-			/* Exit: zoom through + blur + fade */
+			/* Phase 1: completion — progress goes green, cursor vanishes */
+			#splash.splash-complete .splash-progress-bar {
+				background: linear-gradient(90deg, #28c840, #1fa834) !important;
+				box-shadow: 0 0 16px rgba(40, 200, 64, 0.5);
+			}
+			#splash.splash-complete .splash-cursor {
+				animation: none;
+				opacity: 0;
+			}
+			/* Phase 2: exit — zoom forward + blur + dissolve */
 			#splash.splash-exit {
 				opacity: 0;
-				transform: scale(1.04);
-				filter: blur(8px);
+				transform: scale(1.06);
+				filter: blur(12px);
 				pointer-events: none;
 				transition:
-					opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-					transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-					filter 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+					opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+					transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+					filter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 			}
 			.splash-card {
 				width: 360px;
@@ -65,19 +76,19 @@
 				height: 11px;
 				border-radius: 50%;
 				opacity: 0;
-				animation: dotPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+				animation: splashDotPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 			}
 			.splash-dot:nth-child(1) {
 				background: #ff5f57;
-				animation-delay: 0.1s;
+				animation-delay: 0.15s;
 			}
 			.splash-dot:nth-child(2) {
 				background: #febc2e;
-				animation-delay: 0.2s;
+				animation-delay: 0.3s;
 			}
 			.splash-dot:nth-child(3) {
 				background: #28c840;
-				animation-delay: 0.3s;
+				animation-delay: 0.45s;
 			}
 			.splash-title {
 				flex: 1;
@@ -86,7 +97,7 @@
 				font-size: 12px;
 				color: #808080;
 				opacity: 0;
-				animation: fadeIn 0.4s ease forwards 0.35s;
+				animation: splashFadeIn 0.5s ease forwards 0.5s;
 			}
 			.splash-spacer {
 				width: 54px;
@@ -103,16 +114,17 @@
 				overflow: hidden;
 				opacity: 0;
 			}
+			/* Staggered typing — spread across the full 4s duration */
 			.splash-line:nth-child(1) {
-				animation: typeLine 0.4s steps(28) forwards 0.4s;
+				animation: splashTypeLine 0.5s steps(28) forwards 0.6s;
 				color: #808080;
 			}
 			.splash-line:nth-child(2) {
-				animation: typeLine 0.4s steps(24) forwards 0.75s;
+				animation: splashTypeLine 0.5s steps(24) forwards 1.4s;
 				color: #808080;
 			}
 			.splash-line:nth-child(3) {
-				animation: typeLine 0.4s steps(22) forwards 1.1s;
+				animation: splashTypeLine 0.5s steps(22) forwards 2.2s;
 				color: #6a9955;
 			}
 			.splash-prompt {
@@ -129,7 +141,8 @@
 				background: #569cd6;
 				margin-left: 2px;
 				vertical-align: text-bottom;
-				animation: cursorBlink 0.8s step-end infinite;
+				animation: splashCursorBlink 0.8s step-end infinite;
+				transition: opacity 0.3s ease;
 			}
 			/* Progress bar */
 			.splash-progress-track {
@@ -144,21 +157,11 @@
 				width: 0;
 				background: linear-gradient(90deg, #569cd6, #1b6acd);
 				border-radius: 1px;
-				/* Slow fill — spans the full splash duration */
-				animation: progressFill 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
+				/* Fill spans the entire splash duration */
+				animation: splashProgressFill 3.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards 0.4s;
 				transition:
 					background 0.4s ease,
 					box-shadow 0.4s ease;
-			}
-			/* Completion state: progress turns green with glow */
-			#splash.splash-complete .splash-progress-bar {
-				background: linear-gradient(90deg, #28c840, #1fa834);
-				box-shadow: 0 0 12px rgba(40, 200, 64, 0.4);
-			}
-			#splash.splash-complete .splash-cursor {
-				animation: none;
-				opacity: 0;
-				transition: opacity 0.3s ease;
 			}
 			/* Branding */
 			.splash-brand {
@@ -169,28 +172,28 @@
 				color: #4a4a4a;
 				letter-spacing: 0.5px;
 				opacity: 0;
-				animation: fadeIn 0.5s ease forwards 0.6s;
+				animation: splashFadeIn 0.6s ease forwards 1.0s;
 			}
 
-			/* ── App content reveal ── */
+			/* ── App content: starts hidden, revealed with deblur ── */
 			#app-content {
 				height: 100%;
 				opacity: 0;
-				transform: scale(0.98) translateY(4px);
-				filter: blur(4px);
+				filter: blur(12px);
+				transform: scale(0.98);
 			}
 			#app-content.revealed {
 				opacity: 1;
-				transform: scale(1) translateY(0);
-				filter: blur(0);
+				filter: blur(0px);
+				transform: scale(1);
 				transition:
-					opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-					transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-					filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+					opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+					filter 1.0s cubic-bezier(0.16, 1, 0.3, 1),
+					transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 			}
 
-			/* Keyframes */
-			@keyframes dotPop {
+			/* ── Keyframes ── */
+			@keyframes splashDotPop {
 				from {
 					opacity: 0;
 					transform: scale(0);
@@ -200,7 +203,7 @@
 					transform: scale(1);
 				}
 			}
-			@keyframes fadeIn {
+			@keyframes splashFadeIn {
 				from {
 					opacity: 0;
 				}
@@ -208,7 +211,7 @@
 					opacity: 1;
 				}
 			}
-			@keyframes typeLine {
+			@keyframes splashTypeLine {
 				from {
 					opacity: 1;
 					max-width: 0;
@@ -218,12 +221,12 @@
 					max-width: 100%;
 				}
 			}
-			@keyframes cursorBlink {
+			@keyframes splashCursorBlink {
 				50% {
 					opacity: 0;
 				}
 			}
-			@keyframes progressFill {
+			@keyframes splashProgressFill {
 				to {
 					width: 100%;
 				}
@@ -231,6 +234,7 @@
 			/* Respect prefers-reduced-motion */
 			@media (prefers-reduced-motion: reduce) {
 				#splash,
+				#splash.splash-exit,
 				.splash-dot,
 				.splash-title,
 				.splash-line,
@@ -245,15 +249,15 @@
 				}
 				#app-content {
 					opacity: 1;
-					transform: none;
 					filter: none;
+					transform: none;
 				}
 			}
 		</style>
 		%sveltekit.head%
 	</head>
 	<body class="h-full" data-sveltekit-preload-data="hover">
-		<!-- Splash screen — removed after SvelteKit hydrates -->
+		<!-- Splash screen — dismissed by SvelteKit after guaranteed minimum duration -->
 		<div id="splash" aria-hidden="true">
 			<div>
 				<div class="splash-card">

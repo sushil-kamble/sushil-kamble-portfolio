@@ -35,10 +35,10 @@ export function buildFileRegistry(data: PageData): FileEntry[] {
 	// Index files for folder views
 	files.push({
 		id: 'projects-index',
-		name: 'projects.ts',
+		name: 'projects.md',
 		type: 'projects' as const,
 		icon: 'folder-code',
-		language: 'TypeScript',
+		language: 'Markdown',
 		folder: 'projects',
 		href: '/projects'
 	});

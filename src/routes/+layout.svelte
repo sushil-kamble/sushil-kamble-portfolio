@@ -51,35 +51,34 @@
 		editor.updatePathname(page.url.pathname);
 	});
 
-	// Dismiss splash screen after hydration with cinematic reveal
+	// Dismiss splash with guaranteed minimum duration + cinematic reveal
 	onMount(() => {
 		const splash = document.getElementById('splash');
 		const appContent = document.getElementById('app-content');
 		if (!splash) {
-			// No splash — reveal content immediately
 			appContent?.classList.add('revealed');
 			return;
 		}
 
-		// Let all boot animations play out (dots, typing, progress bar fill)
-		const MIN_SPLASH_MS = 2800;
-		const elapsed = performance.now();
-		const remaining = Math.max(0, MIN_SPLASH_MS - elapsed);
+		// Absolute timestamp from app.html — independent of hydration speed
+		const born = (window as unknown as { __splashBorn: number }).__splashBorn || Date.now();
+		const GUARANTEED_MS = 4500; // Always visible for at least 4.5 seconds
+		const wait = Math.max(0, GUARANTEED_MS - (Date.now() - born));
 
 		setTimeout(() => {
-			// Phase 1: "Complete" state — progress bar turns green, cursor stops
+			// Phase 1: "Complete" — progress bar turns green, cursor stops blinking
 			splash.classList.add('splash-complete');
 
-			// Phase 2: After a beat, exit splash + reveal content simultaneously
+			// Phase 2: After a beat, exit splash and reveal content
 			setTimeout(() => {
 				splash.classList.add('splash-exit');
-				// Stagger the content reveal slightly behind the splash exit
-				setTimeout(() => appContent?.classList.add('revealed'), 100);
-				// Clean up splash from DOM after transition
+				// Content deblurs in slightly after splash starts dissolving
+				setTimeout(() => appContent?.classList.add('revealed'), 150);
+				// Remove splash from DOM after exit transition completes
 				splash.addEventListener('transitionend', () => splash.remove(), { once: true });
-				setTimeout(() => splash.remove(), 800);
-			}, 400);
-		}, remaining);
+				setTimeout(() => splash.remove(), 1000);
+			}, 500);
+		}, wait);
 	});
 
 	// Auto-close mobile sidebar on navigation
