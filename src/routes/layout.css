@@ -1,3 +1,138 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+@theme {
+	--color-vsc-bg: #1e1e1e;
+	--color-vsc-sidebar: #161616;
+	--color-vsc-panel: #252526;
+	--color-vsc-border: #333333;
+	--color-vsc-statusbar: #191919;
+	--color-vsc-text: #d4d4d4;
+	--color-vsc-text-muted: #808080;
+	--color-vsc-blue: #569cd6;
+	--color-vsc-green: #6a9955;
+	--color-vsc-yellow: #dcdcaa;
+	--color-vsc-orange: #ce9178;
+	--color-vsc-tab-accent: #1b6acd;
+	--color-vsc-red: #f44747;
+	--color-vsc-purple: #c586c0;
+	--color-vsc-selection: #264f78;
+	--color-vsc-scrollbar: #333333;
+	--color-vsc-scrollbar-hover: #444444;
+
+	--font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--color-vsc-scrollbar);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-vsc-scrollbar-hover);
+}
+
+/* Base styles */
+html,
+body {
+	overflow: hidden;
+	background: var(--color-vsc-bg);
+	color: var(--color-vsc-text);
+	font-family: var(--font-mono);
+	font-feature-settings: 'liga' 1;
+}
+
+/* Scale up on larger screens — single knob for entire site */
+@media (min-width: 1024px) {
+	html {
+		font-size: 18px;
+	}
+}
+
+/* Selection */
+::selection {
+	background: var(--color-vsc-selection);
+	color: var(--color-vsc-text);
+}
+
+/* Utility animation for fade-in */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animate-fade-in {
+	animation: fadeIn 0.2s ease-out;
+}
+
+/* Slide-up entrance for the customization hint */
+@keyframes slideUp {
+	from {
+		opacity: 0;
+		transform: translateY(16px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.animate-slide-up {
+	animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Fade-out for dismissal */
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	to {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+}
+
+.animate-fade-out {
+	animation: fadeOut 0.3s ease-in forwards;
+}
+
+/* Tooltip entrance */
+@keyframes tooltipIn {
+	from {
+		opacity: 0;
+		scale: 0.96;
+	}
+	to {
+		opacity: 1;
+		scale: 1;
+	}
+}
+
+.animate-tooltip-in {
+	animation: tooltipIn 0.15s ease-out;
+}
+
+/* Hide tooltips on touch-only devices */
+@media (hover: none) {
+	.tooltip-panel {
+		display: none !important;
+	}
+}
