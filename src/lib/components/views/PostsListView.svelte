@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import { BookOpen, ExternalLink, Github, ArrowRight } from 'lucide-svelte';
+	import { BookOpen, ExternalLink, Github, ArrowRight, Calendar } from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
 	import type { PageData } from '$lib/types';
 	import TechBadge from '$lib/components/ui/TechBadge.svelte';
@@ -31,6 +31,20 @@
 						<h3 class="font-semibold text-vsc-text transition-colors group-hover:text-vsc-green">
 							{post.title}
 						</h3>
+
+						<!-- Date -->
+						{#if post.createdAt}
+							<div class="mt-1 flex items-center gap-1.5 text-xs text-vsc-text-muted/70">
+								<Calendar size={10} />
+								<time datetime={post.createdAt}>
+									{new Date(post.createdAt).toLocaleDateString('en-US', {
+										year: 'numeric',
+										month: 'short',
+										day: 'numeric'
+									})}
+								</time>
+							</div>
+						{/if}
 
 						<!-- Description -->
 						{#if post.description}

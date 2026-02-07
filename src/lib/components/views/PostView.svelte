@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ExternalLink, Github, BookOpen } from 'lucide-svelte';
+	import { ExternalLink, Github, BookOpen, Calendar } from 'lucide-svelte';
 	import TechBadge from '$lib/components/ui/TechBadge.svelte';
 	import type { Blog } from '$lib/types';
 
@@ -58,6 +58,20 @@
 			{/if}
 		</div>
 	</div>
+
+	{#if post.createdAt}
+		<div class="mt-2 flex items-center gap-1.5 text-xs text-vsc-text-muted">
+			<Calendar size={12} />
+			<time datetime={post.createdAt}>
+				{new Date(post.createdAt).toLocaleDateString('en-US', {
+					weekday: 'short',
+					year: 'numeric',
+					month: 'short',
+					day: 'numeric'
+				})}
+			</time>
+		</div>
+	{/if}
 
 	{#if post.description}
 		<p class="mt-3 leading-relaxed whitespace-pre-wrap text-vsc-text">

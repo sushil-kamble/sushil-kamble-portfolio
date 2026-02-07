@@ -109,7 +109,8 @@ export async function fetchBlogs(): Promise<Blog[]> {
 			tags: multiSelect(item, 'tags'),
 			blog: urlProp(item, 'blog'),
 			github: urlProp(item, 'github'),
-			live: urlProp(item, 'live')
+			live: urlProp(item, 'live'),
+			createdAt: item.created_time
 		};
 	});
 }

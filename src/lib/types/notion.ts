@@ -39,6 +39,7 @@ export interface Blog {
 	blog: string;
 	github: string;
 	live: string;
+	createdAt: string;
 }
 
 export interface PageData {
