@@ -30,5 +30,12 @@
 {#if failed}
 	<Badge text={name} {variant} />
 {:else}
-	<img src={badgeUrl} alt={name} loading="lazy" decoding="async" class="h-5" onerror={() => (failed = true)} />
+	<img
+		src={badgeUrl}
+		alt={name}
+		loading="lazy"
+		decoding="async"
+		class="h-5"
+		onerror={() => (failed = true)}
+	/>
 {/if}

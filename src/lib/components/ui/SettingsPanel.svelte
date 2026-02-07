@@ -17,7 +17,10 @@
 		'github-dark': ['#0d1117', '#58a6ff', '#3fb950', '#d29922', '#f85149'],
 		palenight: ['#292d3e', '#82aaff', '#c3e88d', '#ffcb6b', '#c792ea'],
 		catppuccin: ['#1e1e2e', '#89b4fa', '#a6e3a1', '#f9e2af', '#cba6f7'],
-		synthwave: ['#262335', '#36f9f6', '#72f1b8', '#fede5d', '#ff7edb']
+		synthwave: ['#262335', '#36f9f6', '#72f1b8', '#fede5d', '#ff7edb'],
+		'one-dark-pro': ['#282c34', '#61afef', '#98c379', '#e5c07b', '#e06c75'],
+		'tokyo-night': ['#1a1b26', '#7aa2f7', '#9ece6a', '#e0af68', '#bb9af7'],
+		nord: ['#2e3440', '#88c0d0', '#a3be8c', '#ebcb8b', '#b48ead']
 	};
 </script>
 

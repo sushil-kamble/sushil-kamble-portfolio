@@ -87,10 +87,12 @@ export class EditorState {
 			}
 			if (savedFont && FONTS.some((f) => f.id === savedFont)) {
 				this.currentFont = savedFont;
+				// Lazy-load font if not default
+				if (savedFont !== DEFAULT_FONT) {
+					this.loadFont(savedFont).catch(() => {});
+				}
 			}
-			// Apply immediately (inline script in app.html handles flash prevention)
-			this.applyTheme(this.currentTheme);
-			this.applyFont(this.currentFont);
+			// Note: app.html inline script already applied theme/font to prevent FOUC
 		}
 	}
 
@@ -167,9 +169,53 @@ export class EditorState {
 
 	setFont(id: FontId) {
 		this.currentFont = id;
-		this.applyFont(id);
+		// Lazy-load font CSS if not already loaded
+		if (id !== DEFAULT_FONT) {
+			this.loadFont(id).then(() => this.applyFont(id));
+		} else {
+			this.applyFont(id);
+		}
 		if (typeof window !== 'undefined') {
 			localStorage.setItem(LS_FONT_KEY, id);
+		}
+	}
+
+	/** Dynamically load font CSS on demand */
+	private async loadFont(id: FontId): Promise<void> {
+		const fontLoaders: Record<FontId, () => Promise<unknown>> = {
+			'jetbrains-mono': async () => {}, // Already loaded statically
+			'fira-code': () =>
+				Promise.all([
+					import('@fontsource/fira-code/400.css'),
+					import('@fontsource/fira-code/500.css'),
+					import('@fontsource/fira-code/600.css'),
+					import('@fontsource/fira-code/700.css')
+				]),
+			'cascadia-code': () =>
+				Promise.all([
+					import('@fontsource/cascadia-code/400.css'),
+					import('@fontsource/cascadia-code/600.css'),
+					import('@fontsource/cascadia-code/700.css')
+				]),
+			'source-code-pro': () =>
+				Promise.all([
+					import('@fontsource/source-code-pro/400.css'),
+					import('@fontsource/source-code-pro/500.css'),
+					import('@fontsource/source-code-pro/600.css'),
+					import('@fontsource/source-code-pro/700.css')
+				]),
+			'ibm-plex-mono': () =>
+				Promise.all([
+					import('@fontsource/ibm-plex-mono/400.css'),
+					import('@fontsource/ibm-plex-mono/500.css'),
+					import('@fontsource/ibm-plex-mono/600.css'),
+					import('@fontsource/ibm-plex-mono/700.css')
+				])
+		};
+
+		const loader = fontLoaders[id];
+		if (loader) {
+			await loader();
 		}
 	}
 

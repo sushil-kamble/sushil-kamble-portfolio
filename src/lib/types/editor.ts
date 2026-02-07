@@ -17,7 +17,10 @@ export type ThemeId =
 	| 'github-dark'
 	| 'palenight'
 	| 'catppuccin'
-	| 'synthwave';
+	| 'synthwave'
+	| 'one-dark-pro'
+	| 'tokyo-night'
+	| 'nord';
 
 export type FontId =
 	| 'jetbrains-mono'

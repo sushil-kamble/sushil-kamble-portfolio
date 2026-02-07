@@ -10,7 +10,7 @@ export const THEMES: ThemeDefinition[] = [
 	},
 	{
 		id: 'light',
-		label: 'Light+ (Default)',
+		label: 'Light+',
 		description: 'Clean light theme with bright accents'
 	},
 	{
@@ -42,6 +42,21 @@ export const THEMES: ThemeDefinition[] = [
 		id: 'synthwave',
 		label: "Synthwave '84",
 		description: 'Retro neon dark theme'
+	},
+	{
+		id: 'one-dark-pro',
+		label: 'One Dark Pro',
+		description: 'Atom-inspired theme, highly popular'
+	},
+	{
+		id: 'tokyo-night',
+		label: 'Tokyo Night',
+		description: 'Modern theme inspired by Tokyo nightlife'
+	},
+	{
+		id: 'nord',
+		label: 'Nord',
+		description: 'Arctic, north-bluish clean theme'
 	}
 ];
 
@@ -50,7 +65,7 @@ export const THEMES: ThemeDefinition[] = [
 export const FONTS: FontDefinition[] = [
 	{
 		id: 'jetbrains-mono',
-		label: 'JetBrains Mono',
+		label: 'JetBrains Mono (Default)',
 		fontFamily: "'JetBrains Mono', monospace"
 	},
 	{

@@ -1,30 +1,16 @@
 <script lang="ts">
-	// ── Font imports ──
+	// ── Font imports (default only, others lazy-loaded) ──
 	import '@fontsource/jetbrains-mono/400.css';
 	import '@fontsource/jetbrains-mono/500.css';
 	import '@fontsource/jetbrains-mono/600.css';
 	import '@fontsource/jetbrains-mono/700.css';
-	import '@fontsource/fira-code/400.css';
-	import '@fontsource/fira-code/500.css';
-	import '@fontsource/fira-code/600.css';
-	import '@fontsource/fira-code/700.css';
-	import '@fontsource/cascadia-code/400.css';
-	import '@fontsource/cascadia-code/600.css';
-	import '@fontsource/cascadia-code/700.css';
-	import '@fontsource/source-code-pro/400.css';
-	import '@fontsource/source-code-pro/500.css';
-	import '@fontsource/source-code-pro/600.css';
-	import '@fontsource/source-code-pro/700.css';
-	import '@fontsource/ibm-plex-mono/400.css';
-	import '@fontsource/ibm-plex-mono/500.css';
-	import '@fontsource/ibm-plex-mono/600.css';
-	import '@fontsource/ibm-plex-mono/700.css';
 	// ── Styles ──
 	import './layout.css';
 	import '$lib/assets/themes.css';
 	import { onMount, setContext } from 'svelte';
 	import { page } from '$app/state';
 	import { goto, afterNavigate } from '$app/navigation';
+	import { injectAnalytics } from '@vercel/analytics/sveltekit';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
 	import { EditorState } from '$lib/state/editor.svelte';
 	import { buildFileRegistry } from '$lib/utils/file-registry';
@@ -35,6 +21,9 @@
 	import CommandPalette from '$lib/components/ui/CommandPalette.svelte';
 	import FloatingActions from '$lib/components/ui/FloatingActions.svelte';
 	import SettingsPanel from '$lib/components/ui/SettingsPanel.svelte';
+
+	// Initialize Vercel Analytics (runs asynchronously, non-blocking)
+	injectAnalytics();
 
 	const props: { children: import('svelte').Snippet; data: PageData } = $props();
 
@@ -61,7 +50,7 @@
 
 		// Absolute timestamp from app.html — independent of hydration speed
 		const born = (window as unknown as { __splashBorn: number }).__splashBorn || Date.now();
-		const GUARANTEED_MS = 4500; // Always visible for at least 4.5 seconds
+		const GUARANTEED_MS = 1800; // Always visible for at least 1.8 seconds
 		const wait = Math.max(0, GUARANTEED_MS - (Date.now() - born));
 
 		setTimeout(() => {
@@ -86,7 +75,15 @@
 			editor.sidebarExpanded = false;
 		}
 	});
-
+	// Throttled resize handler (150ms)
+	let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
+	function handleResize() {
+		if (resizeTimeout) return;
+		resizeTimeout = setTimeout(() => {
+			editor.handleResize();
+			resizeTimeout = null;
+		}, 150);
+	}
 	function handleKeydown(e: KeyboardEvent) {
 		const meta = e.metaKey || e.ctrlKey;
 
@@ -143,7 +140,7 @@
 	{@html jsonLd}
 </svelte:head>
 
-<svelte:window onkeydown={handleKeydown} onresize={() => editor.handleResize()} />
+<svelte:window onkeydown={handleKeydown} onresize={handleResize} />
 
 <VSCodeShell>
 	{#snippet sidebar()}

@@ -165,6 +165,72 @@
 	--color-vsc-scrollbar-hover: #504b6e;
 }
 
+/* ── One Dark Pro ───────────────────────────────────────────────── */
+
+[data-theme='one-dark-pro'] {
+	--color-vsc-bg: #282c34;
+	--color-vsc-sidebar: #21252b;
+	--color-vsc-panel: #2c313a;
+	--color-vsc-border: #181a1f;
+	--color-vsc-statusbar: #21252b;
+	--color-vsc-text: #abb2bf;
+	--color-vsc-text-muted: #5c6370;
+	--color-vsc-blue: #61afef;
+	--color-vsc-green: #98c379;
+	--color-vsc-yellow: #e5c07b;
+	--color-vsc-orange: #d19a66;
+	--color-vsc-tab-accent: #528bff;
+	--color-vsc-red: #e06c75;
+	--color-vsc-purple: #c678dd;
+	--color-vsc-selection: #3e4451;
+	--color-vsc-scrollbar: #3e4451;
+	--color-vsc-scrollbar-hover: #4e5666;
+}
+
+/* ── Tokyo Night ────────────────────────────────────────────────── */
+
+[data-theme='tokyo-night'] {
+	--color-vsc-bg: #1a1b26;
+	--color-vsc-sidebar: #16161e;
+	--color-vsc-panel: #1f2335;
+	--color-vsc-border: #292e42;
+	--color-vsc-statusbar: #16161e;
+	--color-vsc-text: #c0caf5;
+	--color-vsc-text-muted: #565f89;
+	--color-vsc-blue: #7aa2f7;
+	--color-vsc-green: #9ece6a;
+	--color-vsc-yellow: #e0af68;
+	--color-vsc-orange: #ff9e64;
+	--color-vsc-tab-accent: #7aa2f7;
+	--color-vsc-red: #f7768e;
+	--color-vsc-purple: #bb9af7;
+	--color-vsc-selection: #364a82;
+	--color-vsc-scrollbar: #292e42;
+	--color-vsc-scrollbar-hover: #3b4261;
+}
+
+/* ── Nord ───────────────────────────────────────────────────────── */
+
+[data-theme='nord'] {
+	--color-vsc-bg: #2e3440;
+	--color-vsc-sidebar: #2e3440;
+	--color-vsc-panel: #3b4252;
+	--color-vsc-border: #434c5e;
+	--color-vsc-statusbar: #2e3440;
+	--color-vsc-text: #eceff4;
+	--color-vsc-text-muted: #81a1c1;
+	--color-vsc-blue: #81a1c1;
+	--color-vsc-green: #a3be8c;
+	--color-vsc-yellow: #ebcb8b;
+	--color-vsc-orange: #d08770;
+	--color-vsc-tab-accent: #88c0d0;
+	--color-vsc-red: #bf616a;
+	--color-vsc-purple: #b48ead;
+	--color-vsc-selection: #434c5e;
+	--color-vsc-scrollbar: #434c5e;
+	--color-vsc-scrollbar-hover: #4c566a;
+}
+
 /* ── Font overrides ─────────────────────────────────────────────── */
 
 [data-font='fira-code'] {
