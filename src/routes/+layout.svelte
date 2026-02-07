@@ -35,6 +35,7 @@
 	import EditorArea from '$lib/components/editor/EditorArea.svelte';
 	import CommandPalette from '$lib/components/ui/CommandPalette.svelte';
 	import FloatingActions from '$lib/components/ui/FloatingActions.svelte';
+	import SettingsPanel from '$lib/components/ui/SettingsPanel.svelte';
 
 	const props: { children: import('svelte').Snippet; data: PageData } = $props();
 
@@ -77,6 +78,18 @@
 			e.preventDefault();
 			editor.toggleSidebar();
 		}
+
+		// Escape — Close settings panel
+		if (e.key === 'Escape' && editor.settingsOpen) {
+			e.preventDefault();
+			editor.settingsOpen = false;
+		}
+
+		// Cmd+, — Open settings
+		if (meta && e.key === ',') {
+			e.preventDefault();
+			editor.toggleSettings();
+		}
 	}
 </script>
 
@@ -102,4 +115,5 @@
 </VSCodeShell>
 
 <CommandPalette />
+<SettingsPanel />
 <FloatingActions />

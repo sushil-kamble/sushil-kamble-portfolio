@@ -9,7 +9,15 @@ export type FileType = FixedTabType | SidebarFileType;
 
 /** ── Theme & Font ── */
 
-export type ThemeId = 'dark-default' | 'light' | 'monokai' | 'dracula' | 'github-dark';
+export type ThemeId =
+	| 'dark-default'
+	| 'light'
+	| 'monokai'
+	| 'dracula'
+	| 'github-dark'
+	| 'palenight'
+	| 'catppuccin'
+	| 'synthwave';
 
 export type FontId =
 	| 'jetbrains-mono'

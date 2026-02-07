@@ -56,6 +56,7 @@ export class EditorState {
 	expandedFolders = $state<Set<string>>(new SvelteSet(['portfolio', 'projects', 'posts']));
 	commandPaletteOpen = $state<boolean>(false);
 	paletteMode = $state<PaletteMode>('files');
+	settingsOpen = $state<boolean>(false);
 
 	/** Theme & font */
 	currentTheme = $state<ThemeId>(DEFAULT_THEME);
@@ -121,6 +122,10 @@ export class EditorState {
 
 	toggleSidebar() {
 		this.sidebarExpanded = !this.sidebarExpanded;
+	}
+
+	toggleSettings() {
+		this.settingsOpen = !this.settingsOpen;
 	}
 
 	toggleCommandPalette() {

@@ -27,6 +27,21 @@ export const THEMES: ThemeDefinition[] = [
 		id: 'github-dark',
 		label: 'GitHub Dark',
 		description: 'Muted dark theme from GitHub'
+	},
+	{
+		id: 'palenight',
+		label: 'Palenight',
+		description: 'Soft purple-tinted dark theme'
+	},
+	{
+		id: 'catppuccin',
+		label: 'Catppuccin Mocha',
+		description: 'Warm pastel dark theme'
+	},
+	{
+		id: 'synthwave',
+		label: "Synthwave '84",
+		description: 'Retro neon dark theme'
 	}
 ];
 
@@ -69,3 +84,4 @@ export const DEFAULT_FONT: FontId = 'jetbrains-mono';
 
 export const LS_THEME_KEY = 'portfolio-theme';
 export const LS_FONT_KEY = 'portfolio-font';
+export const LS_HINT_DISMISSED = 'portfolio-hint-dismissed';

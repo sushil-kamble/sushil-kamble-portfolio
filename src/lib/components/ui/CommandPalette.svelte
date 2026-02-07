@@ -178,6 +178,18 @@
 		editor.setFont(id);
 	}
 
+	// ── Scroll the selected item into view ──
+
+	function scrollSelectedIntoView() {
+		requestAnimationFrame(() => {
+			const container = document.querySelector('[data-palette-results]');
+			if (!container) return;
+			const items = container.querySelectorAll('[data-palette-item]');
+			const item = items[selectedIndex];
+			item?.scrollIntoView({ block: 'nearest' });
+		});
+	}
+
 	// ── Keyboard ──
 
 	function onKeydown(e: KeyboardEvent) {
@@ -185,10 +197,12 @@
 			e.preventDefault();
 			selectedIndex = Math.min(selectedIndex + 1, listLength - 1);
 			triggerPreviewForIndex(selectedIndex);
+			scrollSelectedIntoView();
 		} else if (e.key === 'ArrowUp') {
 			e.preventDefault();
 			selectedIndex = Math.max(selectedIndex - 1, 0);
 			triggerPreviewForIndex(selectedIndex);
+			scrollSelectedIntoView();
 		} else if (e.key === 'Enter') {
 			e.preventDefault();
 			confirmSelection();
@@ -279,11 +293,12 @@
 			</div>
 
 			<!-- Results -->
-			<div class="max-h-72 overflow-y-auto py-1">
+			<div class="max-h-72 overflow-y-auto py-1" data-palette-results>
 				{#if editor.paletteMode === 'themes'}
 					<!-- Theme list -->
 					{#each filteredThemes as theme, i (theme.id)}
 						<button
+							data-palette-item
 							class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[13px] transition-colors
 								{i === selectedIndex ? 'bg-vsc-blue/20 text-vsc-text' : 'text-vsc-text-muted hover:bg-vsc-blue/10'}"
 							onclick={() => selectTheme(theme.id)}
@@ -309,6 +324,7 @@
 					<!-- Font list -->
 					{#each filteredFonts as font, i (font.id)}
 						<button
+							data-palette-item
 							class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[13px] transition-colors
 								{i === selectedIndex ? 'bg-vsc-blue/20 text-vsc-text' : 'text-vsc-text-muted hover:bg-vsc-blue/10'}"
 							onclick={() => selectFont(font.id)}
@@ -335,6 +351,7 @@
 					<!-- Command list -->
 					{#each filteredCommands as cmd, i (cmd.id)}
 						<button
+							data-palette-item
 							class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[13px] transition-colors
 								{i === selectedIndex ? 'bg-vsc-blue/20 text-vsc-text' : 'text-vsc-text-muted hover:bg-vsc-blue/10'}"
 							onclick={() => selectCommand(cmd)}
@@ -362,6 +379,7 @@
 					{#each filteredFiles as entry, i (entry.id)}
 						{@const Icon = iconMap[entry.icon] ?? FileText}
 						<button
+							data-palette-item
 							class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[13px] transition-colors
 								{i === selectedIndex ? 'bg-vsc-blue/20 text-vsc-text' : 'text-vsc-text-muted hover:bg-vsc-panel'}"
 							onclick={() => selectFile(entry)}
