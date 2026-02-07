@@ -41,5 +41,10 @@
 		"onlyBuiltDependencies": [
 			"esbuild"
 		]
+	},
+	"dependencies": {
+		"@fontsource/jetbrains-mono": "^5.2.8",
+		"axios": "^1.13.4",
+		"lucide-svelte": "^0.563.0"
 	}
 }

@@ -1,3 +1,57 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+@theme {
+	--color-vsc-bg: #1e1e1e;
+	--color-vsc-sidebar: #161616;
+	--color-vsc-panel: #252526;
+	--color-vsc-border: #333333;
+	--color-vsc-statusbar: #191919;
+	--color-vsc-text: #d4d4d4;
+	--color-vsc-text-muted: #808080;
+	--color-vsc-blue: #569cd6;
+	--color-vsc-green: #6a9955;
+	--color-vsc-yellow: #dcdcaa;
+	--color-vsc-orange: #ce9178;
+	--color-vsc-tab-accent: #1b6acd;
+	--color-vsc-red: #f44747;
+	--color-vsc-purple: #c586c0;
+
+	--font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #333333;
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #444444;
+}
+
+/* Base styles */
+html,
+body {
+	overflow: hidden;
+	background: #1e1e1e;
+	color: #d4d4d4;
+	font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+	font-feature-settings: 'liga' 1;
+}
+
+/* Selection */
+::selection {
+	background: #264f78;
+	color: #d4d4d4;
+}

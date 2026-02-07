@@ -1,10 +1,10 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
+import type { PageData as PortfolioData } from '$lib/types';
+
 declare global {
 	namespace App {
 		// interface Error {}
 		// interface Locals {}
-		// interface PageData {}
+		interface PageData extends PortfolioData {}
 		// interface PageState {}
 		// interface Platform {}
 	}
