@@ -393,7 +393,7 @@
 			<p class="text-sm text-vsc-green">// Quick ways to reach me</p>
 
 			<div class="mt-3 flex flex-col gap-2 text-sm">
-				{#each contactLinks as { icon: Icon, iconColor, label, href, displayText, isExternal }}
+				{#each contactLinks as { icon: Icon, iconColor, label, href, displayText, isExternal } (label)}
 					<div class="flex flex-col gap-1 text-vsc-text-muted md:flex-row md:items-center md:gap-2">
 						<div class="flex items-center gap-2">
 							<Icon size={14} class={iconColor} />
