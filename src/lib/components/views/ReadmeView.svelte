@@ -36,7 +36,7 @@
 	const contactLinks = [
 		{
 			icon: Mail,
-			iconColor: 'text-vsc-orange',
+			iconColor: 'text-vsc-text',
 			label: 'email',
 			href: 'mailto:iamsushil303@gmail.com',
 			displayText: 'iamsushil303@gmail.com',
