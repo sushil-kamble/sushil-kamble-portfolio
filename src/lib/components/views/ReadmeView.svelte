@@ -414,11 +414,13 @@
 	</div>
 
 	<!-- Callout -->
-	<CalloutBox type="info">
-		<p class="flex items-center gap-1.5">
-			<Sparkles size={14} class="text-vsc-yellow" />
-			Press <kbd class="rounded bg-vsc-panel px-1.5 py-0.5 text-xs text-vsc-blue">Cmd+K</kbd> to search
-			files — or explore the sidebar.
-		</p>
-	</CalloutBox>
+	<div class="hidden md:block">
+		<CalloutBox type="info">
+			<p class="flex items-center gap-1.5">
+				<Sparkles size={14} class="text-vsc-yellow" />
+				Press <kbd class="rounded bg-vsc-panel px-1.5 py-0.5 text-xs text-vsc-blue">Cmd+K</kbd> to search
+				files — or explore the sidebar.
+			</p>
+		</CalloutBox>
+	</div>
 </div>
