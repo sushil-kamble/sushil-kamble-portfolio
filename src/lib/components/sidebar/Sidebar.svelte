@@ -10,9 +10,9 @@
 	const editor = getContext<EditorState>(CONTEXT_KEYS.EDITOR_STATE);
 	const files = getContext<FileEntry[]>(CONTEXT_KEYS.FILE_REGISTRY);
 
-	// Filter out fixed tab entries that shouldn't show in sidebar tree
-	// Keep: readme (root file), sidebar entries with folders, project/post entries
-	const sidebarFiles = $derived(files.filter((f) => f.id === 'readme' || f.folder));
+	// Only entries with a folder property appear in the sidebar tree
+	// (fixed tab entries have no folder — they're for the tab bar / command palette)
+	const sidebarFiles = $derived(files.filter((f) => f.folder));
 	const tree = $derived(buildSidebarTree(sidebarFiles));
 </script>
 

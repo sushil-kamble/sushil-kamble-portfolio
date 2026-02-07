@@ -13,7 +13,7 @@
 	<!-- Title -->
 	<div class="flex flex-1 items-center justify-center gap-2 text-xs text-vsc-text-muted">
 		<Code2 size={14} />
-		<span>sushil.dev — VS Code</span>
+		<span>sushilkamble.com — VS Code</span>
 	</div>
 
 	<!-- Spacer for symmetry -->

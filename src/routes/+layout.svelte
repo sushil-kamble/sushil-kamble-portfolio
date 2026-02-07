@@ -125,7 +125,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<title>sushil.dev — VS Code</title>
+	<title>sushilkamble.com — VS Code</title>
 </svelte:head>
 
 <svelte:window onkeydown={handleKeydown} onresize={() => editor.handleResize()} />

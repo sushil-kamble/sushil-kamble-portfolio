@@ -53,7 +53,9 @@ export const FIXED_TABS: FileEntry[] = [
 export class EditorState {
 	openTabs = $state<FileEntry[]>(FIXED_TABS);
 	sidebarExpanded = $state<boolean>(true);
-	expandedFolders = $state<Set<string>>(new SvelteSet(['portfolio', 'projects', 'posts']));
+	expandedFolders = $state<Set<string>>(
+		new SvelteSet(['sushilkamble-com', 'sushilkamble-com/projects', 'sushilkamble-com/posts'])
+	);
 	commandPaletteOpen = $state<boolean>(false);
 	paletteMode = $state<PaletteMode>('files');
 	settingsOpen = $state<boolean>(false);

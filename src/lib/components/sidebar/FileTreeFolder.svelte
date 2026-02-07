@@ -5,6 +5,7 @@
 	import type { EditorState } from '$lib/state/editor.svelte';
 	import type { TreeFolder } from '$lib/types';
 	import FileTreeItem from './FileTreeItem.svelte';
+	import Self from './FileTreeFolder.svelte';
 
 	let { folder, depth = 0 }: { folder: TreeFolder; depth?: number } = $props();
 
@@ -32,6 +33,8 @@
 			{#each folder.children as child (child.kind === 'file' ? child.entry.id : child.name)}
 				{#if child.kind === 'file'}
 					<FileTreeItem entry={child.entry} depth={depth + 1} />
+				{:else}
+					<Self folder={child} depth={depth + 1} />
 				{/if}
 			{/each}
 		</div>
