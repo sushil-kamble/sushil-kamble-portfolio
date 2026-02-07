@@ -17,7 +17,7 @@
 	];
 </script>
 
-<div class="max-w-3xl">
+<div>
 	<!-- Heading -->
 	<div class="flex items-center gap-3">
 		<Terminal size={24} class="text-vsc-green" />

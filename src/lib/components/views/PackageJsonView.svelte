@@ -15,7 +15,7 @@
 	];
 </script>
 
-<div class="max-w-3xl">
+<div>
 	<p class="text-vsc-text-muted">
 		<span class="text-vsc-green">// package.json</span> — Skills & Dependencies
 	</p>

@@ -8,7 +8,7 @@
 	const data = getContext<PageData>(CONTEXT_KEYS.PORTFOLIO_DATA);
 </script>
 
-<div class="max-w-3xl">
+<div>
 	<p class="text-sm text-vsc-green">// about_me.ts — Career Timeline</p>
 
 	<div class="mt-2">

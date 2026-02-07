@@ -6,7 +6,7 @@
 	let { post }: { post: Blog } = $props();
 </script>
 
-<div class="max-w-3xl">
+<div>
 	<p class="text-sm text-vsc-green">// posts/{post.title.toLowerCase().replace(/\s+/g, '-')}.md</p>
 
 	<div class="mt-2 flex items-start justify-between">

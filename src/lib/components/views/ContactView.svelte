@@ -40,7 +40,7 @@
 	}
 </script>
 
-<div class="max-w-lg">
+<div class="mx-auto max-w-2xl">
 	<p class="text-sm text-vsc-green">// contact.tsx — Get in Touch</p>
 
 	<div class="mt-2">

@@ -6,7 +6,7 @@
 	let { project }: { project: Project } = $props();
 </script>
 
-<div class="max-w-3xl">
+<div>
 	<div class="flex items-start justify-between">
 		<div>
 			<p class="text-sm text-vsc-green">
