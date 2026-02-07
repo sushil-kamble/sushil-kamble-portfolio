@@ -1,5 +1,14 @@
 import { SvelteSet } from 'svelte/reactivity';
 import type { FileEntry } from '$lib/types';
+import type { ThemeId, FontId, PaletteMode } from '$lib/types/editor';
+import {
+	DEFAULT_THEME,
+	DEFAULT_FONT,
+	LS_THEME_KEY,
+	LS_FONT_KEY,
+	THEMES,
+	FONTS
+} from '$lib/constants/themes';
 import { pathToTabId, TAB_HREFS } from '$lib/utils/navigation';
 
 /** The 5 fixed tabs that are always open and cannot be closed */
@@ -46,6 +55,11 @@ export class EditorState {
 	sidebarExpanded = $state<boolean>(true);
 	expandedFolders = $state<Set<string>>(new SvelteSet(['portfolio', 'projects', 'posts']));
 	commandPaletteOpen = $state<boolean>(false);
+	paletteMode = $state<PaletteMode>('files');
+
+	/** Theme & font */
+	currentTheme = $state<ThemeId>(DEFAULT_THEME);
+	currentFont = $state<FontId>(DEFAULT_FONT);
 
 	/** Current pathname, synced from the layout via $app/state */
 	pathname = $state<string>('/');
@@ -61,6 +75,19 @@ export class EditorState {
 		if (typeof window !== 'undefined') {
 			this.isMobile = window.innerWidth < 768;
 			this.sidebarExpanded = !this.isMobile;
+
+			// Restore persisted theme & font
+			const savedTheme = localStorage.getItem(LS_THEME_KEY) as ThemeId | null;
+			const savedFont = localStorage.getItem(LS_FONT_KEY) as FontId | null;
+			if (savedTheme && THEMES.some((t) => t.id === savedTheme)) {
+				this.currentTheme = savedTheme;
+			}
+			if (savedFont && FONTS.some((f) => f.id === savedFont)) {
+				this.currentFont = savedFont;
+			}
+			// Apply immediately (inline script in app.html handles flash prevention)
+			this.applyTheme(this.currentTheme);
+			this.applyFont(this.currentFont);
 		}
 	}
 
@@ -98,5 +125,54 @@ export class EditorState {
 
 	toggleCommandPalette() {
 		this.commandPaletteOpen = !this.commandPaletteOpen;
+		if (this.commandPaletteOpen) {
+			this.paletteMode = 'files';
+		}
+	}
+
+	openThemePicker() {
+		this.paletteMode = 'themes';
+		this.commandPaletteOpen = true;
+	}
+
+	openFontPicker() {
+		this.paletteMode = 'fonts';
+		this.commandPaletteOpen = true;
+	}
+
+	setTheme(id: ThemeId) {
+		this.currentTheme = id;
+		this.applyTheme(id);
+		if (typeof window !== 'undefined') {
+			localStorage.setItem(LS_THEME_KEY, id);
+		}
+	}
+
+	setFont(id: FontId) {
+		this.currentFont = id;
+		this.applyFont(id);
+		if (typeof window !== 'undefined') {
+			localStorage.setItem(LS_FONT_KEY, id);
+		}
+	}
+
+	/** Apply data-theme attribute to <html> */
+	private applyTheme(id: ThemeId) {
+		const el = document.documentElement;
+		if (id === DEFAULT_THEME) {
+			el.removeAttribute('data-theme');
+		} else {
+			el.setAttribute('data-theme', id);
+		}
+	}
+
+	/** Apply data-font attribute to <html> */
+	private applyFont(id: FontId) {
+		const el = document.documentElement;
+		if (id === DEFAULT_FONT) {
+			el.removeAttribute('data-font');
+		} else {
+			el.setAttribute('data-font', id);
+		}
 	}
 }

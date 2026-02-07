@@ -3,6 +3,17 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>
+			// Prevent flash of default theme on load
+			(function () {
+				try {
+					var t = localStorage.getItem('portfolio-theme');
+					var f = localStorage.getItem('portfolio-font');
+					if (t && t !== 'dark-default') document.documentElement.setAttribute('data-theme', t);
+					if (f && f !== 'jetbrains-mono') document.documentElement.setAttribute('data-font', f);
+				} catch (e) {}
+			})();
+		</script>
 		%sveltekit.head%
 	</head>
 	<body class="h-full" data-sveltekit-preload-data="hover">

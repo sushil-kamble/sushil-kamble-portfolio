@@ -7,6 +7,39 @@ export type SidebarFileType = 'project' | 'post';
 /** Union of all file types */
 export type FileType = FixedTabType | SidebarFileType;
 
+/** ── Theme & Font ── */
+
+export type ThemeId = 'dark-default' | 'light' | 'monokai' | 'dracula' | 'github-dark';
+
+export type FontId =
+	| 'jetbrains-mono'
+	| 'fira-code'
+	| 'cascadia-code'
+	| 'source-code-pro'
+	| 'ibm-plex-mono';
+
+export interface ThemeDefinition {
+	id: ThemeId;
+	label: string;
+	description: string;
+}
+
+export interface FontDefinition {
+	id: FontId;
+	label: string;
+	fontFamily: string;
+}
+
+/** Command palette modes */
+export type PaletteMode = 'files' | 'commands' | 'themes' | 'fonts';
+
+export interface PaletteCommand {
+	id: string;
+	label: string;
+	description?: string;
+	action: () => void;
+}
+
 export interface FileEntry {
 	id: string;
 	name: string;

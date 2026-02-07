@@ -43,7 +43,11 @@
 		]
 	},
 	"dependencies": {
+		"@fontsource/cascadia-code": "^5.2.3",
+		"@fontsource/fira-code": "^5.2.7",
+		"@fontsource/ibm-plex-mono": "^5.2.7",
 		"@fontsource/jetbrains-mono": "^5.2.8",
+		"@fontsource/source-code-pro": "^5.2.7",
 		"axios": "^1.13.4",
 		"lucide-svelte": "^0.563.0"
 	}

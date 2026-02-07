@@ -1,9 +1,27 @@
 <script lang="ts">
+	// ── Font imports ──
 	import '@fontsource/jetbrains-mono/400.css';
 	import '@fontsource/jetbrains-mono/500.css';
 	import '@fontsource/jetbrains-mono/600.css';
 	import '@fontsource/jetbrains-mono/700.css';
+	import '@fontsource/fira-code/400.css';
+	import '@fontsource/fira-code/500.css';
+	import '@fontsource/fira-code/600.css';
+	import '@fontsource/fira-code/700.css';
+	import '@fontsource/cascadia-code/400.css';
+	import '@fontsource/cascadia-code/600.css';
+	import '@fontsource/cascadia-code/700.css';
+	import '@fontsource/source-code-pro/400.css';
+	import '@fontsource/source-code-pro/500.css';
+	import '@fontsource/source-code-pro/600.css';
+	import '@fontsource/source-code-pro/700.css';
+	import '@fontsource/ibm-plex-mono/400.css';
+	import '@fontsource/ibm-plex-mono/500.css';
+	import '@fontsource/ibm-plex-mono/600.css';
+	import '@fontsource/ibm-plex-mono/700.css';
+	// ── Styles ──
 	import './layout.css';
+	import '$lib/assets/themes.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import { setContext } from 'svelte';
 	import { page } from '$app/state';
