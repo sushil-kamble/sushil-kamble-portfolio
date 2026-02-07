@@ -10,13 +10,6 @@ export function buildFileRegistry(data: PageData): FileEntry[] {
 			language: 'Markdown'
 		},
 		{
-			id: 'package-json',
-			name: 'package.json',
-			type: 'package-json',
-			icon: 'braces',
-			language: 'JSON'
-		},
-		{
 			id: 'about',
 			name: 'about_me.ts',
 			type: 'about',

@@ -1,18 +1,26 @@
+import { SvelteSet } from 'svelte/reactivity';
 import type { FileEntry } from '$lib/types';
 
 export class EditorState {
 	openTabs = $state<FileEntry[]>([]);
 	activeTabId = $state<string | null>(null);
-	sidebarExpanded = $state(true);
-	expandedFolders = $state<Set<string>>(new Set(['portfolio', 'projects', 'posts']));
-	commandPaletteOpen = $state(false);
+	sidebarExpanded = $state<boolean>(true);
+	expandedFolders = $state<Set<string>>(new SvelteSet(['portfolio', 'projects', 'posts']));
+	commandPaletteOpen = $state<boolean>(false);
 
 	activeTab = $derived(this.openTabs.find((t) => t.id === this.activeTabId) ?? null);
+
+	/** True when viewport is below md breakpoint (768px) */
+	isMobile = $state<boolean>(false);
 
 	constructor(initialFile?: FileEntry) {
 		if (initialFile) {
 			this.openTabs = [initialFile];
 			this.activeTabId = initialFile.id;
+		}
+		if (typeof window !== 'undefined') {
+			this.isMobile = window.innerWidth < 768;
+			this.sidebarExpanded = !this.isMobile;
 		}
 	}
 
@@ -21,6 +29,15 @@ export class EditorState {
 			this.openTabs = [...this.openTabs, entry];
 		}
 		this.activeTabId = entry.id;
+
+		// Auto-close sidebar on mobile after selecting a file
+		if (this.isMobile) {
+			this.sidebarExpanded = false;
+		}
+	}
+
+	handleResize() {
+		this.isMobile = window.innerWidth < 768;
 	}
 
 	closeTab(id: string) {
@@ -38,7 +55,7 @@ export class EditorState {
 	}
 
 	toggleFolder(path: string) {
-		const next = new Set(this.expandedFolders);
+		const next = new SvelteSet(this.expandedFolders);
 		if (next.has(path)) {
 			next.delete(path);
 		} else {

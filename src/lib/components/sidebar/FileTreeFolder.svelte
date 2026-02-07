@@ -18,10 +18,7 @@
 		class="flex w-full items-center gap-1 rounded-sm px-2 py-0.5 text-left text-[13px] text-vsc-text-muted transition-colors hover:bg-vsc-panel/50 hover:text-vsc-text"
 		style="padding-left: {depth * 16 + 8}px"
 	>
-		<ChevronRight
-			size={14}
-			class="shrink-0 transition-transform {isOpen ? 'rotate-90' : ''}"
-		/>
+		<ChevronRight size={14} class="shrink-0 transition-transform {isOpen ? 'rotate-90' : ''}" />
 		{#if isOpen}
 			<FolderOpen size={14} class="shrink-0 text-vsc-yellow" />
 		{:else}

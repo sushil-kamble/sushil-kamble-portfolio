@@ -51,7 +51,7 @@
 	}
 </script>
 
-<svelte:window onkeydown={handleKeydown} />
+<svelte:window onkeydown={handleKeydown} onresize={() => editor.handleResize()} />
 
 <VSCodeShell>
 	{#snippet sidebar()}

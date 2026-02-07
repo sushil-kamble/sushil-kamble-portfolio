@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Component } from 'svelte';
+	import type { ComponentType } from 'svelte';
 
 	let {
 		label,
@@ -8,7 +8,7 @@
 	}: {
 		label: string;
 		value: string;
-		icon: Component<{ size?: number; class?: string }>;
+		icon: ComponentType;
 	} = $props();
 </script>
 

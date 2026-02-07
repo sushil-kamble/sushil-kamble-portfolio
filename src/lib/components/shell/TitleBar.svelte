@@ -2,7 +2,7 @@
 	import { Code2 } from 'lucide-svelte';
 </script>
 
-<header class="flex h-10 select-none items-center border-b border-vsc-border bg-vsc-sidebar px-4">
+<header class="flex h-10 items-center border-b border-vsc-border bg-vsc-sidebar px-4 select-none">
 	<!-- Traffic lights -->
 	<div class="mr-4 flex items-center gap-2">
 		<span class="h-3 w-3 rounded-full bg-[#ff5f57]"></span>

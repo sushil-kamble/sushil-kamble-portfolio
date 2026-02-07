@@ -33,7 +33,7 @@
 				errorMessage = data.error || 'Failed to send message. Please try again.';
 				formState = 'error';
 			}
-		} catch (error) {
+		} catch {
 			errorMessage = 'Network error. Please check your connection and try again.';
 			formState = 'error';
 		}
@@ -46,9 +46,9 @@
 	<div class="mt-2">
 		<p class="text-sm">
 			<span class="text-vsc-purple">import</span>
-			<span class="text-vsc-text"> {'{'} </span>
+			<span class="text-vsc-text"> &lbrace; </span>
 			<span class="text-vsc-yellow">sendMessage</span>
-			<span class="text-vsc-text"> {'}'} </span>
+			<span class="text-vsc-text"> &rbrace; </span>
 			<span class="text-vsc-purple">from</span>
 			<span class="text-vsc-orange"> '@sushil/contact'</span>
 			<span class="text-vsc-text">;</span>
@@ -141,7 +141,7 @@
 
 		<div class="pt-2">
 			<p class="text-sm text-vsc-text-muted">
-				<span class="text-vsc-yellow">sendMessage</span>({'{'}name, email, message{'}'});
+				<span class="text-vsc-yellow">sendMessage</span>(&lbrace;name, email, message&rbrace;);
 			</p>
 			<button
 				type="submit"

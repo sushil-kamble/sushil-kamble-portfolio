@@ -50,6 +50,13 @@ body {
 	font-feature-settings: 'liga' 1;
 }
 
+/* Scale up on larger screens — single knob for entire site */
+@media (min-width: 1024px) {
+	html {
+		font-size: 18px;
+	}
+}
+
 /* Selection */
 ::selection {
 	background: #264f78;

@@ -3,9 +3,7 @@ import type { Career, PageData } from '$lib/types';
 export function calculateExperience(careers: Career[]): string {
 	if (careers.length === 0) return '0 years';
 
-	const starts = careers
-		.map((c) => parseCareerDate(c.start))
-		.filter((d): d is Date => d !== null);
+	const starts = careers.map((c) => parseCareerDate(c.start)).filter((d): d is Date => d !== null);
 
 	if (starts.length === 0) return '0 years';
 

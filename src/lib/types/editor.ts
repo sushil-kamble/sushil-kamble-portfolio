@@ -1,4 +1,4 @@
-export type FileType = 'readme' | 'package-json' | 'project' | 'post' | 'about' | 'contact';
+export type FileType = 'readme' | 'project' | 'post' | 'about' | 'contact';
 
 export interface FileEntry {
 	id: string;

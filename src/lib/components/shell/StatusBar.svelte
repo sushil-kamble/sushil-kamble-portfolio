@@ -5,7 +5,7 @@
 </script>
 
 <footer
-	class="flex h-6 select-none items-center justify-between border-t border-vsc-border bg-vsc-statusbar px-3 text-[11px] text-vsc-text-muted"
+	class="flex h-6 items-center justify-between border-t border-vsc-border bg-vsc-statusbar px-3 text-[11px] text-vsc-text-muted select-none"
 >
 	<div class="flex items-center gap-3">
 		<span class="flex items-center gap-1">

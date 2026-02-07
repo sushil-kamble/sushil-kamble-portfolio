@@ -3,7 +3,7 @@
 	import { MapPin, ExternalLink } from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
 	import type { PageData } from '$lib/types';
-	import Badge from '$lib/components/ui/Badge.svelte';
+	import TechBadge from '$lib/components/ui/TechBadge.svelte';
 
 	const data = getContext<PageData>(CONTEXT_KEYS.PORTFOLIO_DATA);
 </script>
@@ -22,7 +22,7 @@
 	</div>
 
 	<div class="mt-4 space-y-6 pl-4">
-		{#each data.careers as career, i}
+		{#each data.careers as career (career.company + career.start)}
 			<div class="relative border-l-2 border-vsc-blue/20 pl-5">
 				<!-- Timeline dot -->
 				<div class="absolute top-1 -left-1.25 h-2 w-2 rounded-full bg-vsc-blue"></div>
@@ -64,7 +64,7 @@
 
 				{#if career.detailsList.length > 0}
 					<ul class="mt-2 space-y-1 pl-4">
-						{#each career.detailsList as detail}
+						{#each career.detailsList as detail (detail)}
 							<li class="list-disc text-sm text-vsc-text-muted">{detail}</li>
 						{/each}
 					</ul>
@@ -72,8 +72,8 @@
 
 				{#if career.skills.length > 0}
 					<div class="mt-3 flex flex-wrap gap-1.5">
-						{#each career.skills as skill}
-							<Badge text={skill} variant="purple" />
+						{#each career.skills as skill (skill)}
+							<TechBadge name={skill} variant="purple" />
 						{/each}
 					</div>
 				{/if}

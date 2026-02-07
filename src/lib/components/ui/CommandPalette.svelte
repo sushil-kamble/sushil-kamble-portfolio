@@ -14,9 +14,10 @@
 
 	const filtered = $derived(
 		query.trim()
-			? files.filter((f) =>
-					f.name.toLowerCase().includes(query.toLowerCase()) ||
-					(f.folder?.toLowerCase().includes(query.toLowerCase()) ?? false)
+			? files.filter(
+					(f) =>
+						f.name.toLowerCase().includes(query.toLowerCase()) ||
+						(f.folder?.toLowerCase().includes(query.toLowerCase()) ?? false)
 				)
 			: files
 	);

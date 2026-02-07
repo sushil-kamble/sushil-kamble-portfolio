@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ExternalLink, Github } from 'lucide-svelte';
-	import Badge from '$lib/components/ui/Badge.svelte';
+	import TechBadge from '$lib/components/ui/TechBadge.svelte';
 	import type { Project } from '$lib/types';
 
 	let { project }: { project: Project } = $props();
@@ -9,7 +9,9 @@
 <div class="max-w-3xl">
 	<div class="flex items-start justify-between">
 		<div>
-			<p class="text-sm text-vsc-green">// projects/{project.title.toLowerCase().replace(/\s+/g, '-')}.ts</p>
+			<p class="text-sm text-vsc-green">
+				// projects/{project.title.toLowerCase().replace(/\s+/g, '-')}.ts
+			</p>
 			<h2 class="mt-2 text-xl font-bold text-vsc-blue">{project.title}</h2>
 		</div>
 		<div class="flex gap-2">
@@ -47,8 +49,8 @@
 		<div class="mt-4">
 			<p class="text-sm font-medium text-vsc-yellow">Tech Stack</p>
 			<div class="mt-2 flex flex-wrap gap-2">
-				{#each project.stack as tech}
-					<Badge text={tech} variant="blue" />
+				{#each project.stack as tech (tech)}
+					<TechBadge name={tech} variant="blue" />
 				{/each}
 			</div>
 		</div>
@@ -59,7 +61,7 @@
 		<div class="mt-4">
 			<p class="text-sm font-medium text-vsc-yellow">Features</p>
 			<ul class="mt-2 space-y-1 pl-5">
-				{#each project.features as feature}
+				{#each project.features as feature (feature)}
 					<li class="list-disc text-sm text-vsc-text-muted">{feature}</li>
 				{/each}
 			</ul>
@@ -71,8 +73,13 @@
 		<div class="mt-4">
 			<p class="text-sm font-medium text-vsc-yellow">Screenshots</p>
 			<div class="mt-2 grid grid-cols-2 gap-2">
-				{#each project.screenshots as url}
-					<img src={url} alt="{project.title} screenshot" class="rounded border border-vsc-border" loading="lazy" />
+				{#each project.screenshots as url (url)}
+					<img
+						src={url}
+						alt="{project.title} screenshot"
+						class="rounded border border-vsc-border"
+						loading="lazy"
+					/>
 				{/each}
 			</div>
 		</div>

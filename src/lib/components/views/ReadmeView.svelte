@@ -3,14 +3,18 @@
 	import { Terminal, Sparkles } from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
 	import type { PageData } from '$lib/types';
-	import Badge from '$lib/components/ui/Badge.svelte';
+	import TechBadge from '$lib/components/ui/TechBadge.svelte';
 	import CalloutBox from '$lib/components/ui/CalloutBox.svelte';
 
 	const data = getContext<PageData>(CONTEXT_KEYS.PORTFOLIO_DATA);
 
-	const techHighlights = $derived(
-		data.skills.flatMap((s) => s.skills.slice(0, 3)).slice(0, 12)
-	);
+	const variants: Array<'blue' | 'green' | 'purple' | 'orange' | 'yellow'> = [
+		'blue',
+		'green',
+		'purple',
+		'orange',
+		'yellow'
+	];
 </script>
 
 <div class="max-w-3xl">
@@ -35,24 +39,49 @@
 		<p class="mt-4 leading-relaxed text-vsc-text">{data.about_me}</p>
 	{/if}
 
-	<!-- Tech stack badges -->
-	<div class="mt-6">
-		<p class="text-sm font-medium text-vsc-blue">
-			<span class="text-vsc-purple">const</span> techStack = [
-		</p>
-		<div class="mt-2 flex flex-wrap gap-2 pl-4">
-			{#each techHighlights as tech (tech)}
-				<Badge text={tech} variant="blue" />
+	<!-- Skills heading -->
+	<h2 class="mt-4 text-lg font-semibold text-vsc-green">
+		<span class="text-vsc-purple">##</span> SKILL.md
+	</h2>
+
+	<!-- Tech stack — categorized badges -->
+	<div class="mt-3 rounded-lg border border-vsc-border bg-vsc-panel p-4">
+		<p class="text-sm text-vsc-yellow">&lbrace;</p>
+
+		<div class="pl-4">
+			<p class="text-sm">
+				<span class="text-vsc-blue">"version"</span><span class="text-vsc-text">:</span>
+				<span class="text-vsc-orange">"1.0.0"</span><span class="text-vsc-text">,</span>
+			</p>
+
+			{#each data.skills as category, i (category.title)}
+				<div class="mt-3">
+					<p class="text-sm">
+						<span class="text-vsc-blue">"{category.title}"</span><span class="text-vsc-text"
+							>: &lbrace;</span
+						>
+					</p>
+					<div class="flex flex-wrap gap-2 py-2 pl-4">
+						{#each category.skills as skill (skill)}
+							<TechBadge name={skill} variant={variants[i % variants.length]} />
+						{/each}
+					</div>
+					<p class="text-sm text-vsc-text">
+						&rbrace;{i < data.skills.length - 1 ? ',' : ''}
+					</p>
+				</div>
 			{/each}
 		</div>
-		<p class="mt-2 text-sm text-vsc-blue">];</p>
+
+		<p class="text-sm text-vsc-yellow">&rbrace;</p>
 	</div>
 
 	<!-- Callout -->
 	<CalloutBox type="info">
 		<p class="flex items-center gap-1.5">
 			<Sparkles size={14} class="text-vsc-yellow" />
-			Press <kbd class="rounded bg-vsc-panel px-1.5 py-0.5 text-xs text-vsc-blue">Cmd+K</kbd> to search files — or explore the sidebar.
+			Press <kbd class="rounded bg-vsc-panel px-1.5 py-0.5 text-xs text-vsc-blue">Cmd+K</kbd> to search
+			files — or explore the sidebar.
 		</p>
 	</CalloutBox>
 </div>

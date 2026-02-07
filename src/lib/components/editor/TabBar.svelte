@@ -8,10 +8,7 @@
 </script>
 
 {#if editor.openTabs.length > 0}
-	<div
-		class="flex h-9 overflow-x-auto border-b border-vsc-border bg-vsc-panel"
-		role="tablist"
-	>
+	<div class="flex h-9 overflow-x-auto border-b border-vsc-border bg-vsc-panel" role="tablist">
 		{#each editor.openTabs as tab (tab.id)}
 			<Tab entry={tab} />
 		{/each}

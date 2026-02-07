@@ -54,7 +54,7 @@
 
 	{#if post.tags.length > 0}
 		<div class="mt-4 flex flex-wrap gap-2">
-			{#each post.tags as tag}
+			{#each post.tags as tag (tag)}
 				<Badge text={tag} variant="green" />
 			{/each}
 		</div>

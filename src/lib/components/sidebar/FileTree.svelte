@@ -7,7 +7,7 @@
 </script>
 
 <nav class="flex flex-col gap-0.5 px-1 py-1" aria-label="File explorer">
-	{#each nodes as node}
+	{#each nodes as node (node.kind === 'file' ? node.entry.id : node.name)}
 		{#if node.kind === 'file'}
 			<FileTreeItem entry={node.entry} />
 		{:else}
