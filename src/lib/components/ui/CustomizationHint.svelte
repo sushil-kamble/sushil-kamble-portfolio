@@ -2,7 +2,6 @@
 	import { getContext } from 'svelte';
 	import { Settings, X, Sparkles } from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
-	import { LS_HINT_DISMISSED } from '$lib/constants/themes';
 	import type { EditorState } from '$lib/state/editor.svelte';
 
 	const editor = getContext<EditorState>(CONTEXT_KEYS.EDITOR_STATE);
@@ -12,9 +11,6 @@
 
 	function dismiss() {
 		dismissing = true;
-		if (typeof window !== 'undefined') {
-			localStorage.setItem(LS_HINT_DISMISSED, 'true');
-		}
 		setTimeout(() => {
 			visible = false;
 		}, 300);
@@ -30,9 +26,6 @@
 
 	$effect(() => {
 		if (typeof window === 'undefined') return;
-
-		const alreadyDismissed = localStorage.getItem(LS_HINT_DISMISSED);
-		if (alreadyDismissed) return;
 
 		const timer = setTimeout(() => {
 			visible = true;

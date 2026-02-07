@@ -2,7 +2,6 @@
 	import { getContext } from 'svelte';
 	import { Search, PanelLeft, ArrowUp, Settings } from 'lucide-svelte';
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
-	import { LS_HINT_DISMISSED, LS_SEARCH_HINT_DISMISSED } from '$lib/constants/themes';
 	import { formatShortcut, SHORTCUTS } from '$lib/utils/platform';
 	import Tooltip from '$lib/components/ui/Tooltip.svelte';
 	import type { EditorState } from '$lib/state/editor.svelte';
@@ -26,9 +25,6 @@
 
 	function dismissHint() {
 		hintDismissing = true;
-		if (typeof window !== 'undefined') {
-			localStorage.setItem(LS_HINT_DISMISSED, 'true');
-		}
 		setTimeout(() => {
 			showHint = false;
 		}, 300);
@@ -36,9 +32,6 @@
 
 	function dismissSearchHint() {
 		searchHintDismissing = true;
-		if (typeof window !== 'undefined') {
-			localStorage.setItem(LS_SEARCH_HINT_DISMISSED, 'true');
-		}
 		setTimeout(() => {
 			showSearchHint = false;
 		}, 300);
@@ -67,10 +60,9 @@
 		return () => contentArea.removeEventListener('scroll', onScroll);
 	});
 
-	// Show customization hint after delay on first visit
+	// Show customization hint after delay
 	$effect(() => {
 		if (typeof window === 'undefined') return;
-		if (localStorage.getItem(LS_HINT_DISMISSED)) return;
 
 		const timer = setTimeout(() => {
 			showHint = true;
@@ -89,7 +81,6 @@
 	// Show search hint after settings hint (13s delay)
 	$effect(() => {
 		if (typeof window === 'undefined') return;
-		if (localStorage.getItem(LS_SEARCH_HINT_DISMISSED)) return;
 
 		const timer = setTimeout(() => {
 			showSearchHint = true;

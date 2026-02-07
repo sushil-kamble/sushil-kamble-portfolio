@@ -84,5 +84,3 @@ export const DEFAULT_FONT: FontId = 'jetbrains-mono';
 
 export const LS_THEME_KEY = 'portfolio-theme';
 export const LS_FONT_KEY = 'portfolio-font';
-export const LS_HINT_DISMISSED = 'portfolio-hint-dismissed';
-export const LS_SEARCH_HINT_DISMISSED = 'portfolio-search-hint-dismissed';
