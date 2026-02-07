@@ -32,6 +32,26 @@ export function buildFileRegistry(data: PageData): FileEntry[] {
 		}
 	];
 
+	// Index files for folder views
+	files.push({
+		id: 'projects-index',
+		name: 'projects.ts',
+		type: 'projects' as const,
+		icon: 'folder-code',
+		language: 'TypeScript',
+		folder: 'projects',
+		href: '/projects'
+	});
+	files.push({
+		id: 'posts-index',
+		name: 'posts.md',
+		type: 'posts' as const,
+		icon: 'file-text',
+		language: 'Markdown',
+		folder: 'posts',
+		href: '/posts'
+	});
+
 	for (const project of data.projects) {
 		const entry: FileEntry = {
 			id: `project-${project.id}`,

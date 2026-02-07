@@ -25,7 +25,7 @@
 				<!-- Stretched card link -->
 				<a href="/posts/{post.id}" class="absolute inset-0 z-0" aria-label={post.title}></a>
 
-				<div class="relative flex items-start justify-between gap-3">
+				<div class="pointer-events-none flex items-start justify-between gap-3">
 					<div class="flex-1">
 						<!-- Title -->
 						<h3 class="font-semibold text-vsc-text transition-colors group-hover:text-vsc-green">
@@ -40,7 +40,7 @@
 						{/if}
 
 						<!-- Tags + Links row -->
-						<div class="relative z-10 mt-3 flex flex-wrap items-center gap-2">
+						<div class="pointer-events-auto relative z-10 mt-3 flex flex-wrap items-center gap-2">
 							{#each post.tags.slice(0, 3) as tag (tag)}
 								<Badge text={tag} variant="green" />
 							{/each}

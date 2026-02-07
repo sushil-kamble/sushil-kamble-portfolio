@@ -27,7 +27,7 @@
 				></a>
 
 				<!-- Title row -->
-				<div class="relative flex items-start justify-between gap-2">
+				<div class="pointer-events-none flex items-start justify-between gap-2">
 					<h3 class="font-semibold text-vsc-text transition-colors group-hover:text-vsc-blue">
 						{project.title}
 					</h3>
@@ -39,14 +39,16 @@
 
 				<!-- Description -->
 				{#if project.description}
-					<p class="relative mt-2 line-clamp-2 text-sm leading-relaxed text-vsc-text-muted">
+					<p
+						class="pointer-events-none mt-2 line-clamp-2 text-sm leading-relaxed text-vsc-text-muted"
+					>
 						{project.description}
 					</p>
 				{/if}
 
 				<!-- Stack -->
 				{#if project.stack.length > 0}
-					<div class="relative mt-3 flex flex-wrap gap-1.5">
+					<div class="pointer-events-none mt-3 flex flex-wrap gap-1.5">
 						{#each project.stack.slice(0, 4) as tech (tech)}
 							<TechBadge name={tech} variant="blue" />
 						{/each}
@@ -59,7 +61,7 @@
 				{/if}
 
 				<!-- Links -->
-				<div class="relative z-10 mt-3 flex gap-3">
+				<div class="pointer-events-auto relative z-10 mt-3 flex gap-3">
 					{#if project.github}
 						<a
 							href={project.github}
