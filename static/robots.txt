@@ -2,6 +2,7 @@
 User-agent: *
 Allow: /
 Disallow: /about
+Disallow: /deploy
 
 # Sitemap
 Sitemap: https://sushilkamble.com/sitemap.xml
