@@ -1,5 +1,5 @@
 /** Types for the 5 fixed tabs */
-export type FixedTabType = 'readme' | 'about' | 'projects' | 'posts' | 'contact';
+export type FixedTabType = 'readme' | 'career' | 'projects' | 'posts' | 'contact';
 
 /** Types for individual sidebar file entries */
 export type SidebarFileType = 'project' | 'post';

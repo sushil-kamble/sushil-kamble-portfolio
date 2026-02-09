@@ -3,7 +3,7 @@ import type { FileEntry, FixedTabType } from '$lib/types';
 /** Maps each fixed tab ID to its URL path */
 export const TAB_HREFS: Record<FixedTabType, string> = {
 	readme: '/',
-	about: '/about',
+	career: '/career',
 	projects: '/projects',
 	posts: '/posts',
 	contact: '/contact'
@@ -13,7 +13,7 @@ export const TAB_HREFS: Record<FixedTabType, string> = {
 export function pathToTabId(pathname: string): string {
 	if (pathname === '/') return 'readme';
 	const segment = pathname.split('/')[1];
-	if (segment === 'about') return 'about';
+	if (segment === 'career') return 'career';
 	if (segment === 'projects') return 'projects';
 	if (segment === 'posts') return 'posts';
 	if (segment === 'contact') return 'contact';

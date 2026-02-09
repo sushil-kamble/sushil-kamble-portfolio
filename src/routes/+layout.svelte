@@ -70,10 +70,27 @@
 	});
 
 	// Auto-close mobile sidebar on navigation
-	afterNavigate(() => {
+	afterNavigate((navigation) => {
 		if (editor.isMobile) {
 			editor.sidebarExpanded = false;
 		}
+
+		// The app scrolls inside the editor content area (not window),
+		// so force reset to top on route changes.
+		if (
+			navigation.from &&
+			navigation.to &&
+			navigation.to.url.pathname === navigation.from.url.pathname &&
+			navigation.to.url.search === navigation.from.url.search
+		) {
+			return;
+		}
+
+		requestAnimationFrame(() => {
+			const contentArea = document.querySelector<HTMLElement>('[data-content-area]');
+			contentArea?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+			window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+		});
 	});
 	// Throttled resize handler (150ms)
 	let resizeTimeout: ReturnType<typeof setTimeout> | null = null;

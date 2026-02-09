@@ -9,7 +9,7 @@ export async function GET() {
 
 	const staticPages = [
 		{ loc: '', priority: '1.0', changefreq: 'monthly' },
-		{ loc: '/about', priority: '0.8', changefreq: 'monthly' },
+		{ loc: '/career', priority: '0.8', changefreq: 'monthly' },
 		{ loc: '/contact', priority: '0.7', changefreq: 'yearly' },
 		{ loc: '/posts', priority: '0.9', changefreq: 'weekly' },
 		{ loc: '/projects', priority: '0.9', changefreq: 'weekly' }

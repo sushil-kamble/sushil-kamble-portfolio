@@ -216,6 +216,19 @@
 					</div>
 				{/each}
 			</div>
+
+			<a
+				href="/career"
+				class="group mt-3 flex items-center justify-between rounded-lg border border-vsc-border bg-vsc-panel px-3 py-2 text-sm no-underline transition-all duration-200 hover:border-vsc-yellow/40 hover:bg-vsc-bg"
+			>
+				<span class="text-vsc-green">// git log --career --full-history</span>
+				<span
+					class="flex items-center gap-1.5 font-medium text-vsc-yellow transition-colors group-hover:text-vsc-text"
+				>
+					Open full career log
+					<ArrowRight size={14} />
+				</span>
+			</a>
 		</div>
 	{/if}
 
@@ -272,11 +285,9 @@
 
 						<!-- Stack badges -->
 						{#if project.stack.length > 0}
-							<div class="pointer-events-none relative mt-3 flex flex-wrap gap-1">
+							<div class="pointer-events-none relative mt-3 flex flex-wrap gap-1.5">
 								{#each project.stack.slice(0, 3) as tech (tech)}
-									<span class="rounded bg-vsc-blue/10 px-1.5 py-0.5 text-[10px] text-vsc-blue">
-										{tech}
-									</span>
+									<TechBadge name={tech} variant="blue" />
 								{/each}
 								{#if project.stack.length > 3}
 									<span class="self-center text-[10px] text-vsc-text-muted">

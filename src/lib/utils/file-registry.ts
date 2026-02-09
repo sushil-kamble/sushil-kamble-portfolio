@@ -35,13 +35,13 @@ export function buildFileRegistry(data: PageData): FileEntry[] {
 			href: '/'
 		},
 		{
-			id: 'about-sidebar',
+			id: 'career-sidebar',
 			name: 'career.ts',
-			type: 'about' as const,
+			type: 'career' as const,
 			icon: 'user',
 			language: 'TypeScript',
 			folder: 'sushilkamble-com',
-			href: '/about'
+			href: '/career'
 		},
 		{
 			id: 'contact-sidebar',

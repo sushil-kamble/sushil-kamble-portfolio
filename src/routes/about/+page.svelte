@@ -3,12 +3,13 @@
 </script>
 
 <svelte:head>
-	<title>Career — Sushil Kamble</title>
+	<title>About Sushil — Notes</title>
 	<meta
 		name="description"
-		content="Learn about Sushil Kamble — career journey, skills, and experience as a full-stack developer."
+		content="A personal profile page with background, principles, and highlights from Sushil Kamble."
 	/>
-	<link rel="canonical" href="https://sushilkamble.com/about" />
+	<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+	<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
 </svelte:head>
 
 <AboutView />

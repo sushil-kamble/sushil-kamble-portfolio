@@ -1,6 +1,7 @@
 # https://sushilkamble.com
 User-agent: *
 Allow: /
+Disallow: /about
 
 # Sitemap
 Sitemap: https://sushilkamble.com/sitemap.xml

@@ -21,9 +21,9 @@ export const FIXED_TABS: FileEntry[] = [
 		language: 'Markdown'
 	},
 	{
-		id: 'about',
+		id: 'career',
 		name: 'career.ts',
-		type: 'about',
+		type: 'career',
 		icon: 'user',
 		language: 'TypeScript'
 	},
