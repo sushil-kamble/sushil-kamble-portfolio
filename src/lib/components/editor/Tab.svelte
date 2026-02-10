@@ -24,6 +24,9 @@
 	};
 
 	const IconComponent = $derived(iconMap[entry.icon] ?? FileText);
+	const tabSizeClass = $derived(
+		entry.id === 'projects' || entry.id === 'posts' ? 'md:px-5' : 'md:px-4'
+	);
 
 	/** Truncate text to a max length */
 	function truncate(text: string, max: number): string {
@@ -32,26 +35,29 @@
 
 	/** Dynamic tab label: VS Code-style disambiguation for project/post detail views */
 	const displayLabel = $derived.by(() => {
-		const pathname = page.url.pathname;
+		const pathname = page.url.pathname.replace(/\/+$/, '') || '/';
+
 		if (entry.id === 'projects' && pathname.startsWith('/projects/')) {
-			const id = pathname.split('/')[2];
-			const project = data.projects.find((p) => p.id === id);
+			const slug = decodeURIComponent(pathname.split('/')[2] ?? '');
+			const project = data.projects.find((p) => p.slug === slug);
 			return project
-				? { name: truncate(project.title, 20), path: '../projects' }
-				: { name: entry.name, path: '' };
+				? { name: truncate(project.title, 24), fullName: project.title, path: '../projects' }
+				: { name: entry.name, fullName: entry.name, path: '' };
 		}
+
 		if (entry.id === 'posts' && pathname.startsWith('/posts/')) {
-			const id = pathname.split('/')[2];
-			const post = data.blogs.find((b) => b.id === id);
+			const slug = decodeURIComponent(pathname.split('/')[2] ?? '');
+			const post = data.blogs.find((b) => b.slug === slug);
 			return post
-				? { name: truncate(post.title, 20), path: '../posts' }
-				: { name: entry.name, path: '' };
+				? { name: truncate(post.title, 24), fullName: post.title, path: '../posts' }
+				: { name: entry.name, fullName: entry.name, path: '' };
 		}
-		return { name: entry.name, path: '' };
+
+		return { name: entry.name, fullName: entry.name, path: '' };
 	});
 
-	const displayName = $derived(
-		displayLabel.path ? `${displayLabel.name} ${displayLabel.path}` : displayLabel.name
+	const tooltipTitle = $derived(
+		displayLabel.path ? `${displayLabel.fullName} ${displayLabel.path}` : displayLabel.fullName
 	);
 
 	const href = $derived(TAB_HREFS[entry.id as FixedTabType] ?? '/');
@@ -61,16 +67,16 @@
 	{href}
 	role="tab"
 	aria-selected={isActive}
-	class="group flex h-full max-w-50 items-center gap-2 border-r border-vsc-border px-4 py-3 text-[13px] no-underline transition-colors md:py-1.5
+	class="group flex h-full max-w-50 items-center gap-2 border-r border-vsc-border px-4 py-3 text-[13px] no-underline transition-colors md:py-1.5 {tabSizeClass}
 		{isActive
 		? 'border-t-2 border-t-vsc-tab-accent bg-vsc-bg text-vsc-text'
 		: 'border-t-2 border-t-transparent bg-vsc-panel text-vsc-text-muted hover:bg-vsc-bg/50'}"
-	title={displayName}
+	title={tooltipTitle}
 >
 	<IconComponent size={14} class="{isActive ? 'text-vsc-blue' : ''} shrink-0" />
 	<span class="min-w-0 truncate">
-		{displayLabel.name}{#if displayLabel.path}<span class="ml-1 text-vsc-text-muted opacity-60"
-				>{displayLabel.path}</span
+		{displayLabel.name}{#if displayLabel.path}<span
+				class="ml-1 text-[12px] text-vsc-text-muted opacity-60">{displayLabel.path}</span
 			>{/if}
 	</span>
 </a>
