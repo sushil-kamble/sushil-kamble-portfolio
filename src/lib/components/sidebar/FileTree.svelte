@@ -6,7 +6,7 @@
 	let { nodes }: { nodes: TreeNode[] } = $props();
 </script>
 
-<nav class="flex flex-col gap-0.5 px-1 py-1" aria-label="File explorer">
+<nav class="flex flex-col gap-0.5 px-1 py-1 md:py-0.5" aria-label="File explorer">
 	{#each nodes as node (node.kind === 'file' ? node.entry.id : node.name)}
 		{#if node.kind === 'file'}
 			<FileTreeItem entry={node.entry} />

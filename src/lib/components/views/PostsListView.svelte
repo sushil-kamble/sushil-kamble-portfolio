@@ -17,7 +17,7 @@
 
 	<p class="mt-2 text-sm text-vsc-green">// Blog posts, articles, and write-ups</p>
 
-	<div class="mt-5 space-y-3">
+	<div class="mt-5 space-y-5">
 		{#each data.blogs as post (post.id)}
 			<div
 				class="group relative w-full cursor-pointer rounded-lg border border-vsc-border bg-vsc-panel p-4 text-left transition-all duration-200 hover:border-vsc-green/50 hover:bg-vsc-bg hover:shadow-lg hover:shadow-vsc-green/5"
@@ -55,14 +55,16 @@
 
 						<!-- Tags + Links row -->
 						<div class="pointer-events-auto relative z-10 mt-3 flex flex-wrap items-center gap-2">
-							{#each post.tags.slice(0, 3) as tag (tag)}
-								<TechBadge name={tag} variant="green" />
-							{/each}
-							{#if post.tags.length > 3}
-								<span class="text-xs text-vsc-text-muted">+{post.tags.length - 3}</span>
-							{/if}
+							{#if post.tags.length > 0}
+								{#each post.tags.slice(0, 3) as tag (tag)}
+									<TechBadge name={tag} variant="green" />
+								{/each}
+								{#if post.tags.length > 3}
+									<span class="text-xs text-vsc-text-muted">+{post.tags.length - 3}</span>
+								{/if}
 
-							<span class="mx-1 text-vsc-border">|</span>
+								<span class="mx-1 text-vsc-border">|</span>
+							{/if}
 
 							{#if post.blog}
 								<a

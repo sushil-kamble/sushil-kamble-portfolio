@@ -16,7 +16,7 @@
 <div>
 	<button
 		onclick={() => editor.toggleFolder(folder.path)}
-		class="flex w-full items-center gap-1 rounded-sm px-2 py-0.5 text-left text-[13px] text-vsc-text/70 transition-colors hover:bg-vsc-panel/50 hover:text-vsc-text active:bg-vsc-panel"
+		class="flex w-full items-center gap-1 rounded-sm px-2 py-0.5 text-left text-[13px] text-vsc-text/70 transition-colors hover:bg-vsc-panel/50 hover:text-vsc-text active:bg-vsc-panel md:py-0"
 		style="padding-left: {depth * 16 + 8}px"
 	>
 		<ChevronRight size={14} class="shrink-0 transition-transform {isOpen ? 'rotate-90' : ''}" />

@@ -2,7 +2,6 @@
 	import { getContext } from 'svelte';
 	import {
 		Terminal,
-		Sparkles,
 		ArrowRight,
 		Github,
 		ExternalLink,
@@ -17,7 +16,6 @@
 	import { CONTEXT_KEYS } from '$lib/constants/theme';
 	import type { PageData } from '$lib/types';
 	import TechBadge from '$lib/components/ui/TechBadge.svelte';
-	import CalloutBox from '$lib/components/ui/CalloutBox.svelte';
 
 	const data = getContext<PageData>(CONTEXT_KEYS.PORTFOLIO_DATA);
 
@@ -68,7 +66,7 @@
 	];
 </script>
 
-<div>
+<div class="space-y-8">
 	<!-- Hero section with floating portrait -->
 	<div class="hero-section relative">
 		<!-- Portrait — absolutely positioned, bottom-aligned to hero -->
@@ -107,48 +105,11 @@
 		{/if}
 	</div>
 
-	<!-- Skills heading -->
-	<h2 class="mt-4 text-lg font-semibold text-vsc-green">
-		<span class="text-vsc-purple">##</span> SKILL.json
-	</h2>
-
-	<!-- Tech stack — categorized badges -->
-	<div class="mt-3 rounded-lg border border-vsc-border bg-vsc-panel p-4">
-		<p class="text-sm text-vsc-yellow">&lbrace;</p>
-
-		<div class="pl-4">
-			<p class="text-sm">
-				<span class="text-vsc-blue">"version"</span><span class="text-vsc-text">:</span>
-				<span class="text-vsc-orange">"1.0.0"</span><span class="text-vsc-text">,</span>
-			</p>
-
-			{#each data.skills as category, i (category.title)}
-				<div class="mt-3">
-					<p class="text-sm">
-						<span class="text-vsc-blue">"{category.title}"</span><span class="text-vsc-text"
-							>: &lbrace;</span
-						>
-					</p>
-					<div class="flex flex-wrap gap-2 py-2 pl-4">
-						{#each category.skills as skill (skill)}
-							<TechBadge name={skill} variant={variants[i % variants.length]} />
-						{/each}
-					</div>
-					<p class="text-sm text-vsc-text">
-						&rbrace;{i < data.skills.length - 1 ? ',' : ''}
-					</p>
-				</div>
-			{/each}
-		</div>
-
-		<p class="text-sm text-vsc-yellow">&rbrace;</p>
-	</div>
-
 	<!-- ═══════════════════════════════════════════ -->
 	<!-- WORK EXPERIENCE                             -->
 	<!-- ═══════════════════════════════════════════ -->
 	{#if data.careers.length > 0}
-		<div class="mt-8">
+		<div>
 			<div class="flex items-center gap-2">
 				<Briefcase size={18} class="text-vsc-yellow" />
 				<h2 class="text-lg font-semibold text-vsc-yellow">
@@ -219,24 +180,58 @@
 
 			<a
 				href="/career"
-				class="group mt-3 flex items-center justify-between rounded-lg border border-vsc-border bg-vsc-panel px-3 py-2 text-sm no-underline transition-all duration-200 hover:border-vsc-yellow/40 hover:bg-vsc-bg"
+				class="mt-3 flex items-center gap-1.5 text-sm text-vsc-yellow no-underline transition-colors hover:text-vsc-text"
 			>
-				<span class="text-vsc-green">// git log --career --full-history</span>
-				<span
-					class="flex items-center gap-1.5 font-medium text-vsc-yellow transition-colors group-hover:text-vsc-text"
-				>
-					Open full career log
-					<ArrowRight size={14} />
-				</span>
+				View full career log
+				<ArrowRight size={14} />
 			</a>
 		</div>
 	{/if}
+
+	<!-- Skills heading -->
+	<div>
+		<h2 class="text-lg font-semibold text-vsc-green">
+			<span class="text-vsc-purple">##</span> SKILL.json
+		</h2>
+
+		<!-- Tech stack — categorized badges -->
+		<div class="mt-3 rounded-lg border border-vsc-border bg-vsc-panel p-4">
+			<p class="text-sm text-vsc-yellow">&lbrace;</p>
+
+			<div class="pl-4">
+				<p class="text-sm">
+					<span class="text-vsc-blue">"version"</span><span class="text-vsc-text">:</span>
+					<span class="text-vsc-orange">"1.0.0"</span><span class="text-vsc-text">,</span>
+				</p>
+
+				{#each data.skills as category, i (category.title)}
+					<div class="mt-3">
+						<p class="text-sm">
+							<span class="text-vsc-blue">"{category.title}"</span><span class="text-vsc-text"
+								>: &lbrace;</span
+							>
+						</p>
+						<div class="flex flex-wrap gap-2 py-2 pl-4">
+							{#each category.skills as skill (skill)}
+								<TechBadge name={skill} variant={variants[i % variants.length]} />
+							{/each}
+						</div>
+						<p class="text-sm text-vsc-text">
+							&rbrace;{i < data.skills.length - 1 ? ',' : ''}
+						</p>
+					</div>
+				{/each}
+			</div>
+
+			<p class="text-sm text-vsc-yellow">&rbrace;</p>
+		</div>
+	</div>
 
 	<!-- ═══════════════════════════════════════════ -->
 	<!-- FEATURED PROJECTS                           -->
 	<!-- ═══════════════════════════════════════════ -->
 	{#if featuredProjects.length > 0}
-		<div class="mt-8">
+		<div>
 			<div class="flex items-center gap-2">
 				<FolderCode size={18} class="text-vsc-blue" />
 				<h2 class="text-lg font-semibold text-vsc-blue">
@@ -346,7 +341,7 @@
 	<!-- RECENT POSTS                                -->
 	<!-- ═══════════════════════════════════════════ -->
 	{#if recentPosts.length > 0}
-		<div class="mt-8">
+		<div>
 			<div class="flex items-center gap-2">
 				<Newspaper size={18} class="text-vsc-green" />
 				<h2 class="text-lg font-semibold text-vsc-green">
@@ -409,7 +404,7 @@
 	<!-- ═══════════════════════════════════════════ -->
 	<!-- QUICK CONTACT                               -->
 	<!-- ═══════════════════════════════════════════ -->
-	<div class="mt-8">
+	<div>
 		<div class="flex items-center gap-2">
 			<Mail size={18} class="text-vsc-orange" />
 			<h2 class="text-lg font-semibold text-vsc-orange">
@@ -448,17 +443,6 @@
 				<ArrowRight size={14} />
 			</a>
 		</div>
-	</div>
-
-	<!-- Callout -->
-	<div class="hidden md:block">
-		<CalloutBox type="info">
-			<p class="flex items-center gap-1.5">
-				<Sparkles size={14} class="text-vsc-yellow" />
-				Press <kbd class="rounded bg-vsc-panel px-1.5 py-0.5 text-xs text-vsc-blue">Cmd+K</kbd> to search
-				files — or explore the sidebar.
-			</p>
-		</CalloutBox>
 	</div>
 </div>
 

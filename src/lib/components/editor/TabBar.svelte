@@ -7,7 +7,10 @@
 	const editor = getContext<EditorState>(CONTEXT_KEYS.EDITOR_STATE);
 </script>
 
-<div class="flex h-12 overflow-x-auto border-b border-vsc-border bg-vsc-panel" role="tablist">
+<div
+	class="flex h-12 overflow-x-auto border-b border-vsc-border bg-vsc-panel md:h-8"
+	role="tablist"
+>
 	{#each editor.openTabs as tab (tab.id)}
 		<Tab entry={tab} />
 	{/each}

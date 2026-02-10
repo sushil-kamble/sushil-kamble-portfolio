@@ -17,7 +17,7 @@
 
 	<p class="mt-2 text-sm text-vsc-green">// Browse all projects — click to view details</p>
 
-	<div class="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+	<div class="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
 		{#each data.projects as project (project.id)}
 			<div
 				class="group relative cursor-pointer rounded-lg border border-vsc-border bg-vsc-panel p-4 text-left transition-all duration-200 hover:border-vsc-blue/50 hover:bg-vsc-bg hover:shadow-lg hover:shadow-vsc-blue/5"
