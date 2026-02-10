@@ -61,7 +61,7 @@
 	{href}
 	role="tab"
 	aria-selected={isActive}
-	class="group flex h-full max-w-50 items-center gap-2 border-r border-vsc-border px-3 text-[13px] no-underline transition-colors
+	class="group flex h-full max-w-50 items-center gap-2 border-r border-vsc-border px-4 py-3 text-[13px] no-underline transition-colors
 		{isActive
 		? 'border-t-2 border-t-vsc-tab-accent bg-vsc-bg text-vsc-text'
 		: 'border-t-2 border-t-transparent bg-vsc-panel text-vsc-text-muted hover:bg-vsc-bg/50'}"
