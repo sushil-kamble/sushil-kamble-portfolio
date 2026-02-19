@@ -3,7 +3,7 @@ import { fetchBlogs } from '$lib/services/notion';
 
 export async function entries() {
 	const blogs = await fetchBlogs();
-	return blogs.map((b) => ({ slug: b.slug }));
+	return blogs.filter((blog) => Boolean(blog.slug)).map((blog) => ({ slug: blog.slug }));
 }
 
 export async function load({ params, parent }) {

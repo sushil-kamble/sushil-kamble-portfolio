@@ -31,6 +31,10 @@ function slugify(text: string): string {
 		.replace(/(^-|-$)/g, '');
 }
 
+function safeSlug(primary: string, fallback: string): string {
+	return slugify(primary) || slugify(fallback) || fallback;
+}
+
 export async function fetchAboutMe(): Promise<string> {
 	const api = useAxios();
 	const res = await api.get(`/blocks/${ABOUT_ME_BLOCK}/children`);
@@ -81,7 +85,7 @@ export async function fetchProjects(): Promise<Project[]> {
 		const title = titleText(item, 'title');
 		return {
 			id: item.id,
-			slug: slugify(title),
+			slug: safeSlug(title, item.id),
 			title,
 			stack: multiSelect(item, 'stack'),
 			features: multiSelect(item, 'features'),
@@ -103,7 +107,7 @@ export async function fetchBlogs(): Promise<Blog[]> {
 		const title = titleText(item, 'title');
 		return {
 			id: item.id,
-			slug: slugify(title),
+			slug: safeSlug(title, item.id),
 			title,
 			description: richText(item, 'description'),
 			tags: multiSelect(item, 'tags'),

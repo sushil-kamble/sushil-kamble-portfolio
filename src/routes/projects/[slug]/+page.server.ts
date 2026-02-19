@@ -3,7 +3,9 @@ import { fetchProjects } from '$lib/services/notion';
 
 export async function entries() {
 	const projects = await fetchProjects();
-	return projects.map((p) => ({ slug: p.slug }));
+	return projects
+		.filter((project) => Boolean(project.slug))
+		.map((project) => ({ slug: project.slug }));
 }
 
 export async function load({ params, parent }) {
