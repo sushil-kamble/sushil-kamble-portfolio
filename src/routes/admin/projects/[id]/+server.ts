@@ -26,8 +26,7 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 			features: data.features || [],
 			screenshots: data.screenshots || [],
 			github: data.github || '',
-			direct: data.direct || '',
-			ordering: Number(data.ordering) || 0
+			direct: data.direct || ''
 		})
 		.where(eq(projects.id, id));
 

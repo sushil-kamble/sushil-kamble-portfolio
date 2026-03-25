@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { projects } from '$lib/server/schema';
+import { max } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 
 function slugify(text: string): string {
@@ -14,6 +15,9 @@ export const POST: RequestHandler = async ({ request }) => {
 	const data = await request.json();
 	const slug = slugify(data.title);
 
+	const [{ maxOrdering }] = await db.select({ maxOrdering: max(projects.ordering) }).from(projects);
+	const ordering = (maxOrdering ?? 0) + 1;
+
 	await db.insert(projects).values({
 		slug,
 		title: data.title,
@@ -23,7 +27,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		screenshots: data.screenshots || [],
 		github: data.github || '',
 		direct: data.direct || '',
-		ordering: Number(data.ordering) || 0
+		ordering
 	});
 
 	return json({ success: true });

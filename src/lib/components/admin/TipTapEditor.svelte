@@ -390,7 +390,9 @@
 	<div bind:this={element} class="min-h-[320px] px-4 py-5 sm:px-5"></div>
 
 	{#if uploadError}
-		<div class="border-border/70 bg-destructive/5 text-destructive border-t px-4 py-3 text-sm sm:px-5">
+		<div
+			class="border-border/70 bg-destructive/5 text-destructive border-t px-4 py-3 text-sm sm:px-5"
+		>
 			{uploadError}
 		</div>
 	{/if}

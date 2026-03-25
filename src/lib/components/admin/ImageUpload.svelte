@@ -167,7 +167,7 @@
 	{/if}
 
 	<label
-		class={`admin-surface flex min-h-40 cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-dashed p-6 text-center transition-colors ${dragover ? 'border-primary/60 bg-primary/5' : 'hover:bg-muted/30'}`}
+		class={`admin-surface flex min-h-40 cursor-pointer flex-col items-center justify-center gap-3 rounded-md border-dashed p-6 text-center transition-colors ${dragover ? 'border-primary/60 bg-primary/5' : 'hover:bg-muted/30'}`}
 		ondragover={(event) => {
 			event.preventDefault();
 			dragover = true;

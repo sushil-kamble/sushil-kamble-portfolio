@@ -23,7 +23,7 @@
 	let deletingId = $state<number | null>(null);
 	let draggedId = $state<number | null>(null);
 	let dropTargetId = $state<number | null>(null);
-	let reordering = $state(false);
+	let reorderingIds = $state(new Set<number>());
 
 	function formatDate(iso: string): string {
 		try {
@@ -62,8 +62,8 @@
 		return reordered.map((item, ordering) => ({ ...item, ordering }));
 	}
 
-	async function persistOrder(nextBlogs: Blog[]) {
-		reordering = true;
+	async function persistOrder(nextBlogs: Blog[], sourceId: number, targetId: number) {
+		reorderingIds = new Set([sourceId, targetId]);
 
 		const formData = new FormData();
 		formData.set(
@@ -75,7 +75,7 @@
 			await fetch('?/reorder', { method: 'POST', body: formData });
 			await invalidateAll();
 		} finally {
-			reordering = false;
+			reorderingIds = new Set();
 			draggedId = null;
 			dropTargetId = null;
 		}
@@ -101,14 +101,15 @@
 	async function handleDrop(event: DragEvent, targetId: number) {
 		event.preventDefault();
 
-		if (draggedId === null || draggedId === targetId || reordering) {
+		if (draggedId === null || draggedId === targetId || reorderingIds.size > 0) {
 			dropTargetId = null;
 			return;
 		}
 
+		const sourceId = draggedId;
 		const nextBlogs = reorderItems(blogs, draggedId, targetId);
 		blogs = nextBlogs;
-		await persistOrder(nextBlogs);
+		await persistOrder(nextBlogs, sourceId, targetId);
 	}
 
 	async function deleteBlog(id: number) {
@@ -191,13 +192,13 @@
 						</div>
 
 						<div class="flex shrink-0 items-center gap-1.5">
-							{#if reordering}
+							{#if reorderingIds.has(blog.id)}
 								<Loader2 class="text-muted-foreground size-3.5 animate-spin" />
 							{/if}
 							<button
 								type="button"
 								class="admin-collection-handle"
-								draggable="true"
+								draggable={!reorderingIds.has(blog.id)}
 								aria-label={`Drag to reorder ${blog.title}`}
 								title="Drag to reorder"
 								ondragstart={(event) => handleDragStart(event, blog.id)}

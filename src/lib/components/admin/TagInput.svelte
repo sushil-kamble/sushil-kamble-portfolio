@@ -57,7 +57,7 @@
 					<Button
 						variant="ghost"
 						size="icon-xs"
-						class="text-muted-foreground hover:text-foreground -mr-0.5 size-4 rounded-full p-0"
+						class="text-muted-foreground hover:text-foreground -mr-0.5 size-4 rounded-sm p-0"
 						aria-label={`Remove ${tag}`}
 						onclick={() => removeTag(tag)}
 					>

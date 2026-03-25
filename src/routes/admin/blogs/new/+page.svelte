@@ -17,7 +17,6 @@
 	let blogUrl = $state('');
 	let githubUrl = $state('');
 	let liveUrl = $state('');
-	let ordering = $state(0);
 	let tags = $state<string[]>([]);
 	let content = $state('');
 
@@ -34,7 +33,6 @@
 					blogUrl: blogUrl.trim(),
 					githubUrl: githubUrl.trim(),
 					liveUrl: liveUrl.trim(),
-					ordering,
 					tags,
 					content
 				})
@@ -80,6 +78,9 @@
 
 				<Field.Field>
 					<Field.Label for="description">Description</Field.Label>
+					<Field.Description>
+						Shown as the post excerpt. If no content is written below, this becomes the post body.
+					</Field.Description>
 					<Textarea
 						id="description"
 						bind:value={description}
@@ -102,6 +103,10 @@
 
 				<Field.Field>
 					<Field.Label for="new-blog-content-label">Content</Field.Label>
+					<Field.Description>
+						Optional. When filled, this becomes the post body and the description above is shown as
+						an excerpt.
+					</Field.Description>
 					<TipTapEditor
 						{content}
 						labelledBy="new-blog-content-label"
@@ -134,23 +139,16 @@
 					</Field.Field>
 				</div>
 
-				<div class="admin-form-grid">
-					<Field.Field>
-						<Field.Label for="liveUrl">Live URL</Field.Label>
-						<Input
-							id="liveUrl"
-							type="url"
-							bind:value={liveUrl}
-							placeholder="https://…"
-							class="h-10"
-						/>
-					</Field.Field>
-
-					<Field.Field>
-						<Field.Label for="ordering">Order</Field.Label>
-						<Input id="ordering" type="number" bind:value={ordering} class="h-10 sm:max-w-24" />
-					</Field.Field>
-				</div>
+				<Field.Field>
+					<Field.Label for="liveUrl">Live URL</Field.Label>
+					<Input
+						id="liveUrl"
+						type="url"
+						bind:value={liveUrl}
+						placeholder="https://…"
+						class="h-10"
+					/>
+				</Field.Field>
 
 				<div
 					class="border-border flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end"

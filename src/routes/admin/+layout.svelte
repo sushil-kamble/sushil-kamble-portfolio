@@ -37,7 +37,7 @@
 			<div class="admin-shell-body">
 				<div class="fixed top-4 left-4 z-30 sm:hidden">
 					<Sidebar.Trigger
-						class="border-border/70 bg-card/90 shadow-[0_18px_40px_-28px_rgba(15,23,42,0.4)]"
+						class="border-border/70 bg-card/90 shadow-[0_10px_24px_-16px_rgba(15,23,42,0.22)]"
 					/>
 				</div>
 				<div class="admin-shell-content">

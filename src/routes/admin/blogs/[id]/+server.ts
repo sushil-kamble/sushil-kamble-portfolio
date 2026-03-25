@@ -26,8 +26,7 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 			content: data.content || '',
 			blogUrl: data.blogUrl || '',
 			githubUrl: data.githubUrl || '',
-			liveUrl: data.liveUrl || '',
-			ordering: Number(data.ordering) || 0
+			liveUrl: data.liveUrl || ''
 		})
 		.where(eq(blogs.id, id));
 

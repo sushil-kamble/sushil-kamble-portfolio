@@ -13,6 +13,7 @@
 		emptyTitle?: string;
 		emptyDescription?: string;
 		showTechBadges?: boolean;
+		showItemNumbers?: boolean;
 		onchange: (items: string[]) => void;
 	}
 
@@ -24,6 +25,7 @@
 		emptyTitle = 'Nothing here yet',
 		emptyDescription = 'Add your first item to build this section.',
 		showTechBadges = false,
+		showItemNumbers = true,
 		onchange
 	}: Props = $props();
 
@@ -210,13 +212,13 @@
 				bind:value={draft}
 				onkeydown={handleDraftKeydown}
 				{placeholder}
-				class="bg-background/80 h-11 flex-1 rounded-xl"
+				class="bg-background/80 h-10 flex-1 rounded-md"
 			/>
 			<Button
 				type="button"
 				variant="outline"
 				size="lg"
-				class="shrink-0 rounded-xl px-4"
+				class="h-10 shrink-0 rounded-sm px-4"
 				onclick={addItem}
 			>
 				<Plus class="size-4" />
@@ -263,9 +265,11 @@
 
 							<div class="min-w-0 flex-1 space-y-2.5">
 								<div class="flex flex-wrap items-center gap-2">
-									<Badge variant="outline" class="rounded-full px-2.5 py-1">
-										#{index + 1}
-									</Badge>
+									{#if showItemNumbers}
+										<Badge variant="outline" class="rounded-full px-2.5 py-1">
+											#{index + 1}
+										</Badge>
+									{/if}
 									{#if showTechBadges && item.trim()}
 										<div class="max-w-full overflow-hidden rounded-md">
 											<TechBadge name={item.trim()} variant="blue" />
@@ -280,7 +284,7 @@
 									onblur={() => finalizeItem(index)}
 									onkeydown={(event) => handleItemKeydown(event, index)}
 									{placeholder}
-									class="bg-background/85 h-11 w-full rounded-xl"
+									class="bg-background/85 h-10 w-full rounded-md"
 								/>
 							</div>
 						</div>

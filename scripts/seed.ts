@@ -6,7 +6,8 @@
  * Requires NOTION_TOKEN, TURSO_DATABASE_URL, TURSO_AUTH_TOKEN in .env
  */
 
-import 'dotenv/config';
+import { config } from 'dotenv';
+config({ path: '.env.local' });
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import * as schema from '../src/lib/server/schema';
@@ -147,7 +148,7 @@ async function seed() {
 		sorts: [{ property: 'ordering', direction: 'ascending' }]
 	});
 
-	for (const item of projectsRes.results) {
+	for (const [index, item] of projectsRes.results.entries()) {
 		const title = titleText(item, 'title');
 		const project = {
 			slug: safeSlug(title, item.id),
@@ -158,7 +159,7 @@ async function seed() {
 			screenshots: multiSelect(item, 'screenshots'),
 			github: urlProp(item, 'github'),
 			direct: urlProp(item, 'direct'),
-			ordering: numberProp(item, 'ordering')
+			ordering: index + 1
 		};
 		await db.insert(schema.projects).values(project);
 		console.log(`  -> Project: ${project.title} (${project.slug})`);
@@ -170,7 +171,7 @@ async function seed() {
 		sorts: [{ property: 'ordering', direction: 'ascending' }]
 	});
 
-	for (const item of blogsRes.results) {
+	for (const [index, item] of blogsRes.results.entries()) {
 		const title = titleText(item, 'title');
 		const blog = {
 			slug: safeSlug(title, item.id),
@@ -181,7 +182,7 @@ async function seed() {
 			blogUrl: urlProp(item, 'blog'),
 			githubUrl: urlProp(item, 'github'),
 			liveUrl: urlProp(item, 'live'),
-			ordering: numberProp(item, 'ordering'),
+			ordering: index + 1,
 			createdAt: item.created_time
 		};
 		await db.insert(schema.blogs).values(blog);

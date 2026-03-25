@@ -164,17 +164,6 @@
 					</Field.Field>
 				</div>
 
-				<Field.Field>
-					<Field.Label for="ordering">Order</Field.Label>
-					<Input
-						id="ordering"
-						name="ordering"
-						type="number"
-						value={props.data.career.ordering}
-						class="h-10 sm:max-w-24"
-					/>
-				</Field.Field>
-
 				<div
 					class="border-border flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end"
 				>

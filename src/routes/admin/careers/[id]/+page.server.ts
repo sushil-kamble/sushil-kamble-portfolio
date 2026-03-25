@@ -28,7 +28,6 @@ export const actions: Actions = {
 		const details = formData.get('details') as string;
 		const logo = formData.get('logo') as string;
 		const link = formData.get('link') as string;
-		const ordering = Number(formData.get('ordering') || 0);
 		const skills = JSON.parse((formData.get('skills') as string) || '[]');
 		const detailsList = JSON.parse((formData.get('detailsList') as string) || '[]');
 
@@ -43,7 +42,6 @@ export const actions: Actions = {
 				details: details || '',
 				logo: logo || '',
 				link: link || '',
-				ordering,
 				skills,
 				detailsList
 			})

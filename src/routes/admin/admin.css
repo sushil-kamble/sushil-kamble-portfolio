@@ -231,11 +231,11 @@ html[data-route-kind='admin'] {
 
 	/* ─── Cards & surfaces ─── */
 	.admin-surface {
-		@apply border-border/80 bg-card/90 rounded-[1.75rem] border shadow-[0_30px_90px_-52px_rgba(15,23,42,0.45)] backdrop-blur-xl;
+		@apply border-border/80 bg-card/90 rounded-[1.75rem] border shadow-[0_14px_34px_-24px_rgba(15,23,42,0.2)] backdrop-blur-xl;
 	}
 
 	.admin-hero-surface {
-		@apply border-primary/10 bg-card/92 rounded-[2rem] border shadow-[0_32px_100px_-58px_rgba(15,23,42,0.45)] backdrop-blur-xl;
+		@apply border-primary/10 bg-card/92 rounded-[2rem] border shadow-[0_18px_42px_-30px_rgba(15,23,42,0.22)] backdrop-blur-xl;
 	}
 
 	/* ─── Back link ─── */
@@ -254,14 +254,14 @@ html[data-route-kind='admin'] {
 
 	/* ─── Empty state ─── */
 	.admin-empty {
-		@apply border-border/80 bg-card/90 flex flex-col items-center justify-center gap-3 rounded-[1.75rem] border border-dashed px-6 py-14 text-center shadow-[0_24px_72px_-48px_rgba(15,23,42,0.42)];
+		@apply border-border/80 bg-card/90 flex flex-col items-center justify-center gap-3 rounded-[1.75rem] border border-dashed px-6 py-14 text-center shadow-[0_12px_30px_-22px_rgba(15,23,42,0.18)];
 	}
 
 	/* ─── Icon shell (used in page headers) ─── */
 	.admin-icon-shell {
 		@apply text-primary flex size-11 items-center justify-center rounded-[1.1rem] border border-white/70;
 		background: linear-gradient(135deg, oklch(0.98 0.02 210), oklch(1 0 0));
-		box-shadow: 0 14px 34px -24px rgba(15, 23, 42, 0.35);
+		box-shadow: 0 8px 20px -14px rgba(15, 23, 42, 0.22);
 	}
 
 	/* ─── Collection cards (list items) ─── */
@@ -271,7 +271,7 @@ html[data-route-kind='admin'] {
 
 	.admin-collection-card {
 		@apply border-border/80 bg-card/92 relative rounded-[1.5rem] border transition-all duration-200;
-		box-shadow: 0 20px 52px -44px rgba(15, 23, 42, 0.35);
+		box-shadow: 0 10px 26px -18px rgba(15, 23, 42, 0.2);
 	}
 
 	.admin-collection-card:hover {

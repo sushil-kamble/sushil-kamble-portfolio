@@ -20,7 +20,6 @@
 	let description = $state('');
 	let github = $state('');
 	let direct = $state('');
-	let ordering = $state(0);
 	let stack = $state<string[]>([]);
 	let features = $state<string[]>([]);
 	let screenshots = $state<string[]>([]);
@@ -35,7 +34,6 @@
 		description = data.project.description;
 		github = data.project.github;
 		direct = data.project.direct;
-		ordering = data.project.ordering;
 		stack = [...data.project.stack];
 		features = [...data.project.features];
 		screenshots = [...data.project.screenshots];
@@ -54,7 +52,6 @@
 					description: description.trim(),
 					github: github.trim(),
 					direct: direct.trim(),
-					ordering,
 					stack: normalizeItems(stack),
 					features: normalizeItems(features),
 					screenshots
@@ -134,11 +131,6 @@
 				</div>
 
 				<Field.Field>
-					<Field.Label for="ordering">Order</Field.Label>
-					<Input id="ordering" type="number" bind:value={ordering} class="h-10 sm:max-w-24" />
-				</Field.Field>
-
-				<Field.Field>
 					<Field.Label for="project-stack-label">Tech stack</Field.Label>
 					<Field.Description>Add technologies and drag to reorder.</Field.Description>
 					<OrderedTextListEditor
@@ -163,6 +155,7 @@
 						addLabel="Add feature"
 						emptyTitle="No features added"
 						emptyDescription="Add product or technical capabilities."
+						showItemNumbers={false}
 						onchange={(value) => (features = value)}
 					/>
 				</Field.Field>

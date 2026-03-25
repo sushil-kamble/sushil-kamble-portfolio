@@ -34,7 +34,7 @@
 	let deletingId = $state<number | null>(null);
 	let draggedId = $state<number | null>(null);
 	let dropTargetId = $state<number | null>(null);
-	let reordering = $state(false);
+	let reorderingIds = $state(new Set<number>());
 
 	function openProject(id: number) {
 		void goto(`/admin/projects/${id}`);
@@ -61,8 +61,8 @@
 		return reordered.map((item, ordering) => ({ ...item, ordering }));
 	}
 
-	async function persistOrder(nextProjects: Project[]) {
-		reordering = true;
+	async function persistOrder(nextProjects: Project[], sourceId: number, targetId: number) {
+		reorderingIds = new Set([sourceId, targetId]);
 
 		const formData = new FormData();
 		formData.set(
@@ -74,7 +74,7 @@
 			await fetch('?/reorder', { method: 'POST', body: formData });
 			await invalidateAll();
 		} finally {
-			reordering = false;
+			reorderingIds = new Set();
 			draggedId = null;
 			dropTargetId = null;
 		}
@@ -100,14 +100,15 @@
 	async function handleDrop(event: DragEvent, targetId: number) {
 		event.preventDefault();
 
-		if (draggedId === null || draggedId === targetId || reordering) {
+		if (draggedId === null || draggedId === targetId || reorderingIds.size > 0) {
 			dropTargetId = null;
 			return;
 		}
 
+		const sourceId = draggedId;
 		const nextProjects = reorderItems(projects, draggedId, targetId);
 		projects = nextProjects;
-		await persistOrder(nextProjects);
+		await persistOrder(nextProjects, sourceId, targetId);
 	}
 
 	async function deleteProject(id: number) {
@@ -225,14 +226,14 @@
 								</a>
 							{/if}
 
-							{#if reordering}
+							{#if reorderingIds.has(project.id)}
 								<Loader2 class="text-muted-foreground size-3.5 animate-spin" />
 							{/if}
 
 							<button
 								type="button"
 								class="admin-collection-handle"
-								draggable="true"
+								draggable={!reorderingIds.has(project.id)}
 								aria-label={`Drag to reorder ${project.title}`}
 								title="Drag to reorder"
 								ondragstart={(event) => handleDragStart(event, project.id)}
