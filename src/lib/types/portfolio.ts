@@ -39,6 +39,7 @@ export interface Blog {
 	blog: string;
 	github: string;
 	live: string;
+	content?: string;
 	createdAt: string;
 }
 

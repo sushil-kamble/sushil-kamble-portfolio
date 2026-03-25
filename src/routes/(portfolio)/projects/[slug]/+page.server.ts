@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { fetchProjects } from '$lib/services/notion';
+import { fetchProjects } from '$lib/server/data';
 
 export async function entries() {
 	const projects = await fetchProjects();

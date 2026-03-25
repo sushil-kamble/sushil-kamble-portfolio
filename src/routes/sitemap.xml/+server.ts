@@ -1,4 +1,4 @@
-import { fetchBlogs, fetchProjects } from '$lib/services/notion';
+import { fetchBlogs, fetchProjects } from '$lib/server/data';
 
 const SITE_URL = 'https://sushilkamble.com';
 
