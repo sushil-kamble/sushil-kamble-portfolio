@@ -30,6 +30,22 @@
 	let draft = $state('');
 	let draggedIndex = $state<number | null>(null);
 	let dropIndex = $state<number | null>(null);
+	let itemKeys = $state<number[]>([]);
+	let nextItemKey = $state(0);
+
+	$effect(() => {
+		if (items.length > itemKeys.length) {
+			itemKeys = [
+				...itemKeys,
+				...Array.from({ length: items.length - itemKeys.length }, () => nextItemKey++)
+			];
+			return;
+		}
+
+		if (items.length < itemKeys.length) {
+			itemKeys = itemKeys.slice(0, items.length);
+		}
+	});
 
 	function normalizeItems(nextItems: string[]): string[] {
 		return nextItems.map((item) => item.trim()).filter(Boolean);
@@ -39,12 +55,36 @@
 		onchange(normalizeItems(nextItems));
 	}
 
+	function appendItemKey() {
+		itemKeys = [...itemKeys, nextItemKey++];
+	}
+
+	function removeItemKey(index: number) {
+		const nextKeys = [...itemKeys];
+		nextKeys.splice(index, 1);
+		itemKeys = nextKeys;
+	}
+
+	function swapItemKeys(index: number, swapIndex: number) {
+		const nextKeys = [...itemKeys];
+		[nextKeys[index], nextKeys[swapIndex]] = [nextKeys[swapIndex], nextKeys[index]];
+		itemKeys = nextKeys;
+	}
+
+	function reorderItemKeys(sourceIndex: number, targetIndex: number) {
+		const nextKeys = [...itemKeys];
+		const [moved] = nextKeys.splice(sourceIndex, 1);
+		nextKeys.splice(targetIndex, 0, moved);
+		itemKeys = nextKeys;
+	}
+
 	function addItem() {
 		const value = draft.trim();
 		if (!value) return;
 
 		const exists = items.some((item) => item.toLowerCase() === value.toLowerCase());
 		if (!exists) {
+			appendItemKey();
 			commit([...items, value]);
 		}
 
@@ -63,6 +103,7 @@
 
 		if (!normalized) {
 			nextItems.splice(index, 1);
+			removeItemKey(index);
 			commit(nextItems);
 			return;
 		}
@@ -74,6 +115,7 @@
 	function removeItem(index: number) {
 		const nextItems = [...items];
 		nextItems.splice(index, 1);
+		removeItemKey(index);
 		onchange(nextItems);
 	}
 
@@ -83,6 +125,7 @@
 
 		const nextItems = [...items];
 		[nextItems[index], nextItems[swapIndex]] = [nextItems[swapIndex], nextItems[index]];
+		swapItemKeys(index, swapIndex);
 		onchange(nextItems);
 	}
 
@@ -138,6 +181,7 @@
 		const nextItems = [...items];
 		const [moved] = nextItems.splice(draggedIndex, 1);
 		nextItems.splice(index, 0, moved);
+		reorderItemKeys(draggedIndex, index);
 		onchange(nextItems);
 
 		draggedIndex = null;
@@ -145,9 +189,11 @@
 	}
 </script>
 
-<div class="admin-surface space-y-4 rounded-[1.65rem] p-4 sm:p-5" aria-labelledby={labelledBy}>
-	<div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-		<div class="space-y-1">
+<div class="space-y-4" aria-labelledby={labelledBy}>
+	<div
+		class="border-border/60 grid gap-3 border-b pb-4 xl:grid-cols-[minmax(0,1fr)_minmax(24rem,36rem)] xl:items-end"
+	>
+		<div class="min-w-0 space-y-1">
 			<div class="flex flex-wrap items-center gap-2">
 				<Badge variant="outline" class="rounded-full px-2.5 py-1">
 					{items.length} item{items.length === 1 ? '' : 's'}
@@ -158,15 +204,21 @@
 			</div>
 		</div>
 
-		<div class="flex w-full gap-2 sm:w-auto sm:min-w-[22rem]">
+		<div class="flex w-full min-w-0 gap-2">
 			<Input
 				type="text"
 				bind:value={draft}
 				onkeydown={handleDraftKeydown}
 				{placeholder}
-				class="h-10"
+				class="bg-background/80 h-11 flex-1 rounded-xl"
 			/>
-			<Button type="button" variant="secondary" class="shrink-0" onclick={addItem}>
+			<Button
+				type="button"
+				variant="outline"
+				size="lg"
+				class="shrink-0 rounded-xl px-4"
+				onclick={addItem}
+			>
 				<Plus class="size-4" />
 				<span>{addLabel}</span>
 			</Button>
@@ -187,16 +239,16 @@
 		</div>
 	{:else}
 		<div class="grid gap-3">
-			{#each items as item, index (`${index}:${item}`)}
+			{#each items as item, index (itemKeys[index] ?? index)}
 				<div
-					class={`border-border/70 bg-background/75 rounded-[1.35rem] border p-3 transition-all ${dropIndex === index ? 'border-primary/45 ring-primary/15 ring-4' : ''}`}
+					class={`border-border/65 bg-background/45 rounded-[1.25rem] border px-3 py-3 transition-colors sm:px-4 ${dropIndex === index ? 'border-primary/45 ring-primary/12 ring-4' : ''}`}
 					role="presentation"
 					ondragover={(event) => handleDragOver(event, index)}
 					ondragenter={(event) => handleDragOver(event, index)}
 					ondrop={(event) => handleDrop(event, index)}
 				>
-					<div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-						<div class="flex min-w-0 items-start gap-3">
+					<div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
+						<div class="flex min-w-0 flex-1 items-start gap-3">
 							<button
 								type="button"
 								class="admin-collection-handle mt-0.5 shrink-0"
@@ -209,7 +261,7 @@
 								<GripVertical class="size-4" />
 							</button>
 
-							<div class="min-w-0 flex-1 space-y-3">
+							<div class="min-w-0 flex-1 space-y-2.5">
 								<div class="flex flex-wrap items-center gap-2">
 									<Badge variant="outline" class="rounded-full px-2.5 py-1">
 										#{index + 1}
@@ -228,12 +280,12 @@
 									onblur={() => finalizeItem(index)}
 									onkeydown={(event) => handleItemKeydown(event, index)}
 									{placeholder}
-									class="h-11"
+									class="bg-background/85 h-11 w-full rounded-xl"
 								/>
 							</div>
 						</div>
 
-						<div class="flex items-center gap-2 lg:pl-3">
+						<div class="flex shrink-0 items-center gap-2 lg:ml-auto">
 							<Button
 								type="button"
 								variant="outline"

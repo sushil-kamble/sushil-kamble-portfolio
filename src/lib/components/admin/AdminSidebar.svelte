@@ -2,6 +2,8 @@
 	import { page } from '$app/state';
 	import {
 		LayoutDashboard,
+		Loader2,
+		Rocket,
 		User,
 		Briefcase,
 		Zap,
@@ -13,10 +15,12 @@
 	import * as Sidebar from '$lib/components/admin/ui/sidebar/index.js';
 
 	interface Props {
+		onRebuild: () => void;
+		rebuilding?: boolean;
 		onLogout: () => void;
 	}
 
-	let { onLogout }: Props = $props();
+	let { onRebuild, rebuilding = false, onLogout }: Props = $props();
 
 	const navItems = [
 		{ href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -72,7 +76,24 @@
 		</Sidebar.Group>
 	</Sidebar.Content>
 
-	<Sidebar.Footer class="border-sidebar-border px-3 py-3">
+	<Sidebar.Footer class="border-sidebar-border space-y-2 px-3 py-3">
+		<Button
+			variant="default"
+			size="sm"
+			class="w-full justify-start"
+			type="button"
+			disabled={rebuilding}
+			onclick={onRebuild}
+		>
+			{#if rebuilding}
+				<Loader2 class="size-4 animate-spin" />
+				<span>Building…</span>
+			{:else}
+				<Rocket class="size-4" />
+				<span>Rebuild</span>
+			{/if}
+		</Button>
+
 		<Button
 			variant="ghost"
 			size="sm"

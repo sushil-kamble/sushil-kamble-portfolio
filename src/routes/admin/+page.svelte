@@ -113,7 +113,7 @@
 	);
 </script>
 
-<section class="admin-page">
+<section class="admin-page min-w-0 overflow-x-clip">
 	<AdminPageHeader title="Dashboard" description="Overview of your portfolio content.">
 		{#snippet icon()}
 			<LayoutDashboard class="size-4" />
@@ -121,14 +121,14 @@
 	</AdminPageHeader>
 
 	<!-- Stats row -->
-	<div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-		<div class="border-border bg-card rounded-xl border p-4">
+	<div class="grid min-w-0 grid-cols-2 gap-3 xl:grid-cols-4">
+		<div class="border-border bg-card min-w-0 rounded-xl border p-4">
 			<p class="text-muted-foreground text-xs font-medium">Total entries</p>
 			<p class="text-foreground mt-1.5 text-2xl font-semibold tabular-nums">
 				{data.counts.totalEntries}
 			</p>
 		</div>
-		<div class="border-border bg-card rounded-xl border p-4">
+		<div class="border-border bg-card min-w-0 rounded-xl border p-4">
 			<p class="text-muted-foreground text-xs font-medium">Sections ready</p>
 			<p class="text-foreground mt-1.5 text-2xl font-semibold tabular-nums">
 				{readySections}<span class="text-muted-foreground text-sm font-normal"
@@ -136,13 +136,13 @@
 				>
 			</p>
 		</div>
-		<div class="border-border bg-card rounded-xl border p-4">
+		<div class="border-border bg-card min-w-0 rounded-xl border p-4">
 			<p class="text-muted-foreground text-xs font-medium">Screenshots</p>
 			<p class="text-foreground mt-1.5 text-2xl font-semibold tabular-nums">
 				{data.highlights.projectScreenshots}
 			</p>
 		</div>
-		<div class="border-border bg-card rounded-xl border p-4">
+		<div class="border-border bg-card min-w-0 rounded-xl border p-4">
 			<p class="text-muted-foreground text-xs font-medium">Skills indexed</p>
 			<p class="text-foreground mt-1.5 text-2xl font-semibold tabular-nums">
 				{data.counts.totalSkills}
@@ -151,11 +151,11 @@
 	</div>
 
 	<!-- Section cards -->
-	<div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+	<div class="grid min-w-0 grid-cols-2 gap-3 xl:grid-cols-4">
 		{#each sectionCards as card (card.href)}
 			<a
 				href={card.href}
-				class="border-border bg-card hover:bg-accent/40 group flex flex-col gap-3 rounded-xl border p-4 transition-colors"
+				class="border-border bg-card hover:bg-accent/40 group flex min-w-0 flex-col gap-3 rounded-xl border p-4 transition-colors"
 			>
 				<div class="flex items-center justify-between">
 					<div class={`flex size-8 items-center justify-center rounded-lg ${card.accent}`}>
@@ -173,9 +173,9 @@
 		{/each}
 	</div>
 
-	<div class="grid gap-5 lg:grid-cols-[1fr_1fr]">
+	<div class="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
 		<!-- Quick actions -->
-		<Card.Root class="admin-surface">
+		<Card.Root class="admin-surface min-w-0">
 			<Card.Content class="p-4">
 				<div class="mb-3 flex items-center justify-between">
 					<h2 class="text-foreground text-sm font-semibold">Quick actions</h2>
@@ -215,7 +215,7 @@
 		</Card.Root>
 
 		<!-- Attention items -->
-		<Card.Root class="admin-surface">
+		<Card.Root class="admin-surface min-w-0">
 			<Card.Content class="p-4">
 				<div class="mb-3 flex items-center justify-between">
 					<h2 class="text-foreground text-sm font-semibold">
@@ -247,7 +247,7 @@
 	</div>
 
 	<!-- Projects preview -->
-	<Card.Root class="admin-surface">
+	<Card.Root class="admin-surface min-w-0">
 		<Card.Content class="p-4">
 			<div class="mb-3 flex items-center justify-between">
 				<h2 class="text-foreground text-sm font-semibold">Projects in live order</h2>
@@ -264,7 +264,7 @@
 					{#each data.previews.projects as project (project.id)}
 						<a
 							href={`/admin/projects/${project.id}`}
-							class="bg-muted/40 hover:bg-muted flex items-center gap-3 rounded-lg p-3 transition-colors"
+							class="bg-muted/40 hover:bg-muted flex min-w-0 items-center gap-3 rounded-lg p-3 transition-colors"
 						>
 							<div
 								class="border-border bg-card flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border"
@@ -304,9 +304,9 @@
 	</Card.Root>
 
 	<!-- Blogs + Careers + Skills grid -->
-	<div class="grid gap-5 lg:grid-cols-3">
+	<div class="grid min-w-0 gap-5 xl:grid-cols-[repeat(3,minmax(0,1fr))]">
 		<!-- Recent blogs -->
-		<Card.Root class="admin-surface">
+		<Card.Root class="admin-surface min-w-0">
 			<Card.Content class="p-4">
 				<div class="mb-3 flex items-center justify-between">
 					<h2 class="text-foreground text-sm font-semibold">Recent posts</h2>
@@ -336,7 +336,7 @@
 		</Card.Root>
 
 		<!-- Career snapshot -->
-		<Card.Root class="admin-surface">
+		<Card.Root class="admin-surface min-w-0">
 			<Card.Content class="p-4">
 				<div class="mb-3 flex items-center justify-between">
 					<h2 class="text-foreground text-sm font-semibold">Careers</h2>
@@ -352,7 +352,7 @@
 						{#each data.previews.careers as career (career.id)}
 							<a
 								href={`/admin/careers/${career.id}`}
-								class="bg-muted/40 hover:bg-muted flex items-center gap-3 rounded-lg p-3 transition-colors"
+								class="bg-muted/40 hover:bg-muted flex min-w-0 items-center gap-3 rounded-lg p-3 transition-colors"
 							>
 								<div
 									class="border-border bg-card flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border"
@@ -386,7 +386,7 @@
 		</Card.Root>
 
 		<!-- Skills snapshot -->
-		<Card.Root class="admin-surface">
+		<Card.Root class="admin-surface min-w-0">
 			<Card.Content class="p-4">
 				<div class="mb-3 flex items-center justify-between">
 					<h2 class="text-foreground text-sm font-semibold">Skill categories</h2>
@@ -402,10 +402,10 @@
 						{#each data.previews.skillCategories as category (category.id)}
 							<a
 								href="/admin/skills"
-								class="bg-muted/40 hover:bg-muted rounded-lg p-3 transition-colors"
+								class="bg-muted/40 hover:bg-muted block min-w-0 rounded-lg p-3 transition-colors"
 							>
-								<div class="flex items-center justify-between">
-									<p class="text-foreground text-sm font-medium">{category.title}</p>
+								<div class="flex min-w-0 items-center justify-between gap-2">
+									<p class="text-foreground truncate text-sm font-medium">{category.title}</p>
 									<span class="text-muted-foreground text-xs tabular-nums"
 										>{category.totalSkills}</span
 									>
