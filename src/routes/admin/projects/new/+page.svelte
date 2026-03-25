@@ -1,8 +1,15 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { ArrowLeft } from 'lucide-svelte';
-	import TagInput from '$lib/components/admin/TagInput.svelte';
+	import { FolderKanban, Loader2, Save } from 'lucide-svelte';
+	import AdminBackLink from '$lib/components/admin/AdminBackLink.svelte';
+	import OrderedTextListEditor from '$lib/components/admin/OrderedTextListEditor.svelte';
+	import AdminPageHeader from '$lib/components/admin/AdminPageHeader.svelte';
 	import ImageUpload from '$lib/components/admin/ImageUpload.svelte';
+	import { Button } from '$lib/components/admin/ui/button/index.js';
+	import * as Card from '$lib/components/admin/ui/card/index.js';
+	import * as Field from '$lib/components/admin/ui/field/index.js';
+	import { Input } from '$lib/components/admin/ui/input/index.js';
+	import { Textarea } from '$lib/components/admin/ui/textarea/index.js';
 
 	let saving = $state(false);
 	let title = $state('');
@@ -14,11 +21,15 @@
 	let features = $state<string[]>([]);
 	let screenshots = $state<string[]>([]);
 
+	function normalizeItems(items: string[]): string[] {
+		return items.map((item) => item.trim()).filter(Boolean);
+	}
+
 	async function handleSubmit() {
 		if (!title.trim()) return;
 		saving = true;
 		try {
-			const res = await fetch('/admin/projects/new', {
+			const response = await fetch('/admin/projects/new', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
@@ -27,12 +38,12 @@
 					github: github.trim(),
 					direct: direct.trim(),
 					ordering,
-					stack,
-					features,
+					stack: normalizeItems(stack),
+					features: normalizeItems(features),
 					screenshots
 				})
 			});
-			if (res.ok) {
+			if (response.ok) {
 				await goto('/admin/projects');
 			}
 		} finally {
@@ -41,222 +52,127 @@
 	}
 </script>
 
-<div class="page">
-	<a href="/admin/projects" class="back-link">
-		<ArrowLeft size={16} />
-		Back to Projects
-	</a>
+<section class="admin-page-narrow">
+	<AdminBackLink href="/admin/projects" label="Back to projects" />
 
-	<h1>New Project</h1>
-
-	<form
-		class="form"
-		onsubmit={(e) => {
-			e.preventDefault();
-			handleSubmit();
-		}}
+	<AdminPageHeader
+		title="New project"
+		description="Add a portfolio project with screenshots, links, features, and tech stack."
 	>
-		<div class="form-group">
-			<label for="title">Title</label>
-			<input id="title" type="text" bind:value={title} placeholder="Project name" required />
-		</div>
+		{#snippet icon()}
+			<FolderKanban class="size-5" />
+		{/snippet}
+	</AdminPageHeader>
 
-		<div class="form-group">
-			<label for="description">Description</label>
-			<textarea
-				id="description"
-				bind:value={description}
-				placeholder="Brief description of the project..."
-				rows="4"
-			></textarea>
-		</div>
+	<Card.Root class="admin-surface">
+		<Card.Content class="p-6 sm:p-8">
+			<form
+				class="space-y-6"
+				onsubmit={(event) => {
+					event.preventDefault();
+					handleSubmit();
+				}}
+			>
+				<div class="space-y-6">
+					<Field.Field>
+						<Field.Label for="title">Title</Field.Label>
+						<Input id="title" type="text" bind:value={title} placeholder="Project name" required />
+					</Field.Field>
 
-		<div class="form-row">
-			<div class="form-group">
-				<label for="github">GitHub URL</label>
-				<input id="github" type="url" bind:value={github} placeholder="https://github.com/..." />
-			</div>
-			<div class="form-group">
-				<label for="direct">Live URL</label>
-				<input id="direct" type="url" bind:value={direct} placeholder="https://..." />
-			</div>
-		</div>
+					<Field.Field>
+						<Field.Label for="description">Description</Field.Label>
+						<Textarea
+							id="description"
+							bind:value={description}
+							rows={4}
+							placeholder="Brief description of the project..."
+						/>
+					</Field.Field>
 
-		<div class="form-group">
-			<label for="ordering">Order</label>
-			<input id="ordering" type="number" bind:value={ordering} class="input-sm" />
-		</div>
+					<div class="admin-form-grid">
+						<Field.Field>
+							<Field.Label for="github">GitHub URL</Field.Label>
+							<Input
+								id="github"
+								type="url"
+								bind:value={github}
+								placeholder="https://github.com/..."
+							/>
+						</Field.Field>
 
-		<div class="form-group">
-			<p class="field-label" id="new-project-stack-label">Tech Stack</p>
-			<TagInput
-				tags={stack}
-				labelledBy="new-project-stack-label"
-				placeholder="Add technologies..."
-				onchange={(v) => (stack = v)}
-			/>
-		</div>
+						<Field.Field>
+							<Field.Label for="direct">Live URL</Field.Label>
+							<Input id="direct" type="url" bind:value={direct} placeholder="https://..." />
+						</Field.Field>
+					</div>
 
-		<div class="form-group">
-			<p class="field-label" id="new-project-features-label">Features</p>
-			<TagInput
-				tags={features}
-				labelledBy="new-project-features-label"
-				placeholder="Add features..."
-				onchange={(v) => (features = v)}
-			/>
-		</div>
+					<Field.Field>
+						<Field.Label for="ordering">Ordering</Field.Label>
+						<Input id="ordering" type="number" bind:value={ordering} class="md:max-w-32" />
+					</Field.Field>
 
-		<div class="form-group">
-			<p class="field-label" id="new-project-screenshots-label">Screenshots</p>
-			<ImageUpload
-				images={screenshots}
-				labelledBy="new-project-screenshots-label"
-				path="Projects"
-				onchange={(v) => (screenshots = v)}
-			/>
-		</div>
+					<Field.Field>
+						<Field.Label for="new-project-stack-label">Tech stack</Field.Label>
+						<Field.Description
+							>Use the same badge-driven technologies shown on the public portfolio. Drag to set the
+							display order.</Field.Description
+						>
+						<OrderedTextListEditor
+							items={stack}
+							labelledBy="new-project-stack-label"
+							placeholder="Add a technology..."
+							addLabel="Add technology"
+							emptyTitle="No technologies added yet"
+							emptyDescription="Add the stack items you want to showcase and arrange them in the order they should appear."
+							showTechBadges={true}
+							onchange={(value) => (stack = value)}
+						/>
+					</Field.Field>
 
-		<div class="form-actions">
-			<button type="submit" class="btn-save" disabled={saving || !title.trim()}>
-				{saving ? 'Saving...' : 'Save Project'}
-			</button>
-			<a href="/admin/projects" class="btn-cancel">Cancel</a>
-		</div>
-	</form>
-</div>
+					<Field.Field>
+						<Field.Label for="new-project-features-label">Features</Field.Label>
+						<Field.Description
+							>Write concise feature lines and reorder them to control which strengths surface
+							first.</Field.Description
+						>
+						<OrderedTextListEditor
+							items={features}
+							labelledBy="new-project-features-label"
+							placeholder="Add a feature..."
+							addLabel="Add feature"
+							emptyTitle="No features added yet"
+							emptyDescription="Use short, punchy lines for the strongest product or technical capabilities."
+							onchange={(value) => (features = value)}
+						/>
+					</Field.Field>
 
-<style>
-	.page {
-		max-width: 640px;
-	}
+					<Field.Field>
+						<Field.Label for="new-project-screenshots-label">Screenshots</Field.Label>
+						<Field.Description>Upload a few visuals to represent the project.</Field.Description>
+						<ImageUpload
+							images={screenshots}
+							labelledBy="new-project-screenshots-label"
+							path="Projects"
+							onchange={(value) => (screenshots = value)}
+						/>
+					</Field.Field>
+				</div>
 
-	.back-link {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		font-size: 13px;
-		color: #888;
-		text-decoration: none;
-		margin-bottom: 20px;
-		transition: color 0.15s;
-	}
-
-	.back-link:hover {
-		color: #1a1a1a;
-	}
-
-	h1 {
-		font-size: 24px;
-		font-weight: 700;
-		letter-spacing: -0.02em;
-		margin: 0 0 28px;
-	}
-
-	.form {
-		display: flex;
-		flex-direction: column;
-		gap: 20px;
-	}
-
-	.form-group {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.form-group label,
-	.field-label {
-		font-size: 13px;
-		font-weight: 600;
-		color: #555;
-		margin-bottom: 6px;
-	}
-
-	.form-group input,
-	.form-group textarea {
-		width: 100%;
-		padding: 10px 14px;
-		border: 1px solid #e0ddd8;
-		border-radius: 10px;
-		background: #fafaf9;
-		font-size: 14px;
-		color: #1a1a1a;
-		box-sizing: border-box;
-		font-family: inherit;
-		transition: all 0.2s;
-	}
-
-	.form-group input:focus,
-	.form-group textarea:focus {
-		outline: none;
-		border-color: #1a1a1a;
-		background: white;
-		box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.06);
-	}
-
-	.form-group textarea {
-		resize: vertical;
-		line-height: 1.5;
-	}
-
-	.form-row {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 16px;
-	}
-
-	.input-sm {
-		max-width: 120px;
-	}
-
-	.form-actions {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		padding-top: 8px;
-	}
-
-	.btn-save {
-		display: inline-flex;
-		align-items: center;
-		padding: 10px 24px;
-		background: #1a1a1a;
-		color: white;
-		border: none;
-		border-radius: 10px;
-		font-size: 14px;
-		font-weight: 600;
-		cursor: pointer;
-		transition: all 0.2s;
-	}
-
-	.btn-save:hover:not(:disabled) {
-		background: #333;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-	}
-
-	.btn-save:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-
-	.btn-cancel {
-		font-size: 14px;
-		color: #888;
-		text-decoration: none;
-		padding: 10px 20px;
-		border-radius: 10px;
-		transition: all 0.15s;
-	}
-
-	.btn-cancel:hover {
-		background: #f0ede8;
-		color: #555;
-	}
-
-	@media (max-width: 500px) {
-		.form-row {
-			grid-template-columns: 1fr;
-		}
-	}
-</style>
+				<div
+					class="border-border/70 flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end"
+				>
+					<Button href="/admin/projects" variant="outline" size="lg">Cancel</Button>
+					<Button type="submit" size="lg" disabled={saving || !title.trim()}>
+						{#if saving}
+							<Loader2 class="size-4 animate-spin" />
+							<span>Saving...</span>
+						{:else}
+							<Save class="size-4" />
+							<span>Save project</span>
+						{/if}
+					</Button>
+				</div>
+			</form>
+		</Card.Content>
+	</Card.Root>
+</section>

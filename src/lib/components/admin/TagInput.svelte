@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { X } from 'lucide-svelte';
+	import { Badge } from '$lib/components/admin/ui/badge/index.js';
+	import { Button } from '$lib/components/admin/ui/button/index.js';
+	import { Input } from '$lib/components/admin/ui/input/index.js';
 
 	interface Props {
 		tags: string[];
@@ -8,119 +11,51 @@
 		onchange: (tags: string[]) => void;
 	}
 
-	const { tags, placeholder = 'Type and press Enter...', labelledBy, onchange }: Props = $props();
+	let { tags, placeholder = 'Type and press Enter...', labelledBy, onchange }: Props = $props();
 
 	let input = $state('');
 
-	function addTag(e: KeyboardEvent) {
-		if (e.key === 'Enter' || e.key === ',') {
-			e.preventDefault();
-			const val = input.trim().replace(/,$/g, '');
-			if (val && !tags.includes(val)) {
-				onchange([...tags, val]);
-			}
-			input = '';
+	function addTag(event: KeyboardEvent) {
+		if (event.key !== 'Enter' && event.key !== ',') return;
+		event.preventDefault();
+		const value = input.trim().replace(/,$/g, '');
+		if (value && !tags.includes(value)) {
+			onchange([...tags, value]);
 		}
+		input = '';
 	}
 
 	function removeTag(tag: string) {
-		onchange(tags.filter((t) => t !== tag));
+		onchange(tags.filter((current) => current !== tag));
 	}
 </script>
 
-<div class="tag-input-wrapper">
+<div class="admin-surface flex flex-col gap-3 rounded-2xl p-3">
 	{#if tags.length > 0}
-		<div class="tags-list">
+		<div class="flex flex-wrap gap-2">
 			{#each tags as tag (tag)}
-				<span class="tag">
-					{tag}
-					<button
-						type="button"
-						class="tag-remove"
+				<Badge variant="secondary" class="gap-1.5 rounded-full px-2.5 py-1 text-[11px]">
+					<span>{tag}</span>
+					<Button
+						variant="ghost"
+						size="icon-xs"
+						class="text-muted-foreground hover:text-foreground -mr-1 size-4 rounded-full p-0"
+						aria-label={`Remove ${tag}`}
 						onclick={() => removeTag(tag)}
-						aria-label="Remove {tag}"
 					>
-						<X size={12} />
-					</button>
-				</span>
+						<X class="size-3" />
+					</Button>
+				</Badge>
 			{/each}
 		</div>
 	{/if}
-	<input
+
+	<Input
 		type="text"
 		bind:value={input}
 		onkeydown={addTag}
 		{placeholder}
 		aria-labelledby={labelledBy}
-		class="tag-input"
+		class="border-dashed"
 	/>
 </div>
-
-<style>
-	.tag-input-wrapper {
-		border: 1px solid #e0ddd8;
-		border-radius: 10px;
-		padding: 8px;
-		background: #fafaf9;
-		transition: all 0.2s;
-	}
-
-	.tag-input-wrapper:focus-within {
-		border-color: #1a1a1a;
-		background: white;
-		box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.06);
-	}
-
-	.tags-list {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 6px;
-		margin-bottom: 6px;
-	}
-
-	.tag {
-		display: inline-flex;
-		align-items: center;
-		gap: 4px;
-		padding: 4px 8px;
-		background: #f0ede8;
-		border-radius: 6px;
-		font-size: 12px;
-		font-weight: 500;
-		color: #444;
-	}
-
-	.tag-remove {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 16px;
-		height: 16px;
-		border: none;
-		background: none;
-		border-radius: 50%;
-		cursor: pointer;
-		color: #888;
-		transition: all 0.15s;
-		padding: 0;
-	}
-
-	.tag-remove:hover {
-		background: #dc2626;
-		color: white;
-	}
-
-	.tag-input {
-		width: 100%;
-		border: none;
-		background: none;
-		outline: none;
-		font-size: 14px;
-		padding: 4px;
-		color: #1a1a1a;
-	}
-
-	.tag-input::placeholder {
-		color: #aaa;
-	}
-</style>

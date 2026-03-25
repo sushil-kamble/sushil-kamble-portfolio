@@ -1,9 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { ArrowLeft } from 'lucide-svelte';
+	import { FileText, Loader2, Save } from 'lucide-svelte';
+	import AdminBackLink from '$lib/components/admin/AdminBackLink.svelte';
+	import AdminPageHeader from '$lib/components/admin/AdminPageHeader.svelte';
 	import type { PageData } from './$types';
 	import TagInput from '$lib/components/admin/TagInput.svelte';
 	import TipTapEditor from '$lib/components/admin/TipTapEditor.svelte';
+	import { Button } from '$lib/components/admin/ui/button/index.js';
+	import * as Card from '$lib/components/admin/ui/card/index.js';
+	import * as Field from '$lib/components/admin/ui/field/index.js';
+	import { Input } from '$lib/components/admin/ui/input/index.js';
+	import { Textarea } from '$lib/components/admin/ui/textarea/index.js';
 
 	const { data }: { data: PageData } = $props();
 
@@ -20,7 +27,6 @@
 
 	$effect(() => {
 		if (initialized) return;
-
 		title = data.blog.title;
 		description = data.blog.description;
 		blogUrl = data.blog.blogUrl;
@@ -36,7 +42,7 @@
 		if (!title.trim()) return;
 		saving = true;
 		try {
-			const res = await fetch(`/admin/blogs/${data.blog.id}`, {
+			const response = await fetch(`/admin/blogs/${data.blog.id}`, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
@@ -50,7 +56,7 @@
 					content
 				})
 			});
-			if (res.ok) {
+			if (response.ok) {
 				await goto('/admin/blogs');
 			}
 		} finally {
@@ -59,219 +65,113 @@
 	}
 </script>
 
-<div class="page">
-	<a href="/admin/blogs" class="back-link">
-		<ArrowLeft size={16} />
-		Back to Blog Posts
-	</a>
+<section class="admin-page-narrow">
+	<AdminBackLink href="/admin/blogs" label="Back to blog posts" />
 
-	<h1>Edit Blog Post</h1>
-
-	<form
-		class="form"
-		onsubmit={(e) => {
-			e.preventDefault();
-			handleSubmit();
-		}}
+	<AdminPageHeader
+		title="Edit blog post"
+		description="Update the post content, metadata, and links shown in the portfolio feed."
 	>
-		<div class="form-group">
-			<label for="title">Title</label>
-			<input id="title" type="text" bind:value={title} placeholder="Post title" required />
-		</div>
+		{#snippet icon()}
+			<FileText class="size-5" />
+		{/snippet}
+	</AdminPageHeader>
 
-		<div class="form-group">
-			<label for="description">Description</label>
-			<textarea
-				id="description"
-				bind:value={description}
-				placeholder="Brief summary of the post..."
-				rows="3"
-			></textarea>
-		</div>
+	<Card.Root class="admin-surface">
+		<Card.Content class="p-6 sm:p-8">
+			<form
+				class="space-y-6"
+				onsubmit={(event) => {
+					event.preventDefault();
+					handleSubmit();
+				}}
+			>
+				<div class="space-y-6">
+					<Field.Field>
+						<Field.Label for="title">Title</Field.Label>
+						<Input id="title" type="text" bind:value={title} placeholder="Post title" required />
+					</Field.Field>
 
-		<div class="form-group">
-			<p class="field-label" id="blog-tags-label">Tags</p>
-			<TagInput
-				{tags}
-				labelledBy="blog-tags-label"
-				placeholder="Add tags..."
-				onchange={(v) => (tags = v)}
-			/>
-		</div>
+					<Field.Field>
+						<Field.Label for="description">Description</Field.Label>
+						<Textarea
+							id="description"
+							bind:value={description}
+							rows={3}
+							placeholder="Brief summary of the post..."
+						/>
+					</Field.Field>
 
-		<div class="form-group">
-			<p class="field-label" id="blog-content-label">Content</p>
-			<TipTapEditor
-				{content}
-				labelledBy="blog-content-label"
-				uploadPath="Blog"
-				onchange={(v) => (content = v)}
-			/>
-		</div>
+					<Field.Field>
+						<Field.Label for="blog-tags-label">Tags</Field.Label>
+						<Field.Description
+							>Use a few concise keywords for filtering and scanning.</Field.Description
+						>
+						<TagInput
+							{tags}
+							labelledBy="blog-tags-label"
+							placeholder="Add tags..."
+							onchange={(value) => (tags = value)}
+						/>
+					</Field.Field>
 
-		<div class="form-row">
-			<div class="form-group">
-				<label for="blogUrl">Blog URL</label>
-				<input id="blogUrl" type="url" bind:value={blogUrl} placeholder="https://..." />
-			</div>
-			<div class="form-group">
-				<label for="githubUrl">GitHub URL</label>
-				<input
-					id="githubUrl"
-					type="url"
-					bind:value={githubUrl}
-					placeholder="https://github.com/..."
-				/>
-			</div>
-		</div>
+					<Field.Field>
+						<Field.Label for="blog-content-label">Content</Field.Label>
+						<Field.Description>Write in markdown using the editor controls below.</Field.Description
+						>
+						<TipTapEditor
+							{content}
+							labelledBy="blog-content-label"
+							uploadPath="Blog"
+							onchange={(value) => (content = value)}
+						/>
+					</Field.Field>
 
-		<div class="form-row">
-			<div class="form-group">
-				<label for="liveUrl">Live URL</label>
-				<input id="liveUrl" type="url" bind:value={liveUrl} placeholder="https://..." />
-			</div>
-			<div class="form-group">
-				<label for="ordering">Order</label>
-				<input id="ordering" type="number" bind:value={ordering} />
-			</div>
-		</div>
+					<div class="admin-form-grid">
+						<Field.Field>
+							<Field.Label for="blogUrl">Blog URL</Field.Label>
+							<Input id="blogUrl" type="url" bind:value={blogUrl} placeholder="https://..." />
+						</Field.Field>
 
-		<div class="form-actions">
-			<button type="submit" class="btn-save" disabled={saving || !title.trim()}>
-				{saving ? 'Saving...' : 'Update Post'}
-			</button>
-			<a href="/admin/blogs" class="btn-cancel">Cancel</a>
-		</div>
-	</form>
-</div>
+						<Field.Field>
+							<Field.Label for="githubUrl">GitHub URL</Field.Label>
+							<Input
+								id="githubUrl"
+								type="url"
+								bind:value={githubUrl}
+								placeholder="https://github.com/..."
+							/>
+						</Field.Field>
+					</div>
 
-<style>
-	.page {
-		max-width: 640px;
-	}
+					<div class="admin-form-grid">
+						<Field.Field>
+							<Field.Label for="liveUrl">Live URL</Field.Label>
+							<Input id="liveUrl" type="url" bind:value={liveUrl} placeholder="https://..." />
+						</Field.Field>
 
-	.back-link {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		font-size: 13px;
-		color: #888;
-		text-decoration: none;
-		margin-bottom: 20px;
-		transition: color 0.15s;
-	}
+						<Field.Field>
+							<Field.Label for="ordering">Ordering</Field.Label>
+							<Input id="ordering" type="number" bind:value={ordering} class="md:max-w-32" />
+						</Field.Field>
+					</div>
+				</div>
 
-	.back-link:hover {
-		color: #1a1a1a;
-	}
-
-	h1 {
-		font-size: 24px;
-		font-weight: 700;
-		letter-spacing: -0.02em;
-		margin: 0 0 28px;
-	}
-
-	.form {
-		display: flex;
-		flex-direction: column;
-		gap: 20px;
-	}
-
-	.form-group {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.form-group label,
-	.field-label {
-		font-size: 13px;
-		font-weight: 600;
-		color: #555;
-		margin-bottom: 6px;
-	}
-
-	.form-group input,
-	.form-group textarea {
-		width: 100%;
-		padding: 10px 14px;
-		border: 1px solid #e0ddd8;
-		border-radius: 10px;
-		background: #fafaf9;
-		font-size: 14px;
-		color: #1a1a1a;
-		box-sizing: border-box;
-		font-family: inherit;
-		transition: all 0.2s;
-	}
-
-	.form-group input:focus,
-	.form-group textarea:focus {
-		outline: none;
-		border-color: #1a1a1a;
-		background: white;
-		box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.06);
-	}
-
-	.form-group textarea {
-		resize: vertical;
-		line-height: 1.5;
-	}
-
-	.form-row {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 16px;
-	}
-
-	.form-actions {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		padding-top: 8px;
-	}
-
-	.btn-save {
-		display: inline-flex;
-		align-items: center;
-		padding: 10px 24px;
-		background: #1a1a1a;
-		color: white;
-		border: none;
-		border-radius: 10px;
-		font-size: 14px;
-		font-weight: 600;
-		cursor: pointer;
-		transition: all 0.2s;
-	}
-
-	.btn-save:hover:not(:disabled) {
-		background: #333;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-	}
-
-	.btn-save:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-
-	.btn-cancel {
-		font-size: 14px;
-		color: #888;
-		text-decoration: none;
-		padding: 10px 20px;
-		border-radius: 10px;
-		transition: all 0.15s;
-	}
-
-	.btn-cancel:hover {
-		background: #f0ede8;
-		color: #555;
-	}
-
-	@media (max-width: 500px) {
-		.form-row {
-			grid-template-columns: 1fr;
-		}
-	}
-</style>
+				<div
+					class="border-border/70 flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end"
+				>
+					<Button href="/admin/blogs" variant="outline" size="lg">Cancel</Button>
+					<Button type="submit" size="lg" disabled={saving || !title.trim()}>
+						{#if saving}
+							<Loader2 class="size-4 animate-spin" />
+							<span>Saving...</span>
+						{:else}
+							<Save class="size-4" />
+							<span>Update post</span>
+						{/if}
+					</Button>
+				</div>
+			</form>
+		</Card.Content>
+	</Card.Root>
+</section>

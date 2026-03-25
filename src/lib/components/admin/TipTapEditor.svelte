@@ -5,20 +5,22 @@
 	import { Markdown, type MarkdownStorage } from 'tiptap-markdown';
 	import {
 		Bold,
-		Italic,
-		Strikethrough,
 		Code,
-		List,
-		ListOrdered,
 		Heading1,
 		Heading2,
 		Heading3,
-		Quote,
-		Minus,
 		ImagePlus,
-		Undo,
-		Redo
+		Italic,
+		List,
+		ListOrdered,
+		Minus,
+		Quote,
+		Redo,
+		Strikethrough,
+		Undo
 	} from 'lucide-svelte';
+	import { Button } from '$lib/components/admin/ui/button/index.js';
+	import { cn } from '$lib/utils/admin.js';
 
 	interface Props {
 		content: string;
@@ -27,12 +29,15 @@
 		labelledBy?: string;
 	}
 
-	const { content, onchange, uploadPath = 'Blog', labelledBy }: Props = $props();
+	let { content, onchange, uploadPath = 'Blog', labelledBy }: Props = $props();
 
 	let element: HTMLDivElement;
 	let editor: Editor;
 	let ready = $state(false);
 	let toolbarVersion = $state(0);
+
+	const toolbarButtonClass =
+		'rounded-md border border-transparent bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground';
 
 	function getMarkdown(editorInstance: Editor): string {
 		return (editorInstance.storage as { markdown?: MarkdownStorage }).markdown?.getMarkdown() ?? '';
@@ -51,8 +56,8 @@
 					...(labelledBy ? { 'aria-labelledby': labelledBy } : {})
 				}
 			},
-			onUpdate: ({ editor: e }) => {
-				onchange(getMarkdown(e));
+			onUpdate: ({ editor: editorInstance }) => {
+				onchange(getMarkdown(editorInstance));
 			}
 		});
 
@@ -70,7 +75,8 @@
 			editor.destroy();
 		};
 	});
-	function btn(command: string, attrs?: Record<string, unknown>) {
+
+	function runCommand(command: string, attrs?: Record<string, unknown>) {
 		return () => {
 			if (!editor) return;
 			const chain = editor.chain().focus();
@@ -123,13 +129,16 @@
 		input.onchange = async () => {
 			const file = input.files?.[0];
 			if (!file) return;
+
 			const formData = new FormData();
 			formData.append('file', file);
 			formData.append('path', uploadPath);
+
 			try {
-				const res = await fetch('/api/upload', { method: 'POST', body: formData });
-				if (!res.ok) return;
-				const { url } = await res.json();
+				const response = await fetch('/api/upload', { method: 'POST', body: formData });
+				if (!response.ok) return;
+
+				const { url } = await response.json();
 				editor
 					.chain()
 					.focus()
@@ -146,282 +155,273 @@
 	}
 </script>
 
-<div class="tiptap-wrapper">
+<div class="admin-surface overflow-hidden rounded-2xl">
 	{#if ready}
-		<div class="tiptap-toolbar" data-toolbar-version={toolbarVersion}>
-			<div class="toolbar-group">
-				<button
+		<div class="border-border/70 bg-muted/35 flex flex-wrap items-center gap-2 border-b p-3">
+			<div class="flex flex-wrap gap-1" data-toolbar-version={toolbarVersion}>
+				<Button
 					type="button"
-					class="tb"
-					class:active={isActive('bold')}
-					onclick={btn('toggleBold')}
+					variant="ghost"
+					size="icon-sm"
+					class={cn(
+						toolbarButtonClass,
+						isActive('bold') && 'border-border bg-background text-foreground shadow-sm'
+					)}
+					onclick={runCommand('toggleBold')}
 					title="Bold"
 				>
-					<Bold size={16} />
-				</button>
-				<button
+					<Bold class="size-4" />
+				</Button>
+				<Button
 					type="button"
-					class="tb"
-					class:active={isActive('italic')}
-					onclick={btn('toggleItalic')}
+					variant="ghost"
+					size="icon-sm"
+					class={cn(
+						toolbarButtonClass,
+						isActive('italic') && 'border-border bg-background text-foreground shadow-sm'
+					)}
+					onclick={runCommand('toggleItalic')}
 					title="Italic"
 				>
-					<Italic size={16} />
-				</button>
-				<button
+					<Italic class="size-4" />
+				</Button>
+				<Button
 					type="button"
-					class="tb"
-					class:active={isActive('strike')}
-					onclick={btn('toggleStrike')}
+					variant="ghost"
+					size="icon-sm"
+					class={cn(
+						toolbarButtonClass,
+						isActive('strike') && 'border-border bg-background text-foreground shadow-sm'
+					)}
+					onclick={runCommand('toggleStrike')}
 					title="Strikethrough"
 				>
-					<Strikethrough size={16} />
-				</button>
-				<button
+					<Strikethrough class="size-4" />
+				</Button>
+				<Button
 					type="button"
-					class="tb"
-					class:active={isActive('code')}
-					onclick={btn('toggleCode')}
+					variant="ghost"
+					size="icon-sm"
+					class={cn(
+						toolbarButtonClass,
+						isActive('code') && 'border-border bg-background text-foreground shadow-sm'
+					)}
+					onclick={runCommand('toggleCode')}
 					title="Code"
 				>
-					<Code size={16} />
-				</button>
+					<Code class="size-4" />
+				</Button>
 			</div>
 
-			<div class="toolbar-sep"></div>
+			<div class="bg-border/70 h-6 w-px"></div>
 
-			<div class="toolbar-group">
-				<button
+			<div class="flex flex-wrap gap-1">
+				<Button
 					type="button"
-					class="tb"
-					class:active={isActive('heading', { level: 1 })}
-					onclick={btn('toggleHeading', { level: 1 })}
+					variant="ghost"
+					size="icon-sm"
+					class={cn(
+						toolbarButtonClass,
+						isActive('heading', { level: 1 }) &&
+							'border-border bg-background text-foreground shadow-sm'
+					)}
+					onclick={runCommand('toggleHeading', { level: 1 })}
 					title="Heading 1"
 				>
-					<Heading1 size={16} />
-				</button>
-				<button
+					<Heading1 class="size-4" />
+				</Button>
+				<Button
 					type="button"
-					class="tb"
-					class:active={isActive('heading', { level: 2 })}
-					onclick={btn('toggleHeading', { level: 2 })}
+					variant="ghost"
+					size="icon-sm"
+					class={cn(
+						toolbarButtonClass,
+						isActive('heading', { level: 2 }) &&
+							'border-border bg-background text-foreground shadow-sm'
+					)}
+					onclick={runCommand('toggleHeading', { level: 2 })}
 					title="Heading 2"
 				>
-					<Heading2 size={16} />
-				</button>
-				<button
+					<Heading2 class="size-4" />
+				</Button>
+				<Button
 					type="button"
-					class="tb"
-					class:active={isActive('heading', { level: 3 })}
-					onclick={btn('toggleHeading', { level: 3 })}
+					variant="ghost"
+					size="icon-sm"
+					class={cn(
+						toolbarButtonClass,
+						isActive('heading', { level: 3 }) &&
+							'border-border bg-background text-foreground shadow-sm'
+					)}
+					onclick={runCommand('toggleHeading', { level: 3 })}
 					title="Heading 3"
 				>
-					<Heading3 size={16} />
-				</button>
+					<Heading3 class="size-4" />
+				</Button>
 			</div>
 
-			<div class="toolbar-sep"></div>
+			<div class="bg-border/70 h-6 w-px"></div>
 
-			<div class="toolbar-group">
-				<button
+			<div class="flex flex-wrap gap-1">
+				<Button
 					type="button"
-					class="tb"
-					class:active={isActive('bulletList')}
-					onclick={btn('toggleBulletList')}
-					title="Bullet List"
+					variant="ghost"
+					size="icon-sm"
+					class={cn(
+						toolbarButtonClass,
+						isActive('bulletList') && 'border-border bg-background text-foreground shadow-sm'
+					)}
+					onclick={runCommand('toggleBulletList')}
+					title="Bullet list"
 				>
-					<List size={16} />
-				</button>
-				<button
+					<List class="size-4" />
+				</Button>
+				<Button
 					type="button"
-					class="tb"
-					class:active={isActive('orderedList')}
-					onclick={btn('toggleOrderedList')}
-					title="Numbered List"
+					variant="ghost"
+					size="icon-sm"
+					class={cn(
+						toolbarButtonClass,
+						isActive('orderedList') && 'border-border bg-background text-foreground shadow-sm'
+					)}
+					onclick={runCommand('toggleOrderedList')}
+					title="Ordered list"
 				>
-					<ListOrdered size={16} />
-				</button>
-				<button
+					<ListOrdered class="size-4" />
+				</Button>
+				<Button
 					type="button"
-					class="tb"
-					class:active={isActive('blockquote')}
-					onclick={btn('toggleBlockquote')}
+					variant="ghost"
+					size="icon-sm"
+					class={cn(
+						toolbarButtonClass,
+						isActive('blockquote') && 'border-border bg-background text-foreground shadow-sm'
+					)}
+					onclick={runCommand('toggleBlockquote')}
 					title="Quote"
 				>
-					<Quote size={16} />
-				</button>
-				<button type="button" class="tb" onclick={btn('setHorizontalRule')} title="Divider">
-					<Minus size={16} />
-				</button>
+					<Quote class="size-4" />
+				</Button>
+				<Button
+					type="button"
+					variant="ghost"
+					size="icon-sm"
+					class={toolbarButtonClass}
+					onclick={runCommand('setHorizontalRule')}
+					title="Divider"
+				>
+					<Minus class="size-4" />
+				</Button>
 			</div>
 
-			<div class="toolbar-sep"></div>
-
-			<div class="toolbar-group">
-				<button type="button" class="tb" onclick={insertImage} title="Insert Image">
-					<ImagePlus size={16} />
-				</button>
-			</div>
-
-			<div class="toolbar-spacer"></div>
-
-			<div class="toolbar-group">
-				<button type="button" class="tb" onclick={btn('undo')} title="Undo">
-					<Undo size={16} />
-				</button>
-				<button type="button" class="tb" onclick={btn('redo')} title="Redo">
-					<Redo size={16} />
-				</button>
+			<div class="ml-auto flex flex-wrap gap-1">
+				<Button
+					type="button"
+					variant="ghost"
+					size="icon-sm"
+					class={toolbarButtonClass}
+					onclick={insertImage}
+					title="Insert image"
+				>
+					<ImagePlus class="size-4" />
+				</Button>
+				<Button
+					type="button"
+					variant="ghost"
+					size="icon-sm"
+					class={toolbarButtonClass}
+					onclick={runCommand('undo')}
+					title="Undo"
+				>
+					<Undo class="size-4" />
+				</Button>
+				<Button
+					type="button"
+					variant="ghost"
+					size="icon-sm"
+					class={toolbarButtonClass}
+					onclick={runCommand('redo')}
+					title="Redo"
+				>
+					<Redo class="size-4" />
+				</Button>
 			</div>
 		</div>
 	{/if}
 
-	<div bind:this={element} class="tiptap-editor"></div>
+	<div bind:this={element} class="min-h-[320px] px-4 py-5 sm:px-5"></div>
 </div>
 
 <style>
-	.tiptap-wrapper {
-		border: 1px solid #e0ddd8;
-		border-radius: 10px;
-		overflow: hidden;
-		background: white;
-	}
-
-	.tiptap-toolbar {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-		padding: 6px 8px;
-		background: #fafaf9;
-		border-bottom: 1px solid #e0ddd8;
-		flex-wrap: wrap;
-	}
-
-	.toolbar-group {
-		display: flex;
-		gap: 2px;
-	}
-
-	.toolbar-sep {
-		width: 1px;
-		height: 20px;
-		background: #e0ddd8;
-		margin: 0 4px;
-	}
-
-	.toolbar-spacer {
-		flex: 1;
-	}
-
-	.tb {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 32px;
-		height: 32px;
-		border: none;
-		background: none;
-		border-radius: 6px;
-		cursor: pointer;
-		color: #666;
-		transition: all 0.15s;
-		padding: 0;
-	}
-
-	.tb:hover {
-		background: #f0ede8;
-		color: #1a1a1a;
-	}
-
-	.tb.active {
-		background: #1a1a1a;
-		color: white;
-	}
-
-	.tiptap-editor {
-		min-height: 300px;
-		padding: 16px;
-	}
-
 	:global(.tiptap-content) {
 		outline: none;
-		font-size: 15px;
-		line-height: 1.7;
-		color: #1a1a1a;
+		font-size: 0.95rem;
+		line-height: 1.8;
+		color: var(--foreground);
 	}
 
 	:global(.tiptap-content > * + *) {
-		margin-top: 0.75em;
+		margin-top: 0.85em;
 	}
 
 	:global(.tiptap-content h1) {
-		font-size: 1.8em;
+		font-size: 1.75rem;
 		font-weight: 700;
-		margin-top: 1.2em;
+		letter-spacing: -0.03em;
 	}
 
 	:global(.tiptap-content h2) {
-		font-size: 1.4em;
-		font-weight: 600;
-		margin-top: 1em;
+		font-size: 1.35rem;
+		font-weight: 650;
+		letter-spacing: -0.02em;
 	}
 
 	:global(.tiptap-content h3) {
-		font-size: 1.15em;
-		font-weight: 600;
-		margin-top: 0.8em;
+		font-size: 1.05rem;
+		font-weight: 650;
 	}
 
 	:global(.tiptap-content ul),
 	:global(.tiptap-content ol) {
-		padding-left: 1.5em;
+		padding-left: 1.35rem;
 	}
 
 	:global(.tiptap-content blockquote) {
-		border-left: 3px solid #e0ddd8;
-		padding-left: 1em;
-		color: #666;
+		border-left: 3px solid var(--border);
+		padding-left: 1rem;
+		color: var(--muted-foreground);
 		font-style: italic;
 	}
 
 	:global(.tiptap-content code) {
-		background: #f0ede8;
-		padding: 2px 6px;
-		border-radius: 4px;
+		background: color-mix(in oklab, var(--muted) 85%, white 15%);
+		padding: 0.15rem 0.45rem;
+		border-radius: 0.4rem;
 		font-size: 0.9em;
-		font-family: 'JetBrains Mono', monospace;
 	}
 
 	:global(.tiptap-content pre) {
-		background: #1a1a1a;
-		color: #e5e5e5;
-		padding: 16px;
-		border-radius: 8px;
 		overflow-x: auto;
+		border-radius: 1rem;
+		background: color-mix(in oklab, var(--foreground) 92%, black 8%);
+		padding: 1rem;
+		color: white;
 	}
 
 	:global(.tiptap-content pre code) {
-		background: none;
+		background: transparent;
 		padding: 0;
 		color: inherit;
 	}
 
 	:global(.tiptap-content img) {
 		max-width: 100%;
-		border-radius: 8px;
+		border-radius: 1rem;
 	}
 
 	:global(.tiptap-content hr) {
-		border: none;
-		border-top: 1px solid #e0ddd8;
-		margin: 1.5em 0;
-	}
-
-	:global(.tiptap-content p.is-editor-empty:first-child::before) {
-		color: #adb5bd;
-		content: attr(data-placeholder);
-		float: left;
-		height: 0;
-		pointer-events: none;
+		margin: 1.5rem 0;
+		border: 0;
+		border-top: 1px solid var(--border);
 	}
 </style>

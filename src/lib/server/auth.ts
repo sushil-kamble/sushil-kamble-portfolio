@@ -1,34 +1,51 @@
 import { SignJWT, jwtVerify } from 'jose';
-import { ADMIN_PASSWORD } from '$env/static/private';
+import { env } from '$env/dynamic/private';
+import type { Cookies } from '@sveltejs/kit';
 
-const secret = new TextEncoder().encode(ADMIN_PASSWORD);
+function requireAdminPassword(): string {
+	const password = env.ADMIN_PASSWORD;
+	if (!password) {
+		throw new Error('Missing required environment variable: ADMIN_PASSWORD');
+	}
+	return password;
+}
+
 const COOKIE_NAME = 'admin_token';
 const TOKEN_EXPIRY = '7d';
+
+function getSecret(): Uint8Array {
+	return new TextEncoder().encode(requireAdminPassword());
+}
+
+export function getAdminPassword(): string {
+	return requireAdminPassword();
+}
+
+export function getAuthCookieOptions(): Parameters<Cookies['set']>[2] {
+	return {
+		httpOnly: true,
+		sameSite: 'strict',
+		secure: process.env.NODE_ENV === 'production',
+		path: '/admin',
+		maxAge: 7 * 24 * 60 * 60
+	};
+}
 
 export async function createToken(): Promise<string> {
 	return new SignJWT({ role: 'admin' })
 		.setProtectedHeader({ alg: 'HS256' })
 		.setIssuedAt()
 		.setExpirationTime(TOKEN_EXPIRY)
-		.sign(secret);
+		.sign(getSecret());
 }
 
 export async function verifyToken(token: string): Promise<boolean> {
 	try {
-		await jwtVerify(token, secret);
+		await jwtVerify(token, getSecret());
 		return true;
 	} catch {
 		return false;
 	}
-}
-
-export function getTokenCookie(token: string): string {
-	const isProduction = process.env.NODE_ENV === 'production';
-	return `${COOKIE_NAME}=${token}; HttpOnly; ${isProduction ? 'Secure; ' : ''}SameSite=Strict; Path=/admin; Max-Age=${7 * 24 * 60 * 60}`;
-}
-
-export function clearTokenCookie(): string {
-	return `${COOKIE_NAME}=; HttpOnly; SameSite=Strict; Path=/admin; Max-Age=0`;
 }
 
 export { COOKIE_NAME };

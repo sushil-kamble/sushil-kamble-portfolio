@@ -1,45 +1,50 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { SvelteSet } from 'svelte/reactivity';
-	import type { PageData } from './$types';
-	import TagInput from '$lib/components/admin/TagInput.svelte';
 	import {
-		Zap,
-		Plus,
-		Trash2,
+		ArrowDown,
+		ArrowUp,
+		Check,
 		GripVertical,
 		Loader2,
-		Check,
-		ArrowUp,
-		ArrowDown
+		Plus,
+		Trash2,
+		Zap
 	} from 'lucide-svelte';
+	import type { PageData } from './$types';
+	import AdminEmptyState from '$lib/components/admin/AdminEmptyState.svelte';
+	import AdminPageHeader from '$lib/components/admin/AdminPageHeader.svelte';
+	import TagInput from '$lib/components/admin/TagInput.svelte';
+	import * as AlertDialog from '$lib/components/admin/ui/alert-dialog/index.js';
+	import { Badge } from '$lib/components/admin/ui/badge/index.js';
+	import { Button, buttonVariants } from '$lib/components/admin/ui/button/index.js';
+	import * as Card from '$lib/components/admin/ui/card/index.js';
+	import { Input } from '$lib/components/admin/ui/input/index.js';
 
 	const props: { data: PageData } = $props();
 
-	let categories = $derived(props.data.categories.map((c) => ({ ...c, skills: [...c.skills] })));
+	let categories = $derived(
+		props.data.categories.map((category) => ({ ...category, skills: [...category.skills] }))
+	);
 	let savingIds = new SvelteSet<number>();
 	let savedIds = new SvelteSet<number>();
 	let deletingId = $state<number | null>(null);
-	let confirmDeleteId = $state<number | null>(null);
 	let adding = $state(false);
 	let newTitle = $state('');
 
-	async function saveCategory(cat: (typeof categories)[0]) {
-		savingIds.add(cat.id);
+	async function saveCategory(category: (typeof categories)[0]) {
+		savingIds.add(category.id);
 
 		const formData = new FormData();
-		formData.set('id', String(cat.id));
-		formData.set('title', cat.title);
-		formData.set('skills', JSON.stringify(cat.skills));
+		formData.set('id', String(category.id));
+		formData.set('title', category.title);
+		formData.set('skills', JSON.stringify(category.skills));
 
 		await fetch('?/update', { method: 'POST', body: formData });
 
-		savingIds.delete(cat.id);
-
-		savedIds.add(cat.id);
-		setTimeout(() => {
-			savedIds.delete(cat.id);
-		}, 2000);
+		savingIds.delete(category.id);
+		savedIds.add(category.id);
+		setTimeout(() => savedIds.delete(category.id), 2000);
 	}
 
 	async function deleteCategory(id: number) {
@@ -50,7 +55,6 @@
 		await fetch('?/delete', { method: 'POST', body: formData });
 
 		deletingId = null;
-		confirmDeleteId = null;
 		await invalidateAll();
 	}
 
@@ -75,7 +79,7 @@
 		const reordered = [...categories];
 		[reordered[index], reordered[swapIndex]] = [reordered[swapIndex], reordered[index]];
 
-		const order = reordered.map((cat, i) => ({ id: cat.id, ordering: i }));
+		const order = reordered.map((category, ordering) => ({ id: category.id, ordering }));
 
 		const formData = new FormData();
 		formData.set('order', JSON.stringify(order));
@@ -84,463 +88,165 @@
 		await invalidateAll();
 	}
 
-	function handleSkillsChange(catId: number, newSkills: string[]) {
-		const cat = categories.find((c) => c.id === catId);
-		if (cat) {
-			cat.skills = newSkills;
-			saveCategory(cat);
-		}
+	function handleSkillsChange(categoryId: number, skills: string[]) {
+		const category = categories.find((item) => item.id === categoryId);
+		if (!category) return;
+		category.skills = skills;
+		saveCategory(category);
 	}
 
-	function handleTitleBlur(cat: (typeof categories)[0], originalTitle: string) {
-		if (cat.title.trim() && cat.title !== originalTitle) {
-			saveCategory(cat);
+	function handleTitleBlur(category: (typeof categories)[0], originalTitle: string) {
+		if (category.title.trim() && category.title !== originalTitle) {
+			saveCategory(category);
 		}
 	}
 </script>
 
-<div class="page">
-	<header class="page-header">
-		<div class="page-header-left">
-			<div class="page-header-icon">
-				<Zap size={20} strokeWidth={1.8} />
-			</div>
-			<div>
-				<h1>Skills</h1>
-				<p class="page-subtitle">
-					{categories.length}
-					{categories.length === 1 ? 'category' : 'categories'}
-				</p>
-			</div>
-		</div>
-	</header>
+<section class="admin-page-medium">
+	<AdminPageHeader
+		title="Skills"
+		description={`Manage ${categories.length} ${categories.length === 1 ? 'category' : 'categories'} and keep skills grouped consistently.`}
+	>
+		{#snippet icon()}
+			<Zap class="size-5" />
+		{/snippet}
+	</AdminPageHeader>
 
-	<!-- Add Category -->
-	<div class="add-section">
-		<form
-			class="add-form"
-			onsubmit={(e) => {
-				e.preventDefault();
-				addCategory();
-			}}
-		>
-			<input
-				type="text"
-				bind:value={newTitle}
-				placeholder="New category title..."
-				class="add-input"
-			/>
-			<button type="submit" class="add-btn" disabled={adding || !newTitle.trim()}>
-				{#if adding}
-					<Loader2 size={16} class="spin" />
-				{:else}
-					<Plus size={16} />
-				{/if}
-				<span>Add Category</span>
-			</button>
-		</form>
-	</div>
+	<Card.Root class="admin-surface">
+		<Card.Content class="p-5">
+			<form
+				class="flex flex-col gap-3 sm:flex-row"
+				onsubmit={(event) => {
+					event.preventDefault();
+					addCategory();
+				}}
+			>
+				<Input
+					type="text"
+					bind:value={newTitle}
+					placeholder="New category title..."
+					class="flex-1"
+				/>
+				<Button type="submit" size="lg" disabled={adding || !newTitle.trim()}>
+					{#if adding}
+						<Loader2 class="size-4 animate-spin" />
+					{:else}
+						<Plus class="size-4" />
+					{/if}
+					<span>Add category</span>
+				</Button>
+			</form>
+		</Card.Content>
+	</Card.Root>
 
-	<!-- Categories List -->
 	{#if categories.length === 0}
-		<div class="empty-state">
-			<div class="empty-icon">
-				<Zap size={32} strokeWidth={1.2} />
-			</div>
-			<p class="empty-title">No skill categories yet</p>
-			<p class="empty-desc">Add your first category above to get started</p>
-		</div>
+		<AdminEmptyState
+			title="No skill categories yet"
+			description="Create the first category and start adding the skills that should appear on the portfolio."
+		>
+			{#snippet icon()}
+				<Zap class="size-6" />
+			{/snippet}
+		</AdminEmptyState>
 	{:else}
-		<div class="categories-list">
-			{#each categories as cat, i (cat.id)}
+		<div class="grid gap-4">
+			{#each categories as category, index (category.id)}
 				{@const originalTitle =
-					props.data.categories.find((c) => c.id === cat.id)?.title ?? cat.title}
-				<div class="category-card">
-					<div class="category-header">
-						<div class="category-drag-handle">
-							<GripVertical size={16} />
+					props.data.categories.find((item) => item.id === category.id)?.title ?? category.title}
+				<Card.Root class="admin-surface">
+					<Card.Content class="space-y-4 p-5">
+						<div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+							<div class="flex min-w-0 items-start gap-3">
+								<div class="admin-icon-shell size-10 shrink-0 rounded-xl">
+									<GripVertical class="size-4" />
+								</div>
+								<div class="min-w-0 space-y-2">
+									<Input
+										type="text"
+										bind:value={category.title}
+										onblur={() => handleTitleBlur(category, originalTitle)}
+										placeholder="Category title"
+										class="h-10 min-w-0 font-medium"
+									/>
+									<div class="text-muted-foreground flex flex-wrap items-center gap-2 text-xs">
+										<Badge variant="outline" class="rounded-full px-2.5 py-1">
+											{category.skills.length} skill{category.skills.length === 1 ? '' : 's'}
+										</Badge>
+										{#if savingIds.has(category.id)}
+											<Badge variant="secondary" class="gap-1.5 rounded-full px-2.5 py-1">
+												<Loader2 class="size-3.5 animate-spin" />
+												<span>Saving</span>
+											</Badge>
+										{:else if savedIds.has(category.id)}
+											<Badge
+												variant="secondary"
+												class="gap-1.5 rounded-full px-2.5 py-1 text-emerald-700"
+											>
+												<Check class="size-3.5" />
+												<span>Saved</span>
+											</Badge>
+										{/if}
+									</div>
+								</div>
+							</div>
+
+							<div class="flex items-center gap-2">
+								<Button
+									variant="outline"
+									size="icon-sm"
+									onclick={() => moveCategory(index, 'up')}
+									disabled={index === 0}
+									aria-label="Move category up"
+								>
+									<ArrowUp class="size-4" />
+								</Button>
+								<Button
+									variant="outline"
+									size="icon-sm"
+									onclick={() => moveCategory(index, 'down')}
+									disabled={index === categories.length - 1}
+									aria-label="Move category down"
+								>
+									<ArrowDown class="size-4" />
+								</Button>
+
+								<AlertDialog.Root>
+									<AlertDialog.Trigger
+										class={buttonVariants({ variant: 'destructive', size: 'icon-sm' })}
+									>
+										<Trash2 class="size-4" />
+										<span class="sr-only">Delete {category.title}</span>
+									</AlertDialog.Trigger>
+									<AlertDialog.Content>
+										<AlertDialog.Header>
+											<AlertDialog.Title>Delete category</AlertDialog.Title>
+											<AlertDialog.Description>
+												This will remove {category.title} and all of its skills from the admin panel.
+											</AlertDialog.Description>
+										</AlertDialog.Header>
+										<AlertDialog.Footer>
+											<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+											<AlertDialog.Action
+												variant="destructive"
+												disabled={deletingId === category.id}
+												onclick={() => deleteCategory(category.id)}
+											>
+												{deletingId === category.id ? 'Deleting...' : 'Delete'}
+											</AlertDialog.Action>
+										</AlertDialog.Footer>
+									</AlertDialog.Content>
+								</AlertDialog.Root>
+							</div>
 						</div>
 
-						<input
-							type="text"
-							class="category-title-input"
-							bind:value={cat.title}
-							onblur={() => handleTitleBlur(cat, originalTitle)}
-							placeholder="Category title"
-						/>
-
-						<div class="category-actions">
-							<!-- Reorder buttons -->
-							<button
-								class="icon-btn"
-								onclick={() => moveCategory(i, 'up')}
-								disabled={i === 0}
-								aria-label="Move up"
-								title="Move up"
-							>
-								<ArrowUp size={14} />
-							</button>
-							<button
-								class="icon-btn"
-								onclick={() => moveCategory(i, 'down')}
-								disabled={i === categories.length - 1}
-								aria-label="Move down"
-								title="Move down"
-							>
-								<ArrowDown size={14} />
-							</button>
-
-							<!-- Save indicator -->
-							{#if savingIds.has(cat.id)}
-								<span class="save-indicator">
-									<Loader2 size={14} class="spin" />
-								</span>
-							{:else if savedIds.has(cat.id)}
-								<span class="save-indicator saved">
-									<Check size={14} />
-								</span>
-							{/if}
-
-							<!-- Delete -->
-							{#if confirmDeleteId === cat.id}
-								<button
-									class="icon-btn danger confirm"
-									onclick={() => deleteCategory(cat.id)}
-									disabled={deletingId === cat.id}
-									aria-label="Confirm delete"
-									title="Confirm delete"
-								>
-									{#if deletingId === cat.id}
-										<Loader2 size={14} class="spin" />
-									{:else}
-										<Check size={14} />
-									{/if}
-								</button>
-								<button
-									class="icon-btn"
-									onclick={() => (confirmDeleteId = null)}
-									aria-label="Cancel delete"
-									title="Cancel"
-								>
-									Cancel
-								</button>
-							{:else}
-								<button
-									class="icon-btn danger"
-									onclick={() => (confirmDeleteId = cat.id)}
-									aria-label="Delete category"
-									title="Delete"
-								>
-									<Trash2 size={14} />
-								</button>
-							{/if}
-						</div>
-					</div>
-
-					<div class="category-body">
 						<TagInput
-							tags={cat.skills}
+							tags={category.skills}
 							placeholder="Add a skill and press Enter..."
-							onchange={(newSkills) => handleSkillsChange(cat.id, newSkills)}
+							onchange={(skills) => handleSkillsChange(category.id, skills)}
 						/>
-					</div>
-				</div>
+					</Card.Content>
+				</Card.Root>
 			{/each}
 		</div>
 	{/if}
-</div>
-
-<style>
-	.page {
-		max-width: 720px;
-	}
-
-	/* ── Page Header ── */
-	.page-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 24px;
-	}
-
-	.page-header-left {
-		display: flex;
-		align-items: center;
-		gap: 14px;
-	}
-
-	.page-header-icon {
-		width: 44px;
-		height: 44px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: #fef3c7;
-		border-radius: 10px;
-		color: #d97706;
-		flex-shrink: 0;
-	}
-
-	.page-header h1 {
-		font-size: 22px;
-		font-weight: 700;
-		letter-spacing: -0.02em;
-		margin: 0;
-		line-height: 1.2;
-	}
-
-	.page-subtitle {
-		font-size: 14px;
-		color: #888;
-		margin: 2px 0 0;
-	}
-
-	/* ── Add Section ── */
-	.add-section {
-		margin-bottom: 20px;
-	}
-
-	.add-form {
-		display: flex;
-		gap: 10px;
-	}
-
-	.add-input {
-		flex: 1;
-		padding: 10px 16px;
-		border: 1px solid #e0ddd8;
-		border-radius: 10px;
-		font-size: 14px;
-		background: #fafaf9;
-		color: #1a1a1a;
-		outline: none;
-		transition: all 0.2s;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-	}
-
-	.add-input:focus {
-		border-color: #1a1a1a;
-		background: white;
-		box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.06);
-	}
-
-	.add-input::placeholder {
-		color: #aaa;
-	}
-
-	.add-btn {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		padding: 10px 18px;
-		border: none;
-		border-radius: 10px;
-		background: #1a1a1a;
-		color: white;
-		font-size: 13px;
-		font-weight: 600;
-		cursor: pointer;
-		transition: all 0.2s;
-		letter-spacing: -0.005em;
-		white-space: nowrap;
-	}
-
-	.add-btn:hover:not(:disabled) {
-		background: #333;
-		transform: translateY(-1px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-	}
-
-	.add-btn:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-
-	/* ── Empty State ── */
-	.empty-state {
-		text-align: center;
-		padding: 60px 20px;
-		background: white;
-		border: 1px solid #e8e5e0;
-		border-radius: 12px;
-	}
-
-	.empty-icon {
-		width: 64px;
-		height: 64px;
-		margin: 0 auto 16px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: #f5f3f0;
-		border-radius: 16px;
-		color: #aaa;
-	}
-
-	.empty-title {
-		font-size: 16px;
-		font-weight: 600;
-		margin: 0 0 4px;
-		color: #555;
-	}
-
-	.empty-desc {
-		font-size: 14px;
-		color: #aaa;
-		margin: 0;
-	}
-
-	/* ── Categories List ── */
-	.categories-list {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-	}
-
-	.category-card {
-		background: white;
-		border: 1px solid #e8e5e0;
-		border-radius: 12px;
-		overflow: hidden;
-		transition: border-color 0.2s;
-	}
-
-	.category-card:hover {
-		border-color: #d0cdc6;
-	}
-
-	.category-header {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 14px 16px;
-		border-bottom: 1px solid #f0ede8;
-	}
-
-	.category-drag-handle {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: #ccc;
-		flex-shrink: 0;
-		cursor: grab;
-	}
-
-	.category-title-input {
-		flex: 1;
-		border: 1px solid transparent;
-		background: transparent;
-		font-size: 15px;
-		font-weight: 600;
-		color: #1a1a1a;
-		outline: none;
-		padding: 6px 10px;
-		border-radius: 8px;
-		transition: all 0.2s;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-		letter-spacing: -0.01em;
-		min-width: 0;
-	}
-
-	.category-title-input:hover {
-		background: #fafaf9;
-		border-color: #e8e5e0;
-	}
-
-	.category-title-input:focus {
-		background: white;
-		border-color: #1a1a1a;
-		box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.06);
-	}
-
-	.category-actions {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-		flex-shrink: 0;
-	}
-
-	.icon-btn {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 30px;
-		height: 30px;
-		border: none;
-		background: none;
-		border-radius: 8px;
-		cursor: pointer;
-		color: #aaa;
-		transition: all 0.15s;
-		padding: 0;
-		font-size: 12px;
-		font-weight: 500;
-	}
-
-	.icon-btn:hover:not(:disabled) {
-		background: #f5f3f0;
-		color: #555;
-	}
-
-	.icon-btn:disabled {
-		opacity: 0.3;
-		cursor: not-allowed;
-	}
-
-	.icon-btn.danger:hover:not(:disabled) {
-		background: #fef2f2;
-		color: #dc2626;
-	}
-
-	.icon-btn.danger.confirm {
-		background: #fef2f2;
-		color: #dc2626;
-	}
-
-	/* Cancel button in delete confirmation is text-like */
-	.icon-btn:not(.danger):last-child {
-		width: auto;
-		padding: 0 8px;
-		font-size: 12px;
-		color: #888;
-	}
-
-	.save-indicator {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 30px;
-		height: 30px;
-		color: #aaa;
-	}
-
-	.save-indicator.saved {
-		color: #22c55e;
-	}
-
-	.category-body {
-		padding: 14px 16px;
-	}
-
-	/* ── Responsive ── */
-	@media (max-width: 480px) {
-		.add-form {
-			flex-direction: column;
-		}
-
-		.add-btn {
-			justify-content: center;
-		}
-
-		.category-header {
-			flex-wrap: wrap;
-		}
-
-		.category-actions {
-			width: 100%;
-			justify-content: flex-end;
-			margin-top: 4px;
-			padding-left: 24px;
-		}
-	}
-</style>
+</section>

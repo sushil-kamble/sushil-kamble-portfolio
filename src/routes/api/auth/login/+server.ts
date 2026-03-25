@@ -1,22 +1,15 @@
 import { json } from '@sveltejs/kit';
-import { ADMIN_PASSWORD } from '$env/static/private';
-import { createToken, getTokenCookie } from '$lib/server/auth';
+import { COOKIE_NAME, createToken, getAdminPassword, getAuthCookieOptions } from '$lib/server/auth';
 
-export async function POST({ request }) {
+export async function POST({ request, cookies }) {
 	const { password } = await request.json();
 
-	if (password !== ADMIN_PASSWORD) {
+	if (password !== getAdminPassword()) {
 		return json({ error: 'Invalid password' }, { status: 401 });
 	}
 
 	const token = await createToken();
+	cookies.set(COOKIE_NAME, token, getAuthCookieOptions());
 
-	return json(
-		{ success: true },
-		{
-			headers: {
-				'Set-Cookie': getTokenCookie(token)
-			}
-		}
-	);
+	return json({ success: true });
 }

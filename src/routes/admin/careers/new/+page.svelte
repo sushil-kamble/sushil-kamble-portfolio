@@ -1,238 +1,146 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { resolve } from '$app/paths';
-	import TagInput from '$lib/components/admin/TagInput.svelte';
-	import { ArrowLeft } from 'lucide-svelte';
+	import { Briefcase, Sparkles } from 'lucide-svelte';
+	import AdminBackLink from '$lib/components/admin/AdminBackLink.svelte';
+	import OrderedTextListEditor from '$lib/components/admin/OrderedTextListEditor.svelte';
+	import AdminPageHeader from '$lib/components/admin/AdminPageHeader.svelte';
+	import { Button } from '$lib/components/admin/ui/button/index.js';
+	import * as Card from '$lib/components/admin/ui/card/index.js';
+	import * as Field from '$lib/components/admin/ui/field/index.js';
+	import { Input } from '$lib/components/admin/ui/input/index.js';
+	import { Textarea } from '$lib/components/admin/ui/textarea/index.js';
 
 	let skills = $state<string[]>([]);
 	let detailsList = $state<string[]>([]);
 
-	let skillsJson = $derived(JSON.stringify(skills));
-	let detailsListJson = $derived(JSON.stringify(detailsList));
+	function normalizeItems(items: string[]): string[] {
+		return items.map((item) => item.trim()).filter(Boolean);
+	}
+
+	const skillsJson = $derived(JSON.stringify(normalizeItems(skills)));
+	const detailsListJson = $derived(JSON.stringify(normalizeItems(detailsList)));
 </script>
 
-<div class="form-page">
-	<a href={resolve('/admin/careers')} class="back-link">
-		<ArrowLeft size={16} />
-		<span>Back to Careers</span>
-	</a>
+<section class="admin-page-narrow">
+	<AdminBackLink href={resolve('/admin/careers')} label="Back to careers" />
 
-	<h1>Add Career</h1>
+	<AdminPageHeader
+		title="Add career"
+		description="Create a new work-history entry, including bullet points, links, and highlighted skills."
+	>
+		{#snippet icon()}
+			<Briefcase class="size-5" />
+		{/snippet}
+	</AdminPageHeader>
 
-	<form method="POST" use:enhance>
-		<div class="form-grid">
-			<div class="form-group full">
-				<label for="company">Company</label>
-				<input type="text" id="company" name="company" required placeholder="Company name" />
-			</div>
+	<Card.Root class="admin-surface">
+		<Card.Content class="p-6 sm:p-8">
+			<form class="space-y-6" method="POST" use:enhance>
+				<div class="admin-form-grid">
+					<Field.Field class="admin-form-span">
+						<Field.Label for="company">Company</Field.Label>
+						<Input id="company" name="company" required placeholder="Company name" />
+					</Field.Field>
 
-			<div class="form-group">
-				<label for="designation">Designation</label>
-				<input type="text" id="designation" name="designation" placeholder="e.g. Senior Engineer" />
-			</div>
+					<Field.Field>
+						<Field.Label for="designation">Designation</Field.Label>
+						<Input id="designation" name="designation" placeholder="e.g. Senior Engineer" />
+					</Field.Field>
 
-			<div class="form-group">
-				<label for="location">Location</label>
-				<input type="text" id="location" name="location" placeholder="e.g. Bengaluru, India" />
-			</div>
+					<Field.Field>
+						<Field.Label for="location">Location</Field.Label>
+						<Input id="location" name="location" placeholder="e.g. Bengaluru, India" />
+					</Field.Field>
 
-			<div class="form-group">
-				<label for="start">Start</label>
-				<input type="text" id="start" name="start" placeholder="e.g. Jan 2023" />
-			</div>
+					<Field.Field>
+						<Field.Label for="start">Start</Field.Label>
+						<Input id="start" name="start" placeholder="e.g. Jan 2023" />
+					</Field.Field>
 
-			<div class="form-group">
-				<label for="end">End</label>
-				<input type="text" id="end" name="end" placeholder="e.g. Present" />
-			</div>
+					<Field.Field>
+						<Field.Label for="end">End</Field.Label>
+						<Input id="end" name="end" placeholder="e.g. Present" />
+					</Field.Field>
 
-			<div class="form-group full">
-				<label for="details">Details</label>
-				<textarea id="details" name="details" rows="3" placeholder="Brief description of the role"
-				></textarea>
-			</div>
+					<Field.Field class="admin-form-span">
+						<Field.Label for="details">Summary</Field.Label>
+						<Textarea
+							id="details"
+							name="details"
+							rows={4}
+							placeholder="Brief description of the role"
+						/>
+					</Field.Field>
 
-			<div class="form-group full">
-				<label for="detailsList-input">Details List</label>
-				<TagInput
-					tags={detailsList}
-					placeholder="Add bullet point and press Enter..."
-					onchange={(val) => (detailsList = val)}
-				/>
-				<input type="hidden" id="detailsList-input" name="detailsList" value={detailsListJson} />
-			</div>
+					<Field.Field class="admin-form-span">
+						<Field.Label for="detailsList-input">Highlights</Field.Label>
+						<Field.Description>
+							Add bullet points that capture specific wins or responsibilities, and drag them into
+							the order you want shown.
+						</Field.Description>
+						<OrderedTextListEditor
+							items={detailsList}
+							labelledBy="detailsList-input"
+							placeholder="Add a highlight..."
+							addLabel="Add highlight"
+							emptyTitle="No highlights added yet"
+							emptyDescription="Write one accomplishment or responsibility per line, then reorder them so the strongest points appear first."
+							onchange={(value) => (detailsList = value)}
+						/>
+						<input
+							type="hidden"
+							id="detailsList-input"
+							name="detailsList"
+							value={detailsListJson}
+						/>
+					</Field.Field>
 
-			<div class="form-group full">
-				<label for="skills-input">Skills</label>
-				<TagInput
-					tags={skills}
-					placeholder="Add skill and press Enter..."
-					onchange={(val) => (skills = val)}
-				/>
-				<input type="hidden" id="skills-input" name="skills" value={skillsJson} />
-			</div>
+					<Field.Field class="admin-form-span">
+						<Field.Label for="skills-input">Skills</Field.Label>
+						<Field.Description
+							>These use the same badge treatment as the public career section. Edit and reorder
+							them directly here.</Field.Description
+						>
+						<OrderedTextListEditor
+							items={skills}
+							labelledBy="skills-input"
+							placeholder="Add a skill..."
+							addLabel="Add skill"
+							emptyTitle="No skills added yet"
+							emptyDescription="Use the badges to emphasize the technologies or strengths associated with this role."
+							showTechBadges={true}
+							onchange={(value) => (skills = value)}
+						/>
+						<input type="hidden" id="skills-input" name="skills" value={skillsJson} />
+					</Field.Field>
 
-			<div class="form-group">
-				<label for="logo">Logo URL</label>
-				<input type="url" id="logo" name="logo" placeholder="https://..." />
-			</div>
+					<Field.Field>
+						<Field.Label for="logo">Logo URL</Field.Label>
+						<Input id="logo" name="logo" type="url" placeholder="https://..." />
+					</Field.Field>
 
-			<div class="form-group">
-				<label for="link">Link URL</label>
-				<input type="url" id="link" name="link" placeholder="https://..." />
-			</div>
+					<Field.Field>
+						<Field.Label for="link">Link URL</Field.Label>
+						<Input id="link" name="link" type="url" placeholder="https://..." />
+					</Field.Field>
 
-			<div class="form-group">
-				<label for="ordering">Ordering</label>
-				<input type="number" id="ordering" name="ordering" value="0" />
-			</div>
-		</div>
+					<Field.Field>
+						<Field.Label for="ordering">Ordering</Field.Label>
+						<Input id="ordering" name="ordering" type="number" value="0" class="md:max-w-32" />
+					</Field.Field>
+				</div>
 
-		<div class="form-actions">
-			<a href={resolve('/admin/careers')} class="cancel-btn">Cancel</a>
-			<button type="submit" class="save-btn">Save Career</button>
-		</div>
-	</form>
-</div>
-
-<style>
-	.form-page {
-		max-width: 640px;
-	}
-
-	.back-link {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		font-size: 13px;
-		font-weight: 500;
-		color: #888;
-		text-decoration: none;
-		margin-bottom: 16px;
-		transition: color 0.15s;
-	}
-
-	.back-link:hover {
-		color: #1a1a1a;
-	}
-
-	h1 {
-		font-size: 24px;
-		font-weight: 700;
-		letter-spacing: -0.02em;
-		margin: 0 0 24px;
-	}
-
-	.form-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 16px;
-	}
-
-	.form-group {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.form-group.full {
-		grid-column: 1 / -1;
-	}
-
-	label {
-		font-size: 13px;
-		font-weight: 600;
-		color: #555;
-		margin-bottom: 6px;
-	}
-
-	input[type='text'],
-	input[type='url'],
-	input[type='number'],
-	textarea {
-		padding: 10px 14px;
-		border: 1px solid #e0ddd8;
-		border-radius: 10px;
-		background: #fafaf9;
-		font-size: 14px;
-		color: #1a1a1a;
-		transition: all 0.2s;
-		font-family: inherit;
-		width: 100%;
-		box-sizing: border-box;
-	}
-
-	input:focus,
-	textarea:focus {
-		outline: none;
-		border-color: #1a1a1a;
-		background: white;
-		box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.06);
-	}
-
-	input::placeholder,
-	textarea::placeholder {
-		color: #aaa;
-	}
-
-	textarea {
-		resize: vertical;
-		min-height: 80px;
-	}
-
-	.form-actions {
-		display: flex;
-		justify-content: flex-end;
-		gap: 10px;
-		margin-top: 28px;
-		padding-top: 20px;
-		border-top: 1px solid #e8e5e0;
-	}
-
-	.cancel-btn {
-		padding: 10px 20px;
-		border: 1px solid #e0ddd8;
-		border-radius: 10px;
-		background: white;
-		font-size: 13px;
-		font-weight: 600;
-		color: #666;
-		cursor: pointer;
-		text-decoration: none;
-		transition: all 0.15s;
-		display: inline-flex;
-		align-items: center;
-	}
-
-	.cancel-btn:hover {
-		border-color: #ccc;
-		color: #1a1a1a;
-	}
-
-	.save-btn {
-		padding: 10px 24px;
-		border: none;
-		border-radius: 10px;
-		background: #1a1a1a;
-		color: white;
-		font-size: 13px;
-		font-weight: 600;
-		cursor: pointer;
-		transition: all 0.2s;
-	}
-
-	.save-btn:hover {
-		background: #333;
-		transform: translateY(-1px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-	}
-
-	@media (max-width: 480px) {
-		.form-grid {
-			grid-template-columns: 1fr;
-		}
-
-		.form-group.full {
-			grid-column: 1;
-		}
-	}
-</style>
+				<div
+					class="border-border/70 flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end"
+				>
+					<Button href={resolve('/admin/careers')} variant="outline" size="lg">Cancel</Button>
+					<Button type="submit" size="lg">
+						<Sparkles class="size-4" />
+						<span>Save career</span>
+					</Button>
+				</div>
+			</form>
+		</Card.Content>
+	</Card.Root>
+</section>

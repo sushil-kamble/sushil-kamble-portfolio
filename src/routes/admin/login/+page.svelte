@@ -1,32 +1,31 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
-	import { Lock, ArrowRight, Loader2 } from 'lucide-svelte';
+	import { ArrowRight, Loader2, Lock } from 'lucide-svelte';
+	import * as Alert from '$lib/components/admin/ui/alert/index.js';
+	import { Button } from '$lib/components/admin/ui/button/index.js';
+	import * as Card from '$lib/components/admin/ui/card/index.js';
+	import * as Field from '$lib/components/admin/ui/field/index.js';
+	import { Input } from '$lib/components/admin/ui/input/index.js';
 
 	let password = $state('');
 	let error = $state('');
 	let loading = $state(false);
-	let passwordInput: HTMLInputElement | undefined;
 
-	onMount(() => {
-		passwordInput?.focus();
-	});
-
-	async function handleSubmit(e: Event) {
-		e.preventDefault();
+	async function handleSubmit(event: Event) {
+		event.preventDefault();
 		if (!password.trim() || loading) return;
 
 		loading = true;
 		error = '';
 
 		try {
-			const res = await fetch('/api/auth/login', {
+			const response = await fetch('/api/auth/login', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ password })
 			});
 
-			if (res.ok) {
+			if (response.ok) {
 				await goto('/admin');
 			} else {
 				error = 'Invalid password';
@@ -40,150 +39,62 @@
 	}
 </script>
 
-<div class="login-container">
-	<div class="login-card">
-		<div class="login-icon">
-			<Lock size={24} strokeWidth={1.5} />
-		</div>
-		<h1>Portfolio Admin</h1>
-		<p class="login-subtitle">Enter your password to continue</p>
-
-		<form onsubmit={handleSubmit}>
-			<div class="input-group">
-				<input
-					bind:this={passwordInput}
-					type="password"
-					bind:value={password}
-					placeholder="Password"
-					autocomplete="current-password"
-				/>
+<div
+	class="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(143,110,86,0.12),_transparent_32%),linear-gradient(180deg,_rgba(250,248,245,0.98),_rgba(243,239,233,0.95))] px-4 py-8"
+>
+	<Card.Root
+		class="border-border/70 bg-card/95 w-full max-w-md rounded-[1.75rem] shadow-xl shadow-black/5"
+	>
+		<Card.Header class="space-y-5 text-center">
+			<div
+				class="border-border/70 bg-background/90 mx-auto flex size-14 items-center justify-center rounded-[1.25rem] border shadow-sm"
+			>
+				<Lock class="text-muted-foreground size-6" />
 			</div>
+			<div class="space-y-2">
+				<Card.Title class="text-2xl tracking-tight">Portfolio Admin</Card.Title>
+				<Card.Description class="text-sm leading-6">
+					Enter your password to access the content studio.
+				</Card.Description>
+			</div>
+		</Card.Header>
 
-			{#if error}
-				<p class="error-msg">{error}</p>
-			{/if}
+		<Card.Content>
+			<form class="space-y-4" onsubmit={handleSubmit}>
+				<Field.Field>
+					<Field.Label for="admin-password">Password</Field.Label>
+					<Input
+						id="admin-password"
+						type="password"
+						bind:value={password}
+						placeholder="Enter your password"
+						autocomplete="current-password"
+						autofocus
+					/>
+				</Field.Field>
 
-			<button type="submit" disabled={loading || !password.trim()} class="login-btn">
-				{#if loading}
-					<Loader2 size={18} class="spin" />
-					<span>Signing in...</span>
-				{:else}
-					<span>Sign in</span>
-					<ArrowRight size={16} />
+				{#if error}
+					<Alert.Root variant="destructive">
+						<Alert.Title>Sign in failed</Alert.Title>
+						<Alert.Description>{error}</Alert.Description>
+					</Alert.Root>
 				{/if}
-			</button>
-		</form>
-	</div>
+
+				<Button
+					type="submit"
+					size="lg"
+					class="w-full justify-center"
+					disabled={loading || !password.trim()}
+				>
+					{#if loading}
+						<Loader2 class="size-4 animate-spin" />
+						<span>Signing in...</span>
+					{:else}
+						<span>Sign in</span>
+						<ArrowRight class="size-4" />
+					{/if}
+				</Button>
+			</form>
+		</Card.Content>
+	</Card.Root>
 </div>
-
-<style>
-	.login-container {
-		min-height: 100vh;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 20px;
-		background: #f7f7f5;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-	}
-
-	.login-card {
-		width: 100%;
-		max-width: 380px;
-		background: white;
-		border-radius: 16px;
-		padding: 40px 32px;
-		box-shadow:
-			0 1px 3px rgba(0, 0, 0, 0.06),
-			0 8px 24px rgba(0, 0, 0, 0.06);
-		text-align: center;
-	}
-
-	.login-icon {
-		width: 48px;
-		height: 48px;
-		margin: 0 auto 20px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: #f0ede8;
-		border-radius: 12px;
-		color: #555;
-	}
-
-	h1 {
-		font-size: 22px;
-		font-weight: 700;
-		margin: 0 0 6px;
-		letter-spacing: -0.02em;
-		color: #1a1a1a;
-	}
-
-	.login-subtitle {
-		font-size: 14px;
-		color: #888;
-		margin: 0 0 28px;
-	}
-
-	.input-group {
-		margin-bottom: 16px;
-	}
-
-	input {
-		width: 100%;
-		padding: 12px 16px;
-		border: 1px solid #e0ddd8;
-		border-radius: 10px;
-		font-size: 15px;
-		background: #fafaf9;
-		color: #1a1a1a;
-		outline: none;
-		transition: all 0.2s;
-		box-sizing: border-box;
-	}
-
-	input:focus {
-		border-color: #1a1a1a;
-		background: white;
-		box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.06);
-	}
-
-	input::placeholder {
-		color: #aaa;
-	}
-
-	.error-msg {
-		font-size: 13px;
-		color: #dc2626;
-		margin: 0 0 12px;
-	}
-
-	.login-btn {
-		width: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 8px;
-		padding: 12px;
-		border: none;
-		border-radius: 10px;
-		background: #1a1a1a;
-		color: white;
-		font-size: 14px;
-		font-weight: 600;
-		cursor: pointer;
-		transition: all 0.2s;
-		letter-spacing: -0.005em;
-	}
-
-	.login-btn:hover:not(:disabled) {
-		background: #333;
-		transform: translateY(-1px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-	}
-
-	.login-btn:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-</style>

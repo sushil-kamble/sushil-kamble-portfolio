@@ -1,366 +1,237 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { Plus, Pencil, Trash2, Briefcase, MapPin, Calendar } from 'lucide-svelte';
+	import { ArrowUpRight, Briefcase, Calendar, MapPin, Plus, Trash2 } from 'lucide-svelte';
+	import AdminEmptyState from '$lib/components/admin/AdminEmptyState.svelte';
+	import AdminPageHeader from '$lib/components/admin/AdminPageHeader.svelte';
+	import * as AlertDialog from '$lib/components/admin/ui/alert-dialog/index.js';
+	import { Badge } from '$lib/components/admin/ui/badge/index.js';
+	import { Button, buttonVariants } from '$lib/components/admin/ui/button/index.js';
+	import * as Card from '$lib/components/admin/ui/card/index.js';
 
 	const { data } = $props();
+
+	let deletingId = $state<number | null>(null);
+
+	function openCareer(id: number) {
+		void goto(resolve('/admin/careers/[id]', { id: String(id) }));
+	}
+
+	function handleCardKeydown(event: KeyboardEvent, id: number) {
+		if (event.key !== 'Enter' && event.key !== ' ') return;
+		event.preventDefault();
+		openCareer(id);
+	}
+
+	async function deleteCareer(id: number) {
+		deletingId = id;
+		const formData = new FormData();
+		formData.set('id', String(id));
+		await fetch('?/delete', { method: 'POST', body: formData });
+		deletingId = null;
+		await invalidateAll();
+	}
 </script>
 
-<div class="careers-page">
-	<div class="page-header">
-		<div>
-			<h1>Careers</h1>
-			<p class="subtitle">
-				{data.careers.length}
-				{data.careers.length === 1 ? 'entry' : 'entries'}
-			</p>
-		</div>
-		<a href={resolve('/admin/careers/new')} class="add-btn">
-			<Plus size={18} />
-			<span>Add Career</span>
-		</a>
-	</div>
+<section class="admin-page-medium">
+	<AdminPageHeader
+		title="Careers"
+		description={`Manage ${data.careers.length} ${data.careers.length === 1 ? 'career entry' : 'career entries'} shown on the portfolio. Each card now opens directly into the editor.`}
+	>
+		{#snippet icon()}
+			<Briefcase class="size-5" />
+		{/snippet}
+		{#snippet actions()}
+			<Button href={resolve('/admin/careers/new')} size="lg">
+				<Plus class="size-4" />
+				<span>Add career</span>
+			</Button>
+		{/snippet}
+	</AdminPageHeader>
 
 	{#if data.careers.length === 0}
-		<div class="empty-state">
-			<div class="empty-icon">
-				<Briefcase size={32} />
-			</div>
-			<p class="empty-title">No careers yet</p>
-			<p class="empty-desc">Add your first career entry to get started.</p>
-			<a href={resolve('/admin/careers/new')} class="add-btn" style="margin-top: 8px;">
-				<Plus size={16} />
-				<span>Add Career</span>
-			</a>
-		</div>
+		<AdminEmptyState
+			title="No careers yet"
+			description="Create the first entry to start showing your work history on the portfolio."
+		>
+			{#snippet icon()}
+				<Briefcase class="size-6" />
+			{/snippet}
+			{#snippet action()}
+				<Button href={resolve('/admin/careers/new')}>
+					<Plus class="size-4" />
+					<span>Add career</span>
+				</Button>
+			{/snippet}
+		</AdminEmptyState>
 	{:else}
-		<div class="careers-grid">
-			{#each data.careers as career (career.id)}
-				<div class="career-card">
-					<div class="card-body">
-						<div class="card-top">
-							{#if career.logo}
-								<img src={career.logo} alt="{career.company} logo" class="company-logo" />
-							{:else}
-								<div class="company-logo placeholder-logo">
-									<Briefcase size={18} />
-								</div>
-							{/if}
-							<div class="card-info">
-								<h3 class="company-name">{career.company}</h3>
-								{#if career.designation}
-									<p class="designation">{career.designation}</p>
-								{/if}
-							</div>
-						</div>
-
-						<div class="card-meta">
-							{#if career.location}
-								<span class="meta-item">
-									<MapPin size={13} />
-									{career.location}
-								</span>
-							{/if}
-							{#if career.start}
-								<span class="meta-item">
-									<Calendar size={13} />
-									{career.start}{career.end ? ` - ${career.end}` : ' - Present'}
-								</span>
-							{/if}
-						</div>
-
-						{#if career.skills && career.skills.length > 0}
-							<div class="skill-tags">
-								{#each career.skills.slice(0, 4) as skill (skill)}
-									<span class="skill-tag">{skill}</span>
-								{/each}
-								{#if career.skills.length > 4}
-									<span class="skill-tag more">+{career.skills.length - 4}</span>
-								{/if}
-							</div>
-						{/if}
-					</div>
-
-					<div class="card-actions">
-						<a
-							href={resolve('/admin/careers/[id]', { id: String(career.id) })}
-							class="action-btn edit"
-							aria-label="Edit {career.company}"
-						>
-							<Pencil size={15} />
-						</a>
-						<form
-							method="POST"
-							action="?/delete"
-							use:enhance={() => {
-								return async ({ update }) => {
-									await update();
-								};
-							}}
-						>
-							<input type="hidden" name="id" value={career.id} />
-							<button
-								type="submit"
-								class="action-btn delete"
-								aria-label="Delete {career.company}"
-								onclick={(e) => {
-									if (!confirm(`Delete "${career.company}"?`)) {
-										e.preventDefault();
-									}
-								}}
-							>
-								<Trash2 size={15} />
-							</button>
-						</form>
+		<Card.Root class="admin-hero-surface overflow-hidden">
+			<Card.Content class="relative grid gap-5 p-5 sm:grid-cols-[1.35fr_0.65fr] sm:p-6">
+				<div class="space-y-3">
+					<Badge
+						variant="outline"
+						class="rounded-full px-2.5 py-1 text-[10px] tracking-[0.2em] uppercase"
+					>
+						Career Timeline
+					</Badge>
+					<div class="space-y-2">
+						<h2 class="text-foreground text-xl font-semibold tracking-tight sm:text-2xl">
+							Review the professional story at a glance
+						</h2>
+						<p class="text-muted-foreground max-w-2xl text-sm leading-6">
+							Each entry is built as a full editing surface now. Open a role by clicking the card
+							instead of hunting for a small icon.
+						</p>
 					</div>
 				</div>
+
+				<div class="grid gap-3 sm:grid-cols-2">
+					<div class="border-border/70 bg-background/80 rounded-[1.5rem] border p-4">
+						<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">Entries</p>
+						<p class="text-foreground mt-3 text-3xl font-semibold tracking-tight">
+							{data.careers.length}
+						</p>
+					</div>
+					<div class="border-border/70 bg-background/80 rounded-[1.5rem] border p-4">
+						<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">Interaction</p>
+						<p class="text-foreground mt-3 text-lg font-semibold tracking-tight">
+							Card-first editing
+						</p>
+					</div>
+				</div>
+
+				<div
+					class="pointer-events-none absolute top-6 -right-12 size-40 rounded-full bg-sky-500/10 blur-3xl"
+				></div>
+				<div
+					class="pointer-events-none absolute bottom-0 left-8 h-16 w-32 rounded-full bg-amber-500/10 blur-3xl"
+				></div>
+			</Card.Content>
+		</Card.Root>
+
+		<div class="admin-collection-stack">
+			{#each data.careers as career (career.id)}
+				<Card.Root
+					class="admin-collection-card group"
+					role="link"
+					tabindex={0}
+					aria-label={`Open ${career.company}`}
+					onclick={() => openCareer(career.id)}
+					onkeydown={(event) => handleCardKeydown(event, career.id)}
+				>
+					<div
+						class="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-sky-500/50 to-transparent"
+					></div>
+					<div
+						class="pointer-events-none absolute top-6 -right-8 size-24 rounded-full bg-sky-500/8 blur-3xl"
+					></div>
+
+					<Card.Content
+						class="relative flex flex-col gap-5 p-5 sm:flex-row sm:items-start sm:justify-between"
+					>
+						<div class="min-w-0 flex-1 space-y-4">
+							<div class="flex items-start gap-4">
+								<div
+									class="border-border/70 bg-muted/40 flex size-14 items-center justify-center overflow-hidden rounded-[1.2rem] border"
+								>
+									{#if career.logo}
+										<img
+											src={career.logo}
+											alt={`${career.company} logo`}
+											class="size-full object-contain p-2"
+										/>
+									{:else}
+										<Briefcase class="text-muted-foreground size-4" />
+									{/if}
+								</div>
+								<div class="min-w-0 space-y-2">
+									<div class="space-y-1">
+										<h2 class="text-foreground truncate text-xl font-semibold tracking-tight">
+											{career.company}
+										</h2>
+										{#if career.designation}
+											<p class="text-muted-foreground text-sm">{career.designation}</p>
+										{/if}
+									</div>
+
+									<div class="admin-collection-meta">
+										{#if career.location}
+											<div class="admin-collection-meta-pill">
+												<MapPin class="size-3.5" />
+												<span>{career.location}</span>
+											</div>
+										{/if}
+										{#if career.start}
+											<div class="admin-collection-meta-pill">
+												<Calendar class="size-3.5" />
+												<span>{career.start}{career.end ? ` - ${career.end}` : ' - Present'}</span>
+											</div>
+										{/if}
+									</div>
+								</div>
+							</div>
+
+							{#if career.skills?.length}
+								<div class="flex flex-wrap gap-2">
+									{#each career.skills.slice(0, 6) as skill (skill)}
+										<Badge variant="secondary" class="rounded-full px-2.5 py-1">{skill}</Badge>
+									{/each}
+									{#if career.skills.length > 6}
+										<Badge variant="outline" class="rounded-full px-2.5 py-1">
+											+{career.skills.length - 6} more
+										</Badge>
+									{/if}
+								</div>
+							{/if}
+
+							<div class="admin-collection-nav-hint">
+								<span>Open editor</span>
+								<ArrowUpRight class="size-4" />
+							</div>
+						</div>
+
+						<div class="admin-collection-action-rail">
+							<div class="admin-collection-meta lg:flex-col lg:items-end">
+								<div class="admin-collection-meta-pill">
+									<span
+										>{career.skills?.length ?? 0} skill{career.skills?.length === 1
+											? ''
+											: 's'}</span
+									>
+								</div>
+							</div>
+
+							<AlertDialog.Root>
+								<AlertDialog.Trigger
+									class={buttonVariants({ variant: 'destructive', size: 'icon-sm' })}
+									onclick={(event) => event.stopPropagation()}
+								>
+									<Trash2 class="size-4" />
+									<span class="sr-only">Delete {career.company}</span>
+								</AlertDialog.Trigger>
+								<AlertDialog.Content>
+									<AlertDialog.Header>
+										<AlertDialog.Title>Delete career</AlertDialog.Title>
+										<AlertDialog.Description>
+											This will permanently remove {career.company} from the admin panel and portfolio.
+										</AlertDialog.Description>
+									</AlertDialog.Header>
+									<AlertDialog.Footer>
+										<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+										<AlertDialog.Action
+											variant="destructive"
+											disabled={deletingId === career.id}
+											onclick={() => deleteCareer(career.id)}
+										>
+											{deletingId === career.id ? 'Deleting...' : 'Delete'}
+										</AlertDialog.Action>
+									</AlertDialog.Footer>
+								</AlertDialog.Content>
+							</AlertDialog.Root>
+						</div>
+					</Card.Content>
+				</Card.Root>
 			{/each}
 		</div>
 	{/if}
-</div>
-
-<style>
-	.careers-page {
-		max-width: 800px;
-	}
-
-	.page-header {
-		display: flex;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: 16px;
-		margin-bottom: 24px;
-	}
-
-	.page-header h1 {
-		font-size: 24px;
-		font-weight: 700;
-		letter-spacing: -0.02em;
-		margin: 0 0 2px;
-	}
-
-	.subtitle {
-		color: #888;
-		font-size: 13px;
-		margin: 0;
-	}
-
-	.add-btn {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		padding: 9px 16px;
-		background: #1a1a1a;
-		color: white;
-		border: none;
-		border-radius: 10px;
-		font-size: 13px;
-		font-weight: 600;
-		text-decoration: none;
-		cursor: pointer;
-		transition: all 0.2s;
-		white-space: nowrap;
-	}
-
-	.add-btn:hover {
-		background: #333;
-		transform: translateY(-1px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-	}
-
-	/* ── Empty State ── */
-	.empty-state {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		padding: 48px 24px;
-		background: white;
-		border: 1px dashed #e0ddd8;
-		border-radius: 12px;
-		text-align: center;
-	}
-
-	.empty-icon {
-		width: 56px;
-		height: 56px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: #f5f3f0;
-		border-radius: 14px;
-		color: #999;
-		margin-bottom: 12px;
-	}
-
-	.empty-title {
-		font-size: 15px;
-		font-weight: 600;
-		margin: 0 0 4px;
-	}
-
-	.empty-desc {
-		color: #888;
-		font-size: 13px;
-		margin: 0;
-	}
-
-	/* ── Cards Grid ── */
-	.careers-grid {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-	}
-
-	.career-card {
-		display: flex;
-		align-items: stretch;
-		background: white;
-		border: 1px solid #e8e5e0;
-		border-radius: 12px;
-		transition: all 0.2s;
-		overflow: hidden;
-	}
-
-	.career-card:hover {
-		border-color: #d0cdc6;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-	}
-
-	.card-body {
-		flex: 1;
-		padding: 16px;
-		min-width: 0;
-	}
-
-	.card-top {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		margin-bottom: 10px;
-	}
-
-	.company-logo {
-		width: 38px;
-		height: 38px;
-		border-radius: 8px;
-		object-fit: contain;
-		flex-shrink: 0;
-		background: #f5f3f0;
-	}
-
-	.placeholder-logo {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: #aaa;
-	}
-
-	.card-info {
-		min-width: 0;
-	}
-
-	.company-name {
-		font-size: 15px;
-		font-weight: 650;
-		margin: 0;
-		letter-spacing: -0.01em;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	.designation {
-		font-size: 13px;
-		color: #666;
-		margin: 1px 0 0;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	.card-meta {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 12px;
-		margin-bottom: 8px;
-	}
-
-	.meta-item {
-		display: inline-flex;
-		align-items: center;
-		gap: 4px;
-		font-size: 12px;
-		color: #888;
-	}
-
-	.skill-tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 5px;
-	}
-
-	.skill-tag {
-		padding: 3px 8px;
-		background: #f0ede8;
-		border-radius: 5px;
-		font-size: 11px;
-		font-weight: 500;
-		color: #555;
-	}
-
-	.skill-tag.more {
-		background: #e8e5e0;
-		color: #777;
-	}
-
-	/* ── Card Actions ── */
-	.card-actions {
-		display: flex;
-		flex-direction: column;
-		border-left: 1px solid #e8e5e0;
-		flex-shrink: 0;
-	}
-
-	.action-btn {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 44px;
-		flex: 1;
-		border: none;
-		background: none;
-		cursor: pointer;
-		color: #999;
-		transition: all 0.15s;
-		text-decoration: none;
-	}
-
-	.card-actions form {
-		display: flex;
-		flex: 1;
-	}
-
-	.card-actions form .action-btn {
-		width: 44px;
-	}
-
-	.action-btn.edit:hover {
-		background: #f5f3f0;
-		color: #1a1a1a;
-	}
-
-	.action-btn.delete {
-		border-top: 1px solid #e8e5e0;
-	}
-
-	.action-btn.delete:hover {
-		background: #fef2f2;
-		color: #dc2626;
-	}
-
-	@media (min-width: 640px) {
-		.card-top {
-			margin-bottom: 8px;
-		}
-	}
-</style>
+</section>
