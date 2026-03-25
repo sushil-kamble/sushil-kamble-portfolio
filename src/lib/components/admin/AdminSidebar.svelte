@@ -14,6 +14,8 @@
 	import { Button } from '$lib/components/admin/ui/button/index.js';
 	import * as Sidebar from '$lib/components/admin/ui/sidebar/index.js';
 
+	const sidebar = Sidebar.useSidebar();
+
 	interface Props {
 		onRebuild: () => void;
 		rebuilding?: boolean;
@@ -63,7 +65,7 @@
 								size="default"
 							>
 								{#snippet child({ props })}
-									<a href={item.href} {...props}>
+									<a href={item.href} {...props} onclick={() => sidebar.setOpenMobile(false)}>
 										<item.icon class="size-4" />
 										<span>{item.label}</span>
 									</a>

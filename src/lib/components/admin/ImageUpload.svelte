@@ -133,7 +133,7 @@
 					>
 						<img src={url} alt={`Upload ${index + 1}`} class="aspect-square w-full object-cover" />
 						<div
-							class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+							class="pointer-events-none absolute inset-0 bg-linear-to-t from-black/45 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
 						></div>
 						<div
 							class="pointer-events-none absolute inset-x-3 bottom-3 flex items-center justify-between opacity-0 transition-opacity group-hover:opacity-100"
@@ -215,18 +215,25 @@
 	{#if activePreviewIndex !== null}
 		<Dialog.Portal to="body">
 			<Dialog.Overlay
-				class="z-[70] bg-black/88 supports-backdrop-filter:backdrop-blur-sm"
+				class="z-70 bg-black/88 supports-backdrop-filter:backdrop-blur-sm"
 				onclick={closePreview}
 			/>
 
 			<div
-				class="fixed inset-0 z-[71] flex items-center justify-center p-4"
+				class="fixed inset-0 z-71 flex items-center justify-center p-4"
 				role="dialog"
 				aria-modal="true"
 				aria-label="Uploaded image preview"
 				tabindex="-1"
+				onclick={closePreview}
+				onkeydown={(e) => e.key === 'Escape' && closePreview()}
 			>
-				<div class="relative w-full max-w-[min(94vw,1480px)]">
+				<div
+					class="relative w-full max-w-[min(94vw,1480px)]"
+					role="presentation"
+					onclick={(e) => e.stopPropagation()}
+					onkeydown={(e) => e.stopPropagation()}
+				>
 					<img
 						src={activePreviewUrl}
 						alt={`Preview image ${activePreviewIndex + 1}`}
@@ -234,7 +241,7 @@
 					/>
 
 					<div
-						class="pointer-events-none absolute inset-x-0 bottom-0 h-24 rounded-b-[1.5rem] bg-gradient-to-t from-black/72 via-black/28 to-transparent"
+						class="pointer-events-none absolute inset-x-0 bottom-0 h-24 rounded-b-[1.5rem] bg-linear-to-t from-black/72 via-black/28 to-transparent"
 					></div>
 
 					<div class="absolute right-4 bottom-4 left-4 flex items-end justify-between gap-3">
