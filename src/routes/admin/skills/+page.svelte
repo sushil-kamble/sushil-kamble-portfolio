@@ -223,6 +223,7 @@
 						<TagInput
 							tags={category.skills}
 							placeholder="Add a skill and press Enter…"
+							showTechBadges={true}
 							onchange={(skills) => handleSkillsChange(category.id, skills)}
 						/>
 					</Card.Content>

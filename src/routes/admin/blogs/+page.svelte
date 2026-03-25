@@ -3,6 +3,7 @@
 	import { FileText, GripVertical, Loader2, Plus, Trash2 } from 'lucide-svelte';
 	import AdminEmptyState from '$lib/components/admin/AdminEmptyState.svelte';
 	import AdminPageHeader from '$lib/components/admin/AdminPageHeader.svelte';
+	import TechBadge from '$lib/components/ui/TechBadge.svelte';
 	import * as AlertDialog from '$lib/components/admin/ui/alert-dialog/index.js';
 	import { Badge } from '$lib/components/admin/ui/badge/index.js';
 	import { Button, buttonVariants } from '$lib/components/admin/ui/button/index.js';
@@ -178,9 +179,7 @@
 							{#if blog.tags.length > 0}
 								<div class="mt-2 flex flex-wrap gap-1">
 									{#each blog.tags.slice(0, 4) as tag (tag)}
-										<Badge variant="secondary" class="rounded-md px-1.5 py-0.5 text-[10px]"
-											>{tag}</Badge
-										>
+										<TechBadge name={tag} variant="green" />
 									{/each}
 									{#if blog.tags.length > 4}
 										<Badge variant="outline" class="rounded-md px-1.5 py-0.5 text-[10px]">

@@ -112,6 +112,7 @@
 						{tags}
 						labelledBy="blog-tags-label"
 						placeholder="Add tags…"
+						showTechBadges={true}
 						onchange={(value) => (tags = value)}
 					/>
 				</Field.Field>

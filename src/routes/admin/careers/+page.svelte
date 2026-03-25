@@ -4,6 +4,7 @@
 	import { Briefcase, MapPin, Plus, Trash2 } from 'lucide-svelte';
 	import AdminEmptyState from '$lib/components/admin/AdminEmptyState.svelte';
 	import AdminPageHeader from '$lib/components/admin/AdminPageHeader.svelte';
+	import TechBadge from '$lib/components/ui/TechBadge.svelte';
 	import * as AlertDialog from '$lib/components/admin/ui/alert-dialog/index.js';
 	import { Badge } from '$lib/components/admin/ui/badge/index.js';
 	import { Button, buttonVariants } from '$lib/components/admin/ui/button/index.js';
@@ -114,9 +115,7 @@
 							{#if career.skills?.length}
 								<div class="mt-1.5 flex flex-wrap gap-1">
 									{#each career.skills.slice(0, 4) as skill (skill)}
-										<Badge variant="secondary" class="rounded-md px-1.5 py-0.5 text-[10px]"
-											>{skill}</Badge
-										>
+										<TechBadge name={skill} variant="blue" />
 									{/each}
 									{#if career.skills.length > 4}
 										<Badge variant="outline" class="rounded-md px-1.5 py-0.5 text-[10px]">

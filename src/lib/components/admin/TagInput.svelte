@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { X } from 'lucide-svelte';
+	import TechBadge from '$lib/components/ui/TechBadge.svelte';
 	import { Badge } from '$lib/components/admin/ui/badge/index.js';
 	import { Button } from '$lib/components/admin/ui/button/index.js';
 	import { Input } from '$lib/components/admin/ui/input/index.js';
@@ -8,10 +9,17 @@
 		tags: string[];
 		placeholder?: string;
 		labelledBy?: string;
+		showTechBadges?: boolean;
 		onchange: (tags: string[]) => void;
 	}
 
-	let { tags, placeholder = 'Type and press Enter...', labelledBy, onchange }: Props = $props();
+	let {
+		tags,
+		placeholder = 'Type and press Enter...',
+		labelledBy,
+		showTechBadges = false,
+		onchange
+	}: Props = $props();
 
 	let input = $state('');
 
@@ -34,18 +42,28 @@
 	{#if tags.length > 0}
 		<div class="flex flex-wrap gap-2">
 			{#each tags as tag (tag)}
-				<Badge variant="secondary" class="gap-1.5 rounded-full px-2.5 py-1 text-[11px]">
-					<span>{tag}</span>
+				<div
+					class="border-border/70 bg-secondary/60 flex max-w-full items-center gap-1.5 rounded-full border px-1.5 py-1"
+				>
+					{#if showTechBadges}
+						<div class="max-w-full overflow-hidden rounded-md">
+							<TechBadge name={tag} variant="blue" />
+						</div>
+					{:else}
+						<Badge variant="secondary" class="rounded-full px-2 py-0.5 text-[11px]">
+							<span>{tag}</span>
+						</Badge>
+					{/if}
 					<Button
 						variant="ghost"
 						size="icon-xs"
-						class="text-muted-foreground hover:text-foreground -mr-1 size-4 rounded-full p-0"
+						class="text-muted-foreground hover:text-foreground -mr-0.5 size-4 rounded-full p-0"
 						aria-label={`Remove ${tag}`}
 						onclick={() => removeTag(tag)}
 					>
 						<X class="size-3" />
 					</Button>
-				</Badge>
+				</div>
 			{/each}
 		</div>
 	{/if}

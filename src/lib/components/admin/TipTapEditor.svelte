@@ -3,6 +3,7 @@
 	import { Editor } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 	import { Markdown, type MarkdownStorage } from 'tiptap-markdown';
+	import MarkdownImage from '$lib/components/admin/tiptap/MarkdownImage.js';
 	import {
 		Bold,
 		Code,
@@ -32,9 +33,11 @@
 	let { content, onchange, uploadPath = 'Blog', labelledBy }: Props = $props();
 
 	let element: HTMLDivElement;
-	let editor: Editor;
+	let editor = $state<Editor | null>(null);
 	let ready = $state(false);
 	let toolbarVersion = $state(0);
+	let syncingFromProp = false;
+	let uploadError = $state('');
 
 	const toolbarButtonClass =
 		'rounded-md border border-transparent bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground';
@@ -43,10 +46,14 @@
 		return (editorInstance.storage as { markdown?: MarkdownStorage }).markdown?.getMarkdown() ?? '';
 	}
 
+	function normalizeMarkdown(value: string): string {
+		return value.replace(/\r\n/g, '\n').trimEnd();
+	}
+
 	onMount(() => {
 		editor = new Editor({
 			element,
-			extensions: [StarterKit, Markdown],
+			extensions: [StarterKit, MarkdownImage, Markdown],
 			content,
 			editorProps: {
 				attributes: {
@@ -57,6 +64,7 @@
 				}
 			},
 			onUpdate: ({ editor: editorInstance }) => {
+				if (syncingFromProp) return;
 				onchange(getMarkdown(editorInstance));
 			}
 		});
@@ -70,10 +78,25 @@
 		ready = true;
 
 		return () => {
+			if (!editor) return;
 			editor.off('selectionUpdate', rerenderToolbar);
 			editor.off('transaction', rerenderToolbar);
 			editor.destroy();
+			editor = null;
 		};
+	});
+
+	$effect(() => {
+		if (!editor) return;
+
+		const incoming = normalizeMarkdown(content ?? '');
+		const current = normalizeMarkdown(getMarkdown(editor));
+		if (incoming === current) return;
+
+		syncingFromProp = true;
+		editor.commands.setContent(content ?? '');
+		syncingFromProp = false;
+		toolbarVersion += 1;
 	});
 
 	function runCommand(command: string, attrs?: Record<string, unknown>) {
@@ -123,6 +146,7 @@
 	}
 
 	async function insertImage() {
+		uploadError = '';
 		const input = document.createElement('input');
 		input.type = 'file';
 		input.accept = 'image/*';
@@ -135,20 +159,34 @@
 			formData.append('path', uploadPath);
 
 			try {
-				const response = await fetch('/api/upload', { method: 'POST', body: formData });
-				if (!response.ok) return;
+				const response = await fetch('/admin/api/upload', { method: 'POST', body: formData });
+				if (!response.ok) {
+					uploadError = 'Image upload failed. Please try again.';
+					return;
+				}
+				if (!editor) return;
 
 				const { url } = await response.json();
+				uploadError = '';
 				editor
 					.chain()
 					.focus()
-					.insertContentAt(
-						{ from: editor.state.selection.from, to: editor.state.selection.to },
-						`![${file.name}](${url})`
-					)
+					.insertContent([
+						{
+							type: 'image',
+							attrs: {
+								src: url,
+								alt: file.name,
+								title: file.name
+							}
+						},
+						{
+							type: 'paragraph'
+						}
+					])
 					.run();
 			} catch {
-				/* ignore */
+				uploadError = 'Image upload failed. Please try again.';
 			}
 		};
 		input.click();
@@ -350,6 +388,12 @@
 	{/if}
 
 	<div bind:this={element} class="min-h-[320px] px-4 py-5 sm:px-5"></div>
+
+	{#if uploadError}
+		<div class="border-border/70 bg-destructive/5 text-destructive border-t px-4 py-3 text-sm sm:px-5">
+			{uploadError}
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -415,8 +459,13 @@
 	}
 
 	:global(.tiptap-content img) {
-		max-width: 100%;
+		display: block;
+		width: min(100%, 42rem);
+		height: auto;
+		margin: 1.25rem auto;
 		border-radius: 1rem;
+		border: 1px solid color-mix(in oklab, var(--border) 82%, white 18%);
+		background: color-mix(in oklab, var(--background) 88%, white 12%);
 	}
 
 	:global(.tiptap-content hr) {

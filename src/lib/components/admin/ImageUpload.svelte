@@ -16,6 +16,7 @@
 	let dragover = $state(false);
 	let activePreviewIndex = $state<number | null>(null);
 	let previewOpen = $state(false);
+	let uploadError = $state('');
 
 	const hasMultipleImages = $derived(images.length > 1);
 	const activePreviewUrl = $derived(
@@ -24,17 +25,19 @@
 
 	async function uploadFile(file: File) {
 		uploading = true;
+		uploadError = '';
 		try {
 			const formData = new FormData();
 			formData.append('file', file);
 			formData.append('path', path);
 
-			const response = await fetch('/api/upload', { method: 'POST', body: formData });
+			const response = await fetch('/admin/api/upload', { method: 'POST', body: formData });
 			if (!response.ok) throw new Error('Upload failed');
 
 			const { url } = await response.json();
 			onchange([...images, url]);
 		} catch (error) {
+			uploadError = 'Image upload failed. Please try again.';
 			console.error('Upload error:', error);
 		} finally {
 			uploading = false;
@@ -206,6 +209,10 @@
 			<ImageIcon class="size-3.5" />
 			<span>{images.length} image{images.length === 1 ? '' : 's'} selected</span>
 		</div>
+
+		{#if uploadError}
+			<p class="text-destructive text-xs">{uploadError}</p>
+		{/if}
 	</label>
 </div>
 
@@ -217,12 +224,12 @@
 			class="max-w-none gap-0 border-white/10 bg-transparent p-0 shadow-none ring-0"
 		>
 			<div
-				class="relative inline-flex max-h-[86vh] max-w-[min(92vw,1200px)] items-center justify-center"
+				class="relative flex h-[min(88vh,920px)] w-[min(94vw,1480px)] items-center justify-center"
 			>
 				<img
 					src={activePreviewUrl}
 					alt={`Preview image ${activePreviewIndex + 1}`}
-					class="h-auto max-h-[86vh] w-auto max-w-full rounded-[1.5rem] border border-white/12 bg-black/40 object-contain shadow-2xl"
+					class="h-full w-full rounded-[1.5rem] border border-white/12 bg-black/40 object-contain shadow-2xl"
 				/>
 
 				<div
