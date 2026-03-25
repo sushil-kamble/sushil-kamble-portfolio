@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ChevronLeft, ChevronRight, Expand, ImageIcon, Loader2, Upload, X } from 'lucide-svelte';
 	import { Button } from '$lib/components/admin/ui/button/index.js';
+	import * as Dialog from '$lib/components/admin/ui/dialog/index.js';
 
 	interface Props {
 		images: string[];
@@ -14,6 +15,7 @@
 	let uploading = $state(false);
 	let dragover = $state(false);
 	let activePreviewIndex = $state<number | null>(null);
+	let previewOpen = $state(false);
 	let uploadError = $state('');
 
 	const hasMultipleImages = $derived(images.length > 1);
@@ -76,9 +78,11 @@
 
 	function openPreview(index: number) {
 		activePreviewIndex = index;
+		previewOpen = true;
 	}
 
 	function closePreview() {
+		previewOpen = false;
 		activePreviewIndex = null;
 	}
 
@@ -93,7 +97,7 @@
 	}
 
 	function handlePreviewKeydown(event: KeyboardEvent) {
-		if (activePreviewIndex === null) return;
+		if (!previewOpen || activePreviewIndex === null) return;
 
 		if (event.key === 'Escape') {
 			event.preventDefault();
@@ -206,73 +210,78 @@
 		{/if}
 	</label>
 </div>
-{#if activePreviewIndex !== null}
-	<div
-		class="fixed inset-0 z-[70] flex items-center justify-center bg-black/88 p-4 backdrop-blur-sm"
-		role="dialog"
-		aria-modal="true"
-		aria-label="Uploaded image preview"
-		tabindex="-1"
-	>
-		<button
-			type="button"
-			class="absolute inset-0"
-			aria-label="Close preview backdrop"
-			onclick={closePreview}
-		></button>
 
-		<div class="relative w-full max-w-[min(94vw,1480px)]">
-			<img
-				src={activePreviewUrl}
-				alt={`Preview image ${activePreviewIndex + 1}`}
-				class="max-h-[88vh] w-full rounded-[1.5rem] border border-white/12 bg-black/40 object-contain shadow-2xl"
+<Dialog.Root bind:open={previewOpen}>
+	{#if activePreviewIndex !== null}
+		<Dialog.Portal to="body">
+			<Dialog.Overlay
+				class="z-[70] bg-black/88 supports-backdrop-filter:backdrop-blur-sm"
+				onclick={closePreview}
 			/>
 
 			<div
-				class="pointer-events-none absolute inset-x-0 bottom-0 h-24 rounded-b-[1.5rem] bg-gradient-to-t from-black/72 via-black/28 to-transparent"
-			></div>
+				class="fixed inset-0 z-[71] flex items-center justify-center p-4"
+				role="dialog"
+				aria-modal="true"
+				aria-label="Uploaded image preview"
+				tabindex="-1"
+			>
+				<div class="relative w-full max-w-[min(94vw,1480px)]">
+					<img
+						src={activePreviewUrl}
+						alt={`Preview image ${activePreviewIndex + 1}`}
+						class="max-h-[88vh] w-full rounded-[1.5rem] border border-white/12 bg-black/40 object-contain shadow-2xl"
+					/>
 
-			<div class="absolute right-4 bottom-4 left-4 flex items-end justify-between gap-3">
-				<div>
-					<p class="text-sm font-medium text-white">Screenshot preview</p>
-					<p class="text-xs text-white/75">Image {activePreviewIndex + 1} of {images.length}</p>
+					<div
+						class="pointer-events-none absolute inset-x-0 bottom-0 h-24 rounded-b-[1.5rem] bg-gradient-to-t from-black/72 via-black/28 to-transparent"
+					></div>
+
+					<div class="absolute right-4 bottom-4 left-4 flex items-end justify-between gap-3">
+						<div>
+							<p class="text-sm font-medium text-white">Screenshot preview</p>
+							<p class="text-xs text-white/75">
+								Image {activePreviewIndex + 1} of {images.length}
+							</p>
+						</div>
+
+						<Button
+							type="button"
+							variant="secondary"
+							size="icon-sm"
+							class="border-white/15 bg-black/45 text-white hover:bg-black/70"
+							aria-label="Close preview"
+							onclick={closePreview}
+						>
+							<X class="size-4" />
+						</Button>
+					</div>
+
+					{#if hasMultipleImages}
+						<Button
+							type="button"
+							variant="secondary"
+							size="icon-sm"
+							class="absolute top-1/2 left-3 -translate-y-1/2 border-white/15 bg-black/45 text-white hover:bg-black/70"
+							aria-label="Previous image"
+							onclick={showPreviousPreview}
+						>
+							<ChevronLeft class="size-4" />
+						</Button>
+
+						<Button
+							type="button"
+							variant="secondary"
+							size="icon-sm"
+							class="absolute top-1/2 right-3 -translate-y-1/2 border-white/15 bg-black/45 text-white hover:bg-black/70"
+							aria-label="Next image"
+							onclick={showNextPreview}
+						>
+							<ChevronRight class="size-4" />
+						</Button>
+					{/if}
 				</div>
-
-				<Button
-					type="button"
-					variant="secondary"
-					size="icon-sm"
-					class="border-white/15 bg-black/45 text-white hover:bg-black/70"
-					aria-label="Close preview"
-					onclick={closePreview}
-				>
-					<X class="size-4" />
-				</Button>
 			</div>
-
-			{#if hasMultipleImages}
-				<Button
-					type="button"
-					variant="secondary"
-					size="icon-sm"
-					class="absolute top-1/2 left-3 -translate-y-1/2 border-white/15 bg-black/45 text-white hover:bg-black/70"
-					aria-label="Previous image"
-					onclick={showPreviousPreview}
-				>
-					<ChevronLeft class="size-4" />
-				</Button>
-
-				<Button
-					type="button"
-					variant="secondary"
-					size="icon-sm"
-					class="absolute top-1/2 right-3 -translate-y-1/2 border-white/15 bg-black/45 text-white hover:bg-black/70"
-					aria-label="Next image"
-					onclick={showNextPreview}
-				>
-					<ChevronRight class="size-4" />
-				</Button>
-			{/if}
-		</div>
-	</div>
-{/if}
+		</Dialog.Portal>
+	{/if}
+</Dialog.Root>
