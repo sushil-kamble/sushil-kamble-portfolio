@@ -1,14 +1,6 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
-	import {
-		ArrowUpRight,
-		Calendar,
-		FileText,
-		GripVertical,
-		Loader2,
-		Plus,
-		Trash2
-	} from 'lucide-svelte';
+	import { FileText, GripVertical, Loader2, Plus, Trash2 } from 'lucide-svelte';
 	import AdminEmptyState from '$lib/components/admin/AdminEmptyState.svelte';
 	import AdminPageHeader from '$lib/components/admin/AdminPageHeader.svelte';
 	import * as AlertDialog from '$lib/components/admin/ui/alert-dialog/index.js';
@@ -129,15 +121,12 @@
 </script>
 
 <section class="admin-page-medium">
-	<AdminPageHeader
-		title="Blog posts"
-		description={`Manage ${blogs.length} ${blogs.length === 1 ? 'post' : 'posts'}, open any card to edit, and drag posts to reshape the publishing order.`}
-	>
+	<AdminPageHeader title="Blog posts" description="Drag to reorder, click to edit.">
 		{#snippet icon()}
-			<FileText class="size-5" />
+			<FileText class="size-4" />
 		{/snippet}
 		{#snippet actions()}
-			<Button href="/admin/blogs/new" size="lg">
+			<Button href="/admin/blogs/new">
 				<Plus class="size-4" />
 				<span>Add post</span>
 			</Button>
@@ -150,7 +139,7 @@
 			description="Write the first post to start building your blog archive."
 		>
 			{#snippet icon()}
-				<FileText class="size-6" />
+				<FileText class="size-5" />
 			{/snippet}
 			{#snippet action()}
 				<Button href="/admin/blogs/new">
@@ -160,52 +149,10 @@
 			{/snippet}
 		</AdminEmptyState>
 	{:else}
-		<Card.Root class="admin-hero-surface overflow-hidden">
-			<Card.Content class="relative grid gap-5 p-5 sm:grid-cols-[1.35fr_0.65fr] sm:p-6">
-				<div class="space-y-3">
-					<Badge
-						variant="outline"
-						class="rounded-full px-2.5 py-1 text-[10px] tracking-[0.2em] uppercase"
-					>
-						Editorial Queue
-					</Badge>
-					<div class="space-y-2">
-						<h2 class="text-foreground text-xl font-semibold tracking-tight sm:text-2xl">
-							Treat the list like a publishing board
-						</h2>
-						<p class="text-muted-foreground max-w-2xl text-sm leading-6">
-							Posts are now list-first instead of icon-first. Click a card to enter the editor, and
-							drag it to decide what surfaces first in the feed.
-						</p>
-					</div>
-				</div>
-
-				<div class="grid gap-3 sm:grid-cols-2">
-					<div class="border-border/70 bg-background/80 rounded-[1.5rem] border p-4">
-						<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">Posts</p>
-						<p class="text-foreground mt-3 text-3xl font-semibold tracking-tight">{blogs.length}</p>
-					</div>
-					<div class="border-border/70 bg-background/80 rounded-[1.5rem] border p-4">
-						<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">Ordering</p>
-						<p class="text-foreground mt-3 text-lg font-semibold tracking-tight">
-							Direct drag-and-drop
-						</p>
-					</div>
-				</div>
-
-				<div
-					class="pointer-events-none absolute top-6 -right-12 size-40 rounded-full bg-rose-500/10 blur-3xl"
-				></div>
-				<div
-					class="pointer-events-none absolute bottom-0 left-8 h-16 w-32 rounded-full bg-amber-500/10 blur-3xl"
-				></div>
-			</Card.Content>
-		</Card.Root>
-
 		<div class="admin-collection-stack">
 			{#each blogs as blog, index (blog.id)}
 				<Card.Root
-					class={`admin-collection-card group ${dropTargetId === blog.id ? 'admin-collection-card-active' : ''} ${draggedId === blog.id ? 'opacity-70' : ''}`}
+					class={`admin-collection-card group cursor-pointer ${dropTargetId === blog.id ? 'admin-collection-card-active' : ''} ${draggedId === blog.id ? 'opacity-50' : ''}`}
 					role="link"
 					tabindex={0}
 					aria-label={`Open ${blog.title}`}
@@ -215,114 +162,79 @@
 					ondragenter={(event) => handleDragOver(event, blog.id)}
 					ondrop={(event) => handleDrop(event, blog.id)}
 				>
-					<div
-						class="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-rose-500/50 to-transparent"
-					></div>
-					<div
-						class="pointer-events-none absolute top-6 -right-8 size-24 rounded-full bg-rose-500/8 blur-3xl"
-					></div>
+					<Card.Content class="flex items-center gap-3 p-3 sm:p-4">
+						<div class="min-w-0 flex-1">
+							<div class="flex flex-wrap items-center gap-1.5">
+								<span class="text-muted-foreground text-xs tabular-nums">#{index + 1}</span>
+								{#if blog.createdAt}
+									<span class="text-muted-foreground text-xs">· {formatDate(blog.createdAt)}</span>
+								{/if}
+							</div>
+							<h2 class="text-foreground mt-0.5 text-sm font-semibold">{blog.title}</h2>
+							{#if blog.description}
+								<p class="text-muted-foreground mt-0.5 line-clamp-1 text-xs">{blog.description}</p>
+							{/if}
 
-					<Card.Content
-						class="relative flex flex-col gap-5 p-5 lg:flex-row lg:items-start lg:justify-between"
-					>
-						<div class="min-w-0 flex-1 space-y-4">
-							<div class="space-y-2">
-								<div class="flex flex-wrap items-center gap-2">
-									<Badge variant="outline" class="rounded-full px-2.5 py-1">
-										Position {index + 1}
-									</Badge>
-									<Badge variant="secondary" class="rounded-full px-2.5 py-1">
-										Order value {blog.ordering}
-									</Badge>
-									{#if blog.createdAt}
-										<Badge variant="secondary" class="gap-1.5 rounded-full px-2.5 py-1">
-											<Calendar class="size-3.5" />
-											<span>{formatDate(blog.createdAt)}</span>
+							{#if blog.tags.length > 0}
+								<div class="mt-2 flex flex-wrap gap-1">
+									{#each blog.tags.slice(0, 4) as tag (tag)}
+										<Badge variant="secondary" class="rounded-md px-1.5 py-0.5 text-[10px]"
+											>{tag}</Badge
+										>
+									{/each}
+									{#if blog.tags.length > 4}
+										<Badge variant="outline" class="rounded-md px-1.5 py-0.5 text-[10px]">
+											+{blog.tags.length - 4}
 										</Badge>
 									{/if}
 								</div>
-								<div class="space-y-1">
-									<h2 class="text-foreground text-xl font-semibold tracking-tight">{blog.title}</h2>
-									{#if blog.description}
-										<p class="text-muted-foreground line-clamp-2 max-w-3xl text-sm leading-6">
-											{blog.description}
-										</p>
-									{/if}
-								</div>
-							</div>
-
-							<div class="flex flex-wrap items-center gap-2">
-								{#each blog.tags.slice(0, 6) as tag (tag)}
-									<Badge variant="secondary" class="rounded-full px-2.5 py-1">{tag}</Badge>
-								{/each}
-								{#if blog.tags.length > 6}
-									<Badge variant="outline" class="rounded-full px-2.5 py-1">
-										+{blog.tags.length - 6} more
-									</Badge>
-								{/if}
-							</div>
-
-							<div class="admin-collection-nav-hint">
-								<span>Open editor</span>
-								<ArrowUpRight class="size-4" />
-							</div>
+							{/if}
 						</div>
 
-						<div class="admin-collection-action-rail">
-							<div class="admin-collection-meta lg:flex-col lg:items-end">
-								<div class="admin-collection-meta-pill">
-									<span>{blog.tags.length} tag{blog.tags.length === 1 ? '' : 's'}</span>
-								</div>
-								{#if reordering}
-									<div class="admin-collection-meta-pill">
-										<Loader2 class="size-3.5 animate-spin" />
-										<span>Saving order</span>
-									</div>
-								{/if}
-							</div>
+						<div class="flex shrink-0 items-center gap-1.5">
+							{#if reordering}
+								<Loader2 class="text-muted-foreground size-3.5 animate-spin" />
+							{/if}
+							<button
+								type="button"
+								class="admin-collection-handle"
+								draggable="true"
+								aria-label={`Drag to reorder ${blog.title}`}
+								title="Drag to reorder"
+								ondragstart={(event) => handleDragStart(event, blog.id)}
+								ondragend={handleDragEnd}
+								onclick={(event) => event.stopPropagation()}
+							>
+								<GripVertical class="size-3.5" />
+							</button>
 
-							<div class="flex items-center gap-2 lg:justify-end">
-								<button
-									type="button"
-									class="admin-collection-handle"
-									draggable="true"
-									aria-label={`Drag to reorder ${blog.title}`}
-									title="Drag to reorder"
-									ondragstart={(event) => handleDragStart(event, blog.id)}
-									ondragend={handleDragEnd}
+							<AlertDialog.Root>
+								<AlertDialog.Trigger
+									class={buttonVariants({ variant: 'destructive', size: 'icon-sm' })}
 									onclick={(event) => event.stopPropagation()}
 								>
-									<GripVertical class="size-4" />
-								</button>
-
-								<AlertDialog.Root>
-									<AlertDialog.Trigger
-										class={buttonVariants({ variant: 'destructive', size: 'icon-sm' })}
-										onclick={(event) => event.stopPropagation()}
-									>
-										<Trash2 class="size-4" />
-										<span class="sr-only">Delete {blog.title}</span>
-									</AlertDialog.Trigger>
-									<AlertDialog.Content>
-										<AlertDialog.Header>
-											<AlertDialog.Title>Delete post</AlertDialog.Title>
-											<AlertDialog.Description>
-												This will permanently remove {blog.title} and its content.
-											</AlertDialog.Description>
-										</AlertDialog.Header>
-										<AlertDialog.Footer>
-											<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-											<AlertDialog.Action
-												variant="destructive"
-												disabled={deletingId === blog.id}
-												onclick={() => deleteBlog(blog.id)}
-											>
-												{deletingId === blog.id ? 'Deleting...' : 'Delete'}
-											</AlertDialog.Action>
-										</AlertDialog.Footer>
-									</AlertDialog.Content>
-								</AlertDialog.Root>
-							</div>
+									<Trash2 class="size-3.5" />
+									<span class="sr-only">Delete {blog.title}</span>
+								</AlertDialog.Trigger>
+								<AlertDialog.Content>
+									<AlertDialog.Header>
+										<AlertDialog.Title>Delete post</AlertDialog.Title>
+										<AlertDialog.Description>
+											This will permanently remove "{blog.title}".
+										</AlertDialog.Description>
+									</AlertDialog.Header>
+									<AlertDialog.Footer>
+										<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+										<AlertDialog.Action
+											variant="destructive"
+											disabled={deletingId === blog.id}
+											onclick={() => deleteBlog(blog.id)}
+										>
+											{deletingId === blog.id ? 'Deleting…' : 'Delete'}
+										</AlertDialog.Action>
+									</AlertDialog.Footer>
+								</AlertDialog.Content>
+							</AlertDialog.Root>
 						</div>
 					</Card.Content>
 				</Card.Root>

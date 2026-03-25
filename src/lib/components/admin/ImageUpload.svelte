@@ -215,11 +215,13 @@
 			onclick={closePreview}
 		></button>
 
-		<div class="relative w-full max-w-6xl">
+		<div
+			class="relative inline-flex max-h-[86vh] max-w-[min(92vw,1200px)] items-center justify-center"
+		>
 			<img
 				src={activePreviewUrl}
 				alt={`Preview image ${activePreviewIndex + 1}`}
-				class="max-h-[86vh] w-full rounded-[1.5rem] border border-white/12 bg-black/40 object-contain shadow-2xl"
+				class="h-auto max-h-[86vh] w-auto max-w-full rounded-[1.5rem] border border-white/12 bg-black/40 object-contain shadow-2xl"
 			/>
 
 			<div

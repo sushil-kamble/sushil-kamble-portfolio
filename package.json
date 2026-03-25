@@ -59,6 +59,7 @@
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.1016.0",
+		"@fontsource-variable/dm-sans": "^5.2.8",
 		"@fontsource/cascadia-code": "^5.2.3",
 		"@fontsource/fira-code": "^5.2.7",
 		"@fontsource/ibm-plex-mono": "^5.2.7",

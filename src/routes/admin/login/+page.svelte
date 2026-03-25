@@ -39,62 +39,56 @@
 	}
 </script>
 
-<div
-	class="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(143,110,86,0.12),_transparent_32%),linear-gradient(180deg,_rgba(250,248,245,0.98),_rgba(243,239,233,0.95))] px-4 py-8"
->
-	<Card.Root
-		class="border-border/70 bg-card/95 w-full max-w-md rounded-[1.75rem] shadow-xl shadow-black/5"
-	>
-		<Card.Header class="space-y-5 text-center">
+<div class="flex min-h-screen items-center justify-center bg-[#f7f6f4] px-5 py-8">
+	<div class="w-full max-w-sm">
+		<div class="mb-8 text-center">
 			<div
-				class="border-border/70 bg-background/90 mx-auto flex size-14 items-center justify-center rounded-[1.25rem] border shadow-sm"
+				class="bg-foreground text-background mx-auto flex size-10 items-center justify-center rounded-xl"
 			>
-				<Lock class="text-muted-foreground size-6" />
+				<Lock class="size-4" />
 			</div>
-			<div class="space-y-2">
-				<Card.Title class="text-2xl tracking-tight">Portfolio Admin</Card.Title>
-				<Card.Description class="text-sm leading-6">
-					Enter your password to access the content studio.
-				</Card.Description>
-			</div>
-		</Card.Header>
+			<h1 class="text-foreground mt-4 text-xl font-semibold tracking-tight">Admin Login</h1>
+			<p class="text-muted-foreground mt-1.5 text-sm">Enter your password to continue.</p>
+		</div>
 
-		<Card.Content>
-			<form class="space-y-4" onsubmit={handleSubmit}>
-				<Field.Field>
-					<Field.Label for="admin-password">Password</Field.Label>
-					<Input
-						id="admin-password"
-						type="password"
-						bind:value={password}
-						placeholder="Enter your password"
-						autocomplete="current-password"
-						autofocus
-					/>
-				</Field.Field>
+		<Card.Root class="border-border rounded-xl border">
+			<Card.Content class="p-5">
+				<form class="space-y-4" onsubmit={handleSubmit}>
+					<Field.Field>
+						<Field.Label for="admin-password">Password</Field.Label>
+						<Input
+							id="admin-password"
+							type="password"
+							bind:value={password}
+							placeholder="••••••••"
+							autocomplete="current-password"
+							autofocus
+							class="h-11"
+						/>
+					</Field.Field>
 
-				{#if error}
-					<Alert.Root variant="destructive">
-						<Alert.Title>Sign in failed</Alert.Title>
-						<Alert.Description>{error}</Alert.Description>
-					</Alert.Root>
-				{/if}
-
-				<Button
-					type="submit"
-					size="lg"
-					class="w-full justify-center"
-					disabled={loading || !password.trim()}
-				>
-					{#if loading}
-						<Loader2 class="size-4 animate-spin" />
-						<span>Signing in...</span>
-					{:else}
-						<span>Sign in</span>
-						<ArrowRight class="size-4" />
+					{#if error}
+						<Alert.Root variant="destructive">
+							<Alert.Description>{error}</Alert.Description>
+						</Alert.Root>
 					{/if}
-				</Button>
-			</form>
-		</Card.Content>
-	</Card.Root>
+
+					<Button
+						type="submit"
+						size="lg"
+						class="h-11 w-full justify-center"
+						disabled={loading || !password.trim()}
+					>
+						{#if loading}
+							<Loader2 class="size-4 animate-spin" />
+							<span>Signing in…</span>
+						{:else}
+							<span>Sign in</span>
+							<ArrowRight class="size-4" />
+						{/if}
+					</Button>
+				</form>
+			</Card.Content>
+		</Card.Root>
+	</div>
 </div>

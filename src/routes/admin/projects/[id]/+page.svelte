@@ -72,119 +72,122 @@
 <section class="admin-page-narrow">
 	<AdminBackLink href="/admin/projects" label="Back to projects" />
 
-	<AdminPageHeader
-		title="Edit project"
-		description="Update the portfolio presentation, ordering, links, and screenshots for this project."
-	>
+	<AdminPageHeader title="Edit project" description="Update this project's details.">
 		{#snippet icon()}
-			<FolderKanban class="size-5" />
+			<FolderKanban class="size-4" />
 		{/snippet}
 	</AdminPageHeader>
 
-	<Card.Root class="admin-surface">
-		<Card.Content class="p-6 sm:p-8">
+	<Card.Root class="admin-surface overflow-visible">
+		<Card.Content class="p-5">
 			<form
-				class="space-y-6"
+				class="space-y-5"
 				onsubmit={(event) => {
 					event.preventDefault();
 					handleSubmit();
 				}}
 			>
-				<div class="space-y-6">
+				<Field.Field>
+					<Field.Label for="title">Title</Field.Label>
+					<Input
+						id="title"
+						type="text"
+						bind:value={title}
+						placeholder="Project name"
+						required
+						class="h-10"
+					/>
+				</Field.Field>
+
+				<Field.Field>
+					<Field.Label for="description">Description</Field.Label>
+					<Textarea
+						id="description"
+						bind:value={description}
+						rows={3}
+						placeholder="Brief description…"
+					/>
+				</Field.Field>
+
+				<div class="admin-form-grid">
 					<Field.Field>
-						<Field.Label for="title">Title</Field.Label>
-						<Input id="title" type="text" bind:value={title} placeholder="Project name" required />
-					</Field.Field>
-
-					<Field.Field>
-						<Field.Label for="description">Description</Field.Label>
-						<Textarea
-							id="description"
-							bind:value={description}
-							rows={4}
-							placeholder="Brief description of the project..."
-						/>
-					</Field.Field>
-
-					<div class="admin-form-grid">
-						<Field.Field>
-							<Field.Label for="github">GitHub URL</Field.Label>
-							<Input
-								id="github"
-								type="url"
-								bind:value={github}
-								placeholder="https://github.com/..."
-							/>
-						</Field.Field>
-
-						<Field.Field>
-							<Field.Label for="direct">Live URL</Field.Label>
-							<Input id="direct" type="url" bind:value={direct} placeholder="https://..." />
-						</Field.Field>
-					</div>
-
-					<Field.Field>
-						<Field.Label for="ordering">Ordering</Field.Label>
-						<Input id="ordering" type="number" bind:value={ordering} class="md:max-w-32" />
-					</Field.Field>
-
-					<Field.Field>
-						<Field.Label for="project-stack-label">Tech stack</Field.Label>
-						<Field.Description
-							>These use the same badge source as the public portfolio. Drag them into the exact
-							order you want shown.</Field.Description
-						>
-						<OrderedTextListEditor
-							items={stack}
-							labelledBy="project-stack-label"
-							placeholder="Add a technology..."
-							addLabel="Add technology"
-							emptyTitle="No technologies added yet"
-							emptyDescription="Build the stack as an ordered set of portfolio badges instead of a plain tag list."
-							showTechBadges={true}
-							onchange={(value) => (stack = value)}
+						<Field.Label for="github">GitHub URL</Field.Label>
+						<Input
+							id="github"
+							type="url"
+							bind:value={github}
+							placeholder="https://github.com/…"
+							class="h-10"
 						/>
 					</Field.Field>
 
 					<Field.Field>
-						<Field.Label for="project-features-label">Features</Field.Label>
-						<Field.Description
-							>Each feature can be edited individually and reordered to shape the story of the
-							project.</Field.Description
-						>
-						<OrderedTextListEditor
-							items={features}
-							labelledBy="project-features-label"
-							placeholder="Add a feature..."
-							addLabel="Add feature"
-							emptyTitle="No features added yet"
-							emptyDescription="Use clear, one-line feature statements and arrange them from strongest to least critical."
-							onchange={(value) => (features = value)}
-						/>
-					</Field.Field>
-
-					<Field.Field>
-						<Field.Label for="project-screenshots-label">Screenshots</Field.Label>
-						<Field.Description>Upload a few visuals to represent the project.</Field.Description>
-						<ImageUpload
-							images={screenshots}
-							labelledBy="project-screenshots-label"
-							path="Projects"
-							onchange={(value) => (screenshots = value)}
+						<Field.Label for="direct">Live URL</Field.Label>
+						<Input
+							id="direct"
+							type="url"
+							bind:value={direct}
+							placeholder="https://…"
+							class="h-10"
 						/>
 					</Field.Field>
 				</div>
 
+				<Field.Field>
+					<Field.Label for="ordering">Order</Field.Label>
+					<Input id="ordering" type="number" bind:value={ordering} class="h-10 sm:max-w-24" />
+				</Field.Field>
+
+				<Field.Field>
+					<Field.Label for="project-stack-label">Tech stack</Field.Label>
+					<Field.Description>Add technologies and drag to reorder.</Field.Description>
+					<OrderedTextListEditor
+						items={stack}
+						labelledBy="project-stack-label"
+						placeholder="Add a technology…"
+						addLabel="Add technology"
+						emptyTitle="No technologies added"
+						emptyDescription="Build the stack as ordered badges."
+						showTechBadges={true}
+						onchange={(value) => (stack = value)}
+					/>
+				</Field.Field>
+
+				<Field.Field>
+					<Field.Label for="project-features-label">Features</Field.Label>
+					<Field.Description>Key features of the project.</Field.Description>
+					<OrderedTextListEditor
+						items={features}
+						labelledBy="project-features-label"
+						placeholder="Add a feature…"
+						addLabel="Add feature"
+						emptyTitle="No features added"
+						emptyDescription="Add product or technical capabilities."
+						onchange={(value) => (features = value)}
+					/>
+				</Field.Field>
+
+				<Field.Field>
+					<Field.Label for="project-screenshots-label">Screenshots</Field.Label>
+					<Field.Description>Upload visuals for this project.</Field.Description>
+					<ImageUpload
+						images={screenshots}
+						labelledBy="project-screenshots-label"
+						path="Projects"
+						onchange={(value) => (screenshots = value)}
+					/>
+				</Field.Field>
+
 				<div
-					class="border-border/70 flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end"
+					class="border-border flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end"
 				>
-					<Button href="/admin/projects" variant="outline" size="lg">Cancel</Button>
-					<Button type="submit" size="lg" disabled={saving || !title.trim()}>
+					<Button href="/admin/projects" variant="outline">Cancel</Button>
+					<Button type="submit" disabled={saving || !title.trim()}>
 						{#if saving}
-							<Loader2 class="size-4 animate-spin" />
-							<span>Saving...</span>
+							<Loader2 class="size-3.5 animate-spin" />
+							<span>Saving…</span>
 						{:else}
-							<Save class="size-4" />
+							<Save class="size-3.5" />
 							<span>Update project</span>
 						{/if}
 					</Button>

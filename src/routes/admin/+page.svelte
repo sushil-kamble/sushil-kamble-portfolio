@@ -1,14 +1,12 @@
 <script lang="ts">
 	import {
 		ArrowRight,
-		BookOpenText,
 		Briefcase,
 		FileText,
 		FolderKanban,
 		Images,
 		LayoutDashboard,
 		Link2,
-		NotebookPen,
 		Plus,
 		TriangleAlert,
 		UserRound,
@@ -52,41 +50,28 @@
 			count: data.counts.careers,
 			icon: Briefcase,
 			href: '/admin/careers',
-			accent: 'bg-sky-500/10 text-sky-600',
-			description:
-				data.previews.careers[0]?.designation && data.previews.careers[0]?.company
-					? `${data.previews.careers[0].designation} at ${data.previews.careers[0].company}`
-					: 'Timeline and role history'
+			accent: 'text-sky-600 bg-sky-50'
 		},
 		{
 			label: 'Skills',
 			count: data.counts.totalSkills,
 			icon: Zap,
 			href: '/admin/skills',
-			accent: 'bg-amber-500/10 text-amber-600',
-			description: data.previews.skillCategories[0]?.title
-				? `${data.previews.skillCategories[0].title} leads the library`
-				: 'Grouped capability sets'
+			accent: 'text-amber-600 bg-amber-50'
 		},
 		{
 			label: 'Projects',
 			count: data.counts.projects,
 			icon: FolderKanban,
 			href: '/admin/projects',
-			accent: 'bg-emerald-500/10 text-emerald-600',
-			description: data.previews.projects[0]?.title
-				? `${data.previews.projects[0].title} is first in live order`
-				: 'Portfolio work and case studies'
+			accent: 'text-emerald-600 bg-emerald-50'
 		},
 		{
 			label: 'Blogs',
 			count: data.counts.blogs,
 			icon: FileText,
 			href: '/admin/blogs',
-			accent: 'bg-rose-500/10 text-rose-600',
-			description: data.previews.recentBlogs[0]?.title
-				? `Latest: ${data.previews.recentBlogs[0].title}`
-				: 'Editorial queue and publishing'
+			accent: 'text-rose-600 bg-rose-50'
 		}
 	]);
 
@@ -101,25 +86,25 @@
 			label: 'Careers without logos',
 			value: data.attention.careersWithoutLogo,
 			href: '/admin/careers',
-			helper: 'Branding polish'
+			helper: 'Needs branding'
 		},
 		{
 			label: 'Projects missing screenshots',
 			value: data.attention.projectsWithoutScreenshots,
 			href: '/admin/projects',
-			helper: 'Visual coverage'
+			helper: 'Add visuals'
 		},
 		{
 			label: 'Blogs without tags',
 			value: data.attention.blogsWithoutTags,
 			href: '/admin/blogs',
-			helper: 'Archive metadata'
+			helper: 'Tag needed'
 		},
 		{
 			label: 'Empty skill categories',
 			value: data.attention.emptySkillCategories,
 			href: '/admin/skills',
-			helper: 'Content depth'
+			helper: 'Add skills'
 		}
 	]);
 
@@ -129,505 +114,313 @@
 </script>
 
 <section class="admin-page">
-	<AdminPageHeader
-		title="Dashboard"
-		description="A content control room for the portfolio. See what is live, what was updated recently, and what still needs editorial attention before you dive into a section."
-	>
+	<AdminPageHeader title="Dashboard" description="Overview of your portfolio content.">
 		{#snippet icon()}
-			<LayoutDashboard class="size-5" />
+			<LayoutDashboard class="size-4" />
 		{/snippet}
 	</AdminPageHeader>
 
-	<div class="grid gap-4 xl:grid-cols-[1.35fr_0.85fr]">
-		<Card.Root class="admin-hero-surface overflow-hidden">
-			<Card.Content class="relative space-y-6 p-6">
-				<div class="space-y-3">
-					<Badge
-						variant="outline"
-						class="rounded-full px-2.5 py-1 text-[10px] tracking-[0.2em] uppercase"
-					>
-						Portfolio Control Room
-					</Badge>
-					<div class="space-y-2">
-						<h2 class="text-foreground max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl">
-							See the live portfolio as a system, not as isolated forms.
-						</h2>
-						<p class="text-muted-foreground max-w-3xl text-sm leading-6">
-							You currently have {data.counts.totalEntries} structured content entries across
-							{data.counts.sections} admin sections. The dashboard now surfaces live-order previews, recent
-							writing, and missing content signals so you can decide what to edit next without clicking
-							through every area.
-						</p>
-					</div>
-				</div>
-
-				<div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-					<div class="border-border/70 bg-background/80 rounded-[1.5rem] border p-4">
-						<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">Entries</p>
-						<p class="text-foreground mt-3 text-3xl font-semibold tracking-tight">
-							{data.counts.totalEntries}
-						</p>
-						<p class="text-muted-foreground mt-1 text-xs">
-							Across careers, skills, projects, and blogs
-						</p>
-					</div>
-					<div class="border-border/70 bg-background/80 rounded-[1.5rem] border p-4">
-						<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">Ready sections</p>
-						<p class="text-foreground mt-3 text-3xl font-semibold tracking-tight">
-							{readySections}/{data.counts.sections}
-						</p>
-						<p class="text-muted-foreground mt-1 text-xs">Sections with content already present</p>
-					</div>
-					<div class="border-border/70 bg-background/80 rounded-[1.5rem] border p-4">
-						<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">Screenshots</p>
-						<p class="text-foreground mt-3 text-3xl font-semibold tracking-tight">
-							{data.highlights.projectScreenshots}
-						</p>
-						<p class="text-muted-foreground mt-1 text-xs">Project visuals uploaded to the site</p>
-					</div>
-					<div class="border-border/70 bg-background/80 rounded-[1.5rem] border p-4">
-						<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">Skill badges</p>
-						<p class="text-foreground mt-3 text-3xl font-semibold tracking-tight">
-							{data.counts.totalSkills}
-						</p>
-						<p class="text-muted-foreground mt-1 text-xs">
-							Technologies indexed across the portfolio
-						</p>
-					</div>
-				</div>
-
-				{#if data.previews.recentBlogs[0]}
-					<div class="border-border/70 bg-background/75 rounded-[1.5rem] border p-4">
-						<div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-							<div class="space-y-1">
-								<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">
-									Recent writing
-								</p>
-								<p class="text-foreground text-lg font-semibold tracking-tight">
-									{data.previews.recentBlogs[0].title}
-								</p>
-								<p class="text-muted-foreground text-sm">
-									{formatDate(data.previews.recentBlogs[0].createdAt)}
-								</p>
-							</div>
-							<Button href="/admin/blogs" variant="outline" size="sm">
-								<NotebookPen class="size-4" />
-								<span>Open blog queue</span>
-							</Button>
-						</div>
-					</div>
-				{/if}
-
-				<div
-					class="pointer-events-none absolute top-4 -right-8 size-44 rounded-full bg-amber-500/10 blur-3xl"
-				></div>
-				<div
-					class="pointer-events-none absolute bottom-0 left-10 h-24 w-48 rounded-full bg-sky-500/10 blur-3xl"
-				></div>
-			</Card.Content>
-		</Card.Root>
-
-		<div class="grid gap-4">
-			<Card.Root class="admin-collection-card overflow-hidden">
-				<Card.Content class="space-y-4 p-5">
-					<div class="flex items-start justify-between gap-3">
-						<div class="space-y-1">
-							<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">Quick launch</p>
-							<h3 class="text-foreground text-lg font-semibold tracking-tight">
-								Start a new content pass
-							</h3>
-						</div>
-						<div class="admin-icon-shell size-10 rounded-2xl">
-							<Plus class="size-4" />
-						</div>
-					</div>
-
-					<div class="grid gap-2">
-						<Button href="/admin/projects/new" variant="secondary" class="justify-between">
-							<span>New project</span>
-							<ArrowRight class="size-4" />
-						</Button>
-						<Button href="/admin/blogs/new" variant="secondary" class="justify-between">
-							<span>New blog post</span>
-							<ArrowRight class="size-4" />
-						</Button>
-						<Button href="/admin/careers/new" variant="secondary" class="justify-between">
-							<span>New career entry</span>
-							<ArrowRight class="size-4" />
-						</Button>
-						<Button href="/admin/about" variant="outline" class="justify-between">
-							<span>Refine about section</span>
-							<ArrowRight class="size-4" />
-						</Button>
-					</div>
-				</Card.Content>
-			</Card.Root>
-
-			<Card.Root class="admin-collection-card overflow-hidden">
-				<Card.Content class="space-y-4 p-5">
-					<div class="flex items-start justify-between gap-3">
-						<div class="space-y-1">
-							<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">
-								Needs attention
-							</p>
-							<h3 class="text-foreground text-lg font-semibold tracking-tight">
-								{attentionCount === 0
-									? 'Everything looks covered'
-									: `${attentionCount} focus areas`}
-							</h3>
-						</div>
-						<div class="admin-icon-shell size-10 rounded-2xl">
-							<TriangleAlert class="size-4" />
-						</div>
-					</div>
-
-					<div class="grid gap-2">
-						{#each attentionItems as item (item.label)}
-							<a
-								href={item.href}
-								class="border-border/70 hover:border-border bg-background/75 flex items-center justify-between gap-3 rounded-[1rem] border px-3 py-3 transition-colors"
-							>
-								<div class="min-w-0">
-									<p class="text-foreground text-sm font-medium">{item.label}</p>
-									<p class="text-muted-foreground text-xs">{item.helper}</p>
-								</div>
-								<Badge
-									variant={item.value > 0 ? 'secondary' : 'outline'}
-									class="rounded-full px-2.5 py-1"
-								>
-									{item.value > 0 ? item.value : 'OK'}
-								</Badge>
-							</a>
-						{/each}
-					</div>
-				</Card.Content>
-			</Card.Root>
+	<!-- Stats row -->
+	<div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+		<div class="border-border bg-card rounded-xl border p-4">
+			<p class="text-muted-foreground text-xs font-medium">Total entries</p>
+			<p class="text-foreground mt-1.5 text-2xl font-semibold tabular-nums">
+				{data.counts.totalEntries}
+			</p>
+		</div>
+		<div class="border-border bg-card rounded-xl border p-4">
+			<p class="text-muted-foreground text-xs font-medium">Sections ready</p>
+			<p class="text-foreground mt-1.5 text-2xl font-semibold tabular-nums">
+				{readySections}<span class="text-muted-foreground text-sm font-normal"
+					>/{data.counts.sections}</span
+				>
+			</p>
+		</div>
+		<div class="border-border bg-card rounded-xl border p-4">
+			<p class="text-muted-foreground text-xs font-medium">Screenshots</p>
+			<p class="text-foreground mt-1.5 text-2xl font-semibold tabular-nums">
+				{data.highlights.projectScreenshots}
+			</p>
+		</div>
+		<div class="border-border bg-card rounded-xl border p-4">
+			<p class="text-muted-foreground text-xs font-medium">Skills indexed</p>
+			<p class="text-foreground mt-1.5 text-2xl font-semibold tabular-nums">
+				{data.counts.totalSkills}
+			</p>
 		</div>
 	</div>
 
-	<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+	<!-- Section cards -->
+	<div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
 		{#each sectionCards as card (card.href)}
-			<Card.Root class="admin-collection-card group overflow-hidden">
-				<Card.Content class="p-0">
-					<Button
-						href={card.href}
-						variant="ghost"
-						size="lg"
-						class="flex h-full w-full items-start justify-between gap-4 rounded-[1.55rem] px-5 py-5 text-left"
-					>
-						<div class="flex items-start gap-4">
-							<div class={`flex size-12 items-center justify-center rounded-2xl ${card.accent}`}>
-								<card.icon class="size-5" />
-							</div>
-							<div class="space-y-1">
-								<p class="text-muted-foreground text-sm font-medium">{card.label}</p>
-								<p class="text-foreground text-3xl font-semibold tracking-tight">{card.count}</p>
-								<p class="text-muted-foreground line-clamp-2 text-xs leading-5">
-									{card.description}
-								</p>
-							</div>
-						</div>
-						<div class="flex flex-col items-end gap-3">
-							<Badge
-								variant="outline"
-								class="rounded-full px-2.5 py-1 text-[10px] tracking-[0.18em] uppercase"
-							>
-								Open
-							</Badge>
-							<ArrowRight
-								class="text-muted-foreground group-hover:text-foreground size-4 transition-colors"
-							/>
-						</div>
-					</Button>
-				</Card.Content>
-			</Card.Root>
+			<a
+				href={card.href}
+				class="border-border bg-card hover:bg-accent/40 group flex flex-col gap-3 rounded-xl border p-4 transition-colors"
+			>
+				<div class="flex items-center justify-between">
+					<div class={`flex size-8 items-center justify-center rounded-lg ${card.accent}`}>
+						<card.icon class="size-4" />
+					</div>
+					<ArrowRight
+						class="text-muted-foreground/50 group-hover:text-foreground size-3.5 transition-colors"
+					/>
+				</div>
+				<div>
+					<p class="text-foreground text-2xl font-semibold tabular-nums">{card.count}</p>
+					<p class="text-muted-foreground text-xs font-medium">{card.label}</p>
+				</div>
+			</a>
 		{/each}
 	</div>
 
-	<div class="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-		<Card.Root class="admin-collection-card overflow-hidden">
-			<Card.Content class="space-y-5 p-5">
-				<div class="flex items-center justify-between gap-3">
-					<div class="space-y-1">
-						<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">
-							What visitors see first
-						</p>
-						<h3 class="text-foreground text-xl font-semibold tracking-tight">
-							Projects in live order
-						</h3>
-					</div>
-					<Button href="/admin/projects" variant="outline" size="sm">
-						<span>Manage</span>
-						<ArrowRight class="size-4" />
-					</Button>
+	<div class="grid gap-5 lg:grid-cols-[1fr_1fr]">
+		<!-- Quick actions -->
+		<Card.Root class="admin-surface">
+			<Card.Content class="p-4">
+				<div class="mb-3 flex items-center justify-between">
+					<h2 class="text-foreground text-sm font-semibold">Quick actions</h2>
+					<Plus class="text-muted-foreground size-4" />
 				</div>
-
-				<div class="grid gap-3">
-					{#if data.previews.projects.length === 0}
-						<div
-							class="border-border/70 bg-background/75 rounded-[1.35rem] border border-dashed px-4 py-6 text-center"
-						>
-							<p class="text-foreground text-sm font-medium">No projects yet</p>
-							<p class="text-muted-foreground mt-1 text-sm">
-								Add a project to start building the live portfolio queue.
-							</p>
-						</div>
-					{:else}
-						{#each data.previews.projects as project (project.id)}
-							<a
-								href={`/admin/projects/${project.id}`}
-								class="border-border/70 hover:border-border bg-background/75 flex gap-4 rounded-[1.35rem] border p-3 transition-colors"
-							>
-								<div
-									class="border-border/70 bg-muted/40 flex h-20 w-28 shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border"
-								>
-									{#if project.screenshot}
-										<img
-											src={project.screenshot}
-											alt={project.title}
-											class="size-full object-cover"
-										/>
-									{:else}
-										<Images class="text-muted-foreground size-5" />
-									{/if}
-								</div>
-
-								<div class="min-w-0 flex-1 space-y-3">
-									<div class="space-y-1">
-										<div class="flex flex-wrap items-center gap-2">
-											<Badge variant="outline" class="rounded-full px-2.5 py-1">
-												Position {project.ordering + 1}
-											</Badge>
-											{#if project.hasExternalLink}
-												<Badge variant="secondary" class="gap-1.5 rounded-full px-2.5 py-1">
-													<Link2 class="size-3.5" />
-													<span>External link</span>
-												</Badge>
-											{/if}
-										</div>
-										<p class="text-foreground text-base font-semibold tracking-tight">
-											{project.title}
-										</p>
-										<p class="text-muted-foreground line-clamp-2 text-sm leading-6">
-											{project.description}
-										</p>
-									</div>
-
-									<div class="flex flex-wrap items-center gap-2">
-										{#each project.stack as tech (tech)}
-											<TechBadge name={tech} variant="blue" />
-										{/each}
-										<Badge variant="outline" class="rounded-full px-2.5 py-1">
-											{project.featureCount} feature{project.featureCount === 1 ? '' : 's'}
-										</Badge>
-									</div>
-								</div>
-							</a>
-						{/each}
-					{/if}
+				<div class="grid gap-1.5">
+					<a
+						href="/admin/projects/new"
+						class="bg-muted/50 hover:bg-muted flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-colors"
+					>
+						<span>New project</span>
+						<ArrowRight class="text-muted-foreground size-3.5" />
+					</a>
+					<a
+						href="/admin/blogs/new"
+						class="bg-muted/50 hover:bg-muted flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-colors"
+					>
+						<span>New blog post</span>
+						<ArrowRight class="text-muted-foreground size-3.5" />
+					</a>
+					<a
+						href="/admin/careers/new"
+						class="bg-muted/50 hover:bg-muted flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-colors"
+					>
+						<span>New career entry</span>
+						<ArrowRight class="text-muted-foreground size-3.5" />
+					</a>
+					<a
+						href="/admin/about"
+						class="bg-muted/50 hover:bg-muted flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-colors"
+					>
+						<span>Edit about</span>
+						<ArrowRight class="text-muted-foreground size-3.5" />
+					</a>
 				</div>
 			</Card.Content>
 		</Card.Root>
 
-		<Card.Root class="admin-collection-card overflow-hidden">
-			<Card.Content class="space-y-5 p-5">
-				<div class="flex items-center justify-between gap-3">
-					<div class="space-y-1">
-						<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">Recent writing</p>
-						<h3 class="text-foreground text-xl font-semibold tracking-tight">
-							Latest blog activity
-						</h3>
-					</div>
-					<Button href="/admin/blogs" variant="outline" size="sm">
-						<span>Open blogs</span>
-						<ArrowRight class="size-4" />
-					</Button>
+		<!-- Attention items -->
+		<Card.Root class="admin-surface">
+			<Card.Content class="p-4">
+				<div class="mb-3 flex items-center justify-between">
+					<h2 class="text-foreground text-sm font-semibold">
+						{attentionCount === 0 ? 'All clear' : `${attentionCount} need attention`}
+					</h2>
+					<TriangleAlert class="text-muted-foreground size-4" />
 				</div>
-
-				<div class="grid gap-3">
-					{#if data.previews.recentBlogs.length === 0}
-						<div
-							class="border-border/70 bg-background/75 rounded-[1.35rem] border border-dashed px-4 py-6 text-center"
+				<div class="grid gap-1.5">
+					{#each attentionItems as item (item.label)}
+						<a
+							href={item.href}
+							class="bg-muted/50 hover:bg-muted flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors"
 						>
-							<p class="text-foreground text-sm font-medium">No blog posts yet</p>
-							<p class="text-muted-foreground mt-1 text-sm">
-								Write the first post to populate the editorial queue.
-							</p>
-						</div>
-					{:else}
-						{#each data.previews.recentBlogs as blog (blog.id)}
-							<a
-								href={`/admin/blogs/${blog.id}`}
-								class="border-border/70 hover:border-border bg-background/75 rounded-[1.35rem] border p-4 transition-colors"
-							>
-								<div class="space-y-3">
-									<div class="space-y-1">
-										<div class="flex flex-wrap items-center gap-2">
-											<Badge variant="secondary" class="gap-1.5 rounded-full px-2.5 py-1">
-												<BookOpenText class="size-3.5" />
-												<span>{formatDate(blog.createdAt)}</span>
-											</Badge>
-										</div>
-										<p class="text-foreground text-base font-semibold tracking-tight">
-											{blog.title}
-										</p>
-										<p class="text-muted-foreground line-clamp-2 text-sm leading-6">
-											{blog.description}
-										</p>
-									</div>
-
-									<div class="flex flex-wrap gap-2">
-										{#each blog.tags as tag (tag)}
-											<Badge variant="outline" class="rounded-full px-2.5 py-1">{tag}</Badge>
-										{/each}
-									</div>
-								</div>
-							</a>
-						{/each}
-					{/if}
+							<div class="min-w-0">
+								<p class="text-foreground text-sm font-medium">{item.label}</p>
+							</div>
+							{#if item.value > 0}
+								<Badge variant="secondary" class="rounded-md px-2 py-0.5 text-xs tabular-nums">
+									{item.value}
+								</Badge>
+							{:else}
+								<span class="text-xs font-medium text-emerald-600">OK</span>
+							{/if}
+						</a>
+					{/each}
 				</div>
 			</Card.Content>
 		</Card.Root>
 	</div>
 
-	<div class="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
-		<Card.Root class="admin-collection-card overflow-hidden">
-			<Card.Content class="space-y-5 p-5">
-				<div class="flex items-center justify-between gap-3">
-					<div class="space-y-1">
-						<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">Career timeline</p>
-						<h3 class="text-foreground text-xl font-semibold tracking-tight">Role snapshot</h3>
-					</div>
-					<Button href="/admin/careers" variant="outline" size="sm">
-						<span>Manage</span>
-						<ArrowRight class="size-4" />
+	<!-- Projects preview -->
+	<Card.Root class="admin-surface">
+		<Card.Content class="p-4">
+			<div class="mb-3 flex items-center justify-between">
+				<h2 class="text-foreground text-sm font-semibold">Projects in live order</h2>
+				<Button href="/admin/projects" variant="ghost" size="sm" class="text-xs">
+					<span>View all</span>
+					<ArrowRight class="size-3.5" />
+				</Button>
+			</div>
+
+			{#if data.previews.projects.length === 0}
+				<p class="text-muted-foreground py-6 text-center text-sm">No projects yet.</p>
+			{:else}
+				<div class="grid gap-2">
+					{#each data.previews.projects as project (project.id)}
+						<a
+							href={`/admin/projects/${project.id}`}
+							class="bg-muted/40 hover:bg-muted flex items-center gap-3 rounded-lg p-3 transition-colors"
+						>
+							<div
+								class="border-border bg-card flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border"
+							>
+								{#if project.screenshot}
+									<img
+										src={project.screenshot}
+										alt={project.title}
+										class="size-full object-cover"
+									/>
+								{:else}
+									<Images class="text-muted-foreground size-4" />
+								{/if}
+							</div>
+
+							<div class="min-w-0 flex-1">
+								<p class="text-foreground truncate text-sm font-medium">{project.title}</p>
+								<p class="text-muted-foreground truncate text-xs">{project.description}</p>
+							</div>
+
+							<div class="flex shrink-0 items-center gap-2">
+								{#if project.hasExternalLink}
+									<Link2 class="text-muted-foreground size-3.5" />
+								{/if}
+								<Badge
+									variant="secondary"
+									class="rounded-md px-1.5 py-0.5 text-[10px] tabular-nums"
+								>
+									#{project.ordering + 1}
+								</Badge>
+							</div>
+						</a>
+					{/each}
+				</div>
+			{/if}
+		</Card.Content>
+	</Card.Root>
+
+	<!-- Blogs + Careers + Skills grid -->
+	<div class="grid gap-5 lg:grid-cols-3">
+		<!-- Recent blogs -->
+		<Card.Root class="admin-surface">
+			<Card.Content class="p-4">
+				<div class="mb-3 flex items-center justify-between">
+					<h2 class="text-foreground text-sm font-semibold">Recent posts</h2>
+					<Button href="/admin/blogs" variant="ghost" size="sm" class="text-xs">
+						<span>All</span>
+						<ArrowRight class="size-3.5" />
 					</Button>
 				</div>
-
-				<div class="grid gap-3">
-					{#if data.previews.careers.length === 0}
-						<div
-							class="border-border/70 bg-background/75 rounded-[1.35rem] border border-dashed px-4 py-6 text-center"
-						>
-							<p class="text-foreground text-sm font-medium">No career entries yet</p>
-							<p class="text-muted-foreground mt-1 text-sm">
-								Add the first role to give the timeline structure.
-							</p>
-						</div>
-					{:else}
-						{#each data.previews.careers as career (career.id)}
+				{#if data.previews.recentBlogs.length === 0}
+					<p class="text-muted-foreground py-4 text-center text-sm">No posts yet.</p>
+				{:else}
+					<div class="grid gap-2">
+						{#each data.previews.recentBlogs as blog (blog.id)}
 							<a
-								href={`/admin/careers/${career.id}`}
-								class="border-border/70 hover:border-border bg-background/75 rounded-[1.35rem] border p-4 transition-colors"
+								href={`/admin/blogs/${blog.id}`}
+								class="bg-muted/40 hover:bg-muted rounded-lg p-3 transition-colors"
 							>
-								<div class="space-y-3">
-									<div class="flex items-start gap-3">
-										<div
-											class="border-border/70 bg-muted/40 flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-[1rem] border"
-										>
-											{#if career.logo}
-												<img
-													src={career.logo}
-													alt={`${career.company} logo`}
-													class="size-full object-contain p-2"
-												/>
-											{:else}
-												<UserRound class="text-muted-foreground size-4" />
-											{/if}
-										</div>
-
-										<div class="min-w-0 flex-1 space-y-1">
-											<p class="text-foreground text-base font-semibold tracking-tight">
-												{career.designation || career.company}
-											</p>
-											<p class="text-muted-foreground text-sm">
-												{career.company}
-												{#if career.location}
-													<span> • {career.location}</span>
-												{/if}
-											</p>
-											<p class="text-muted-foreground text-xs">
-												{career.start}{career.end ? ` - ${career.end}` : ' - Present'}
-											</p>
-										</div>
-
-										<Badge variant="outline" class="rounded-full px-2.5 py-1">
-											{career.highlights} highlight{career.highlights === 1 ? '' : 's'}
-										</Badge>
-									</div>
-
-									<div class="flex flex-wrap gap-2">
-										{#each career.skills as skill (skill)}
-											<TechBadge name={skill} variant="purple" />
-										{/each}
-									</div>
-								</div>
+								<p class="text-foreground text-sm font-medium">{blog.title}</p>
+								<p class="text-muted-foreground mt-0.5 text-xs">
+									{formatDate(blog.createdAt)}
+								</p>
 							</a>
 						{/each}
-					{/if}
-				</div>
+					</div>
+				{/if}
 			</Card.Content>
 		</Card.Root>
 
-		<Card.Root class="admin-collection-card overflow-hidden">
-			<Card.Content class="space-y-5 p-5">
-				<div class="flex items-center justify-between gap-3">
-					<div class="space-y-1">
-						<p class="text-muted-foreground text-xs tracking-[0.18em] uppercase">Skill library</p>
-						<h3 class="text-foreground text-xl font-semibold tracking-tight">Category snapshot</h3>
-					</div>
-					<Button href="/admin/skills" variant="outline" size="sm">
-						<span>Open skills</span>
-						<ArrowRight class="size-4" />
+		<!-- Career snapshot -->
+		<Card.Root class="admin-surface">
+			<Card.Content class="p-4">
+				<div class="mb-3 flex items-center justify-between">
+					<h2 class="text-foreground text-sm font-semibold">Careers</h2>
+					<Button href="/admin/careers" variant="ghost" size="sm" class="text-xs">
+						<span>All</span>
+						<ArrowRight class="size-3.5" />
 					</Button>
 				</div>
+				{#if data.previews.careers.length === 0}
+					<p class="text-muted-foreground py-4 text-center text-sm">No entries yet.</p>
+				{:else}
+					<div class="grid gap-2">
+						{#each data.previews.careers as career (career.id)}
+							<a
+								href={`/admin/careers/${career.id}`}
+								class="bg-muted/40 hover:bg-muted flex items-center gap-3 rounded-lg p-3 transition-colors"
+							>
+								<div
+									class="border-border bg-card flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border"
+								>
+									{#if career.logo}
+										<img
+											src={career.logo}
+											alt={`${career.company} logo`}
+											class="size-full object-contain p-1.5"
+										/>
+									{:else}
+										<UserRound class="text-muted-foreground size-3.5" />
+									{/if}
+								</div>
+								<div class="min-w-0">
+									<p class="text-foreground truncate text-sm font-medium">
+										{career.designation || career.company}
+									</p>
+									<p class="text-muted-foreground truncate text-xs">
+										{career.company}
+										{#if career.location}
+											· {career.location}
+										{/if}
+									</p>
+								</div>
+							</a>
+						{/each}
+					</div>
+				{/if}
+			</Card.Content>
+		</Card.Root>
 
-				<div class="grid gap-3">
-					{#if data.previews.skillCategories.length === 0}
-						<div
-							class="border-border/70 bg-background/75 rounded-[1.35rem] border border-dashed px-4 py-6 text-center"
-						>
-							<p class="text-foreground text-sm font-medium">No skill categories yet</p>
-							<p class="text-muted-foreground mt-1 text-sm">
-								Create categories to build out the skills section.
-							</p>
-						</div>
-					{:else}
+		<!-- Skills snapshot -->
+		<Card.Root class="admin-surface">
+			<Card.Content class="p-4">
+				<div class="mb-3 flex items-center justify-between">
+					<h2 class="text-foreground text-sm font-semibold">Skill categories</h2>
+					<Button href="/admin/skills" variant="ghost" size="sm" class="text-xs">
+						<span>All</span>
+						<ArrowRight class="size-3.5" />
+					</Button>
+				</div>
+				{#if data.previews.skillCategories.length === 0}
+					<p class="text-muted-foreground py-4 text-center text-sm">No categories yet.</p>
+				{:else}
+					<div class="grid gap-2">
 						{#each data.previews.skillCategories as category (category.id)}
 							<a
 								href="/admin/skills"
-								class="border-border/70 hover:border-border bg-background/75 rounded-[1.35rem] border p-4 transition-colors"
+								class="bg-muted/40 hover:bg-muted rounded-lg p-3 transition-colors"
 							>
-								<div class="space-y-3">
-									<div class="flex flex-wrap items-center gap-2">
-										<Badge variant="outline" class="rounded-full px-2.5 py-1">
-											Order {category.ordering + 1}
-										</Badge>
-										<Badge variant="secondary" class="rounded-full px-2.5 py-1">
-											{category.totalSkills} skill{category.totalSkills === 1 ? '' : 's'}
-										</Badge>
-									</div>
-									<div class="space-y-1">
-										<p class="text-foreground text-base font-semibold tracking-tight">
-											{category.title}
-										</p>
-										<p class="text-muted-foreground text-sm">
-											{category.totalSkills === 0
-												? 'This category still needs items.'
-												: 'Preview of the technologies currently grouped here.'}
-										</p>
-									</div>
-
-									<div class="flex flex-wrap gap-2">
+								<div class="flex items-center justify-between">
+									<p class="text-foreground text-sm font-medium">{category.title}</p>
+									<span class="text-muted-foreground text-xs tabular-nums"
+										>{category.totalSkills}</span
+									>
+								</div>
+								{#if category.sampleSkills.length > 0}
+									<div class="mt-2 flex flex-wrap gap-1">
 										{#each category.sampleSkills as skill (skill)}
 											<TechBadge name={skill} variant="blue" />
 										{/each}
 									</div>
-								</div>
+								{/if}
 							</a>
 						{/each}
-					{/if}
-				</div>
+					</div>
+				{/if}
 			</Card.Content>
 		</Card.Root>
 	</div>

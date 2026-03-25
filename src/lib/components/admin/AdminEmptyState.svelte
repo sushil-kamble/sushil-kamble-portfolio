@@ -13,17 +13,17 @@
 
 <div class="admin-empty">
 	{#if icon}
-		<div class="admin-icon-shell size-14 rounded-[1.25rem]">
+		<div class="admin-icon-shell size-10 rounded-xl">
 			{@render icon()}
 		</div>
 	{/if}
 
-	<div class="space-y-1.5">
-		<h2 class="text-foreground text-lg font-semibold tracking-tight">{title}</h2>
-		<p class="text-muted-foreground max-w-md text-sm leading-6">{description}</p>
+	<div class="space-y-1">
+		<h2 class="text-foreground text-sm font-semibold">{title}</h2>
+		<p class="text-muted-foreground max-w-xs text-sm leading-relaxed">{description}</p>
 	</div>
 
 	{#if action}
-		<div class="pt-2">{@render action()}</div>
+		<div class="pt-1">{@render action()}</div>
 	{/if}
 </div>

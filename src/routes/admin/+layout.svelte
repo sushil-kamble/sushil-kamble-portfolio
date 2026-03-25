@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { Bell, Loader2, ShieldCheck } from 'lucide-svelte';
+	import { Loader2, Rocket } from 'lucide-svelte';
 	import AdminSidebar from '$lib/components/admin/AdminSidebar.svelte';
-	import { Badge } from '$lib/components/admin/ui/badge/index.js';
 	import * as Sidebar from '$lib/components/admin/ui/sidebar/index.js';
 	import './admin.css';
 
@@ -37,45 +36,37 @@
 {#if isLoginRoute}
 	{@render children()}
 {:else}
-	<Sidebar.Provider
-		class="bg-[radial-gradient(circle_at_top,_rgba(143,110,86,0.09),_transparent_28%),linear-gradient(180deg,_rgba(250,248,245,0.98),_rgba(245,242,238,0.88))]"
-	>
-		<AdminSidebar {rebuilding} onRebuild={handleRebuild} onLogout={handleLogout} />
+	<Sidebar.Provider class="bg-background">
+		<AdminSidebar onLogout={handleLogout} />
 
 		<Sidebar.Inset class="min-h-screen">
-			<header class="border-border/60 bg-background/80 sticky top-0 z-20 border-b backdrop-blur-xl">
-				<div class="flex items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+			<header class="border-border/80 bg-card/90 sticky top-0 z-20 border-b backdrop-blur-sm">
+				<div class="flex items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
 					<div class="flex min-w-0 items-center gap-3">
 						<Sidebar.Trigger class="-ml-1" />
-						<div class="min-w-0">
-							<p class="text-foreground truncate text-sm font-medium">{sectionLabel}</p>
-							<p class="text-muted-foreground truncate text-xs">
-								Manage portfolio content and publishing flows
-							</p>
-						</div>
+						<h1 class="text-foreground truncate text-sm font-semibold">{sectionLabel}</h1>
 					</div>
 
 					<div class="flex items-center gap-2">
-						<Badge variant="outline" class="hidden gap-1.5 rounded-full px-2.5 py-1 sm:inline-flex">
-							<ShieldCheck class="size-3.5" />
-							<span>Protected</span>
-						</Badge>
 						<button
 							type="button"
-							class="border-border/70 bg-background/85 text-muted-foreground hover:text-foreground inline-flex size-8 items-center justify-center rounded-full border transition-colors"
-							aria-label="Notifications"
+							class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-8 items-center gap-2 rounded-lg px-3 text-xs font-medium transition-colors disabled:opacity-50"
+							disabled={rebuilding}
+							onclick={handleRebuild}
 						>
 							{#if rebuilding}
-								<Loader2 class="size-4 animate-spin" />
+								<Loader2 class="size-3.5 animate-spin" />
+								<span>Building…</span>
 							{:else}
-								<Bell class="size-4" />
+								<Rocket class="size-3.5" />
+								<span>Rebuild</span>
 							{/if}
 						</button>
 					</div>
 				</div>
 			</header>
 
-			<div class="flex-1 px-4 py-5 sm:px-6 lg:px-8">
+			<div class="flex-1 px-4 py-5 sm:px-6">
 				{@render children()}
 			</div>
 		</Sidebar.Inset>

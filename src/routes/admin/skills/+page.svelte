@@ -1,16 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { SvelteSet } from 'svelte/reactivity';
-	import {
-		ArrowDown,
-		ArrowUp,
-		Check,
-		GripVertical,
-		Loader2,
-		Plus,
-		Trash2,
-		Zap
-	} from 'lucide-svelte';
+	import { ArrowDown, ArrowUp, Check, Loader2, Plus, Trash2, Zap } from 'lucide-svelte';
 	import type { PageData } from './$types';
 	import AdminEmptyState from '$lib/components/admin/AdminEmptyState.svelte';
 	import AdminPageHeader from '$lib/components/admin/AdminPageHeader.svelte';
@@ -105,17 +96,18 @@
 <section class="admin-page-medium">
 	<AdminPageHeader
 		title="Skills"
-		description={`Manage ${categories.length} ${categories.length === 1 ? 'category' : 'categories'} and keep skills grouped consistently.`}
+		description="{categories.length} {categories.length === 1 ? 'category' : 'categories'}"
 	>
 		{#snippet icon()}
-			<Zap class="size-5" />
+			<Zap class="size-4" />
 		{/snippet}
 	</AdminPageHeader>
 
+	<!-- Add category form -->
 	<Card.Root class="admin-surface">
-		<Card.Content class="p-5">
+		<Card.Content class="p-4">
 			<form
-				class="flex flex-col gap-3 sm:flex-row"
+				class="flex flex-col gap-2.5 sm:flex-row"
 				onsubmit={(event) => {
 					event.preventDefault();
 					addCategory();
@@ -124,14 +116,14 @@
 				<Input
 					type="text"
 					bind:value={newTitle}
-					placeholder="New category title..."
-					class="flex-1"
+					placeholder="New category title…"
+					class="h-10 flex-1"
 				/>
-				<Button type="submit" size="lg" disabled={adding || !newTitle.trim()}>
+				<Button type="submit" disabled={adding || !newTitle.trim()}>
 					{#if adding}
-						<Loader2 class="size-4 animate-spin" />
+						<Loader2 class="size-3.5 animate-spin" />
 					{:else}
-						<Plus class="size-4" />
+						<Plus class="size-3.5" />
 					{/if}
 					<span>Add category</span>
 				</Button>
@@ -142,86 +134,75 @@
 	{#if categories.length === 0}
 		<AdminEmptyState
 			title="No skill categories yet"
-			description="Create the first category and start adding the skills that should appear on the portfolio."
+			description="Create a category and start adding skills."
 		>
 			{#snippet icon()}
-				<Zap class="size-6" />
+				<Zap class="size-5" />
 			{/snippet}
 		</AdminEmptyState>
 	{:else}
-		<div class="grid gap-4">
+		<div class="grid gap-3">
 			{#each categories as category, index (category.id)}
 				{@const originalTitle =
 					props.data.categories.find((item) => item.id === category.id)?.title ?? category.title}
 				<Card.Root class="admin-surface">
-					<Card.Content class="space-y-4 p-5">
-						<div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-							<div class="flex min-w-0 items-start gap-3">
-								<div class="admin-icon-shell size-10 shrink-0 rounded-xl">
-									<GripVertical class="size-4" />
-								</div>
-								<div class="min-w-0 space-y-2">
-									<Input
-										type="text"
-										bind:value={category.title}
-										onblur={() => handleTitleBlur(category, originalTitle)}
-										placeholder="Category title"
-										class="h-10 min-w-0 font-medium"
-									/>
-									<div class="text-muted-foreground flex flex-wrap items-center gap-2 text-xs">
-										<Badge variant="outline" class="rounded-full px-2.5 py-1">
-											{category.skills.length} skill{category.skills.length === 1 ? '' : 's'}
-										</Badge>
-										{#if savingIds.has(category.id)}
-											<Badge variant="secondary" class="gap-1.5 rounded-full px-2.5 py-1">
-												<Loader2 class="size-3.5 animate-spin" />
-												<span>Saving</span>
-											</Badge>
-										{:else if savedIds.has(category.id)}
-											<Badge
-												variant="secondary"
-												class="gap-1.5 rounded-full px-2.5 py-1 text-emerald-700"
-											>
-												<Check class="size-3.5" />
-												<span>Saved</span>
-											</Badge>
-										{/if}
-									</div>
+					<Card.Content class="space-y-3 p-4">
+						<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+							<div class="flex min-w-0 flex-1 items-center gap-2.5">
+								<Input
+									type="text"
+									bind:value={category.title}
+									onblur={() => handleTitleBlur(category, originalTitle)}
+									placeholder="Category title"
+									class="h-9 min-w-0 font-medium"
+								/>
+								<div class="flex shrink-0 items-center gap-1">
+									<Badge
+										variant="secondary"
+										class="rounded-md px-1.5 py-0.5 text-[10px] tabular-nums"
+									>
+										{category.skills.length}
+									</Badge>
+									{#if savingIds.has(category.id)}
+										<Loader2 class="text-muted-foreground size-3.5 animate-spin" />
+									{:else if savedIds.has(category.id)}
+										<Check class="size-3.5 text-emerald-600" />
+									{/if}
 								</div>
 							</div>
 
-							<div class="flex items-center gap-2">
+							<div class="flex items-center gap-1">
 								<Button
-									variant="outline"
+									variant="ghost"
 									size="icon-sm"
 									onclick={() => moveCategory(index, 'up')}
 									disabled={index === 0}
-									aria-label="Move category up"
+									aria-label="Move up"
 								>
-									<ArrowUp class="size-4" />
+									<ArrowUp class="size-3.5" />
 								</Button>
 								<Button
-									variant="outline"
+									variant="ghost"
 									size="icon-sm"
 									onclick={() => moveCategory(index, 'down')}
 									disabled={index === categories.length - 1}
-									aria-label="Move category down"
+									aria-label="Move down"
 								>
-									<ArrowDown class="size-4" />
+									<ArrowDown class="size-3.5" />
 								</Button>
 
 								<AlertDialog.Root>
 									<AlertDialog.Trigger
 										class={buttonVariants({ variant: 'destructive', size: 'icon-sm' })}
 									>
-										<Trash2 class="size-4" />
+										<Trash2 class="size-3.5" />
 										<span class="sr-only">Delete {category.title}</span>
 									</AlertDialog.Trigger>
 									<AlertDialog.Content>
 										<AlertDialog.Header>
 											<AlertDialog.Title>Delete category</AlertDialog.Title>
 											<AlertDialog.Description>
-												This will remove {category.title} and all of its skills from the admin panel.
+												Remove "{category.title}" and all its skills?
 											</AlertDialog.Description>
 										</AlertDialog.Header>
 										<AlertDialog.Footer>
@@ -231,7 +212,7 @@
 												disabled={deletingId === category.id}
 												onclick={() => deleteCategory(category.id)}
 											>
-												{deletingId === category.id ? 'Deleting...' : 'Delete'}
+												{deletingId === category.id ? 'Deleting…' : 'Delete'}
 											</AlertDialog.Action>
 										</AlertDialog.Footer>
 									</AlertDialog.Content>
@@ -241,7 +222,7 @@
 
 						<TagInput
 							tags={category.skills}
-							placeholder="Add a skill and press Enter..."
+							placeholder="Add a skill and press Enter…"
 							onchange={(skills) => handleSkillsChange(category.id, skills)}
 						/>
 					</Card.Content>

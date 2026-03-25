@@ -19,19 +19,16 @@
 </script>
 
 <section class="admin-page-narrow">
-	<AdminPageHeader
-		title="About"
-		description="Update the summary that introduces you across the portfolio."
-	>
+	<AdminPageHeader title="About" description="Update your portfolio bio.">
 		{#snippet icon()}
-			<User class="size-5" />
+			<User class="size-4" />
 		{/snippet}
 	</AdminPageHeader>
 
 	<Card.Root class="admin-surface">
-		<Card.Content class="p-6 sm:p-8">
+		<Card.Content class="p-5">
 			<form
-				class="space-y-5"
+				class="space-y-4"
 				method="POST"
 				use:enhance={() => {
 					saving = true;
@@ -50,15 +47,14 @@
 						id="about-textarea"
 						name="about"
 						bind:value={bio}
-						rows={12}
+						rows={10}
 						placeholder="Write about yourself..."
+						class="min-h-[200px] resize-y"
 					/>
-					<div
-						class="text-muted-foreground flex flex-wrap items-center justify-between gap-2 text-xs"
-					>
+					<div class="text-muted-foreground flex items-center justify-between text-xs">
 						<span>{charCount} characters</span>
 						{#if isDirty}
-							<Badge variant="secondary" class="rounded-full px-2.5 py-1">Unsaved changes</Badge>
+							<Badge variant="secondary" class="rounded-md px-2 py-0.5 text-[10px]">Unsaved</Badge>
 						{/if}
 					</div>
 				</Field.Field>
@@ -68,15 +64,15 @@
 				{/if}
 
 				<div class="flex justify-end">
-					<Button type="submit" size="lg" disabled={saving || !isDirty}>
+					<Button type="submit" disabled={saving || !isDirty} class="h-9">
 						{#if saving}
-							<Loader2 class="size-4 animate-spin" />
-							<span>Saving...</span>
+							<Loader2 class="size-3.5 animate-spin" />
+							<span>Saving…</span>
 						{:else if saved}
-							<Check class="size-4" />
+							<Check class="size-3.5" />
 							<span>Saved</span>
 						{:else}
-							<Save class="size-4" />
+							<Save class="size-3.5" />
 							<span>Save changes</span>
 						{/if}
 					</Button>

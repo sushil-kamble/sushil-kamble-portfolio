@@ -1,8 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@import '@fontsource-variable/inter';
+@import '@fontsource-variable/dm-sans';
 @reference '../layout.css';
-/* shadcn-svelte admin theme entrypoint */
 
 @layer base {
 	html[data-route-kind='admin'] * {
@@ -12,7 +11,7 @@
 		@apply bg-background text-foreground;
 	}
 	html[data-route-kind='admin'] {
-		@apply font-sans;
+		@apply font-sans antialiased;
 		color-scheme: light;
 	}
 }
@@ -86,76 +85,42 @@
 }
 
 html[data-route-kind='admin'] {
-	--background: oklch(1 0 0);
-	--foreground: oklch(0.147 0.004 49.3);
+	--background: oklch(0.985 0.002 75);
+	--foreground: oklch(0.17 0.012 75);
 	--card: oklch(1 0 0);
-	--card-foreground: oklch(0.147 0.004 49.3);
+	--card-foreground: oklch(0.17 0.012 75);
 	--popover: oklch(1 0 0);
-	--popover-foreground: oklch(0.147 0.004 49.3);
-	--primary: oklch(0.214 0.009 43.1);
-	--primary-foreground: oklch(0.986 0.002 67.8);
-	--secondary: oklch(0.96 0.002 17.2);
-	--secondary-foreground: oklch(0.214 0.009 43.1);
-	--muted: oklch(0.96 0.002 17.2);
-	--muted-foreground: oklch(0.547 0.021 43.1);
-	--accent: oklch(0.96 0.002 17.2);
-	--accent-foreground: oklch(0.214 0.009 43.1);
+	--popover-foreground: oklch(0.17 0.012 75);
+	--primary: oklch(0.205 0.012 60);
+	--primary-foreground: oklch(0.985 0.002 75);
+	--secondary: oklch(0.955 0.005 75);
+	--secondary-foreground: oklch(0.205 0.012 60);
+	--muted: oklch(0.955 0.005 75);
+	--muted-foreground: oklch(0.52 0.016 60);
+	--accent: oklch(0.955 0.005 75);
+	--accent-foreground: oklch(0.205 0.012 60);
 	--destructive: oklch(0.577 0.245 27.325);
-	--border: oklch(0.922 0.005 34.3);
-	--input: oklch(0.922 0.005 34.3);
-	--ring: oklch(0.714 0.014 41.2);
+	--border: oklch(0.915 0.005 75);
+	--input: oklch(0.915 0.005 75);
+	--ring: oklch(0.52 0.016 60);
 	--chart-1: oklch(0.865 0.127 207.078);
 	--chart-2: oklch(0.715 0.143 215.221);
 	--chart-3: oklch(0.609 0.126 221.723);
 	--chart-4: oklch(0.52 0.105 223.128);
 	--chart-5: oklch(0.45 0.085 224.283);
-	--radius: 0.625rem;
-	--sidebar: oklch(0.986 0.002 67.8);
-	--sidebar-foreground: oklch(0.147 0.004 49.3);
-	--sidebar-primary: oklch(0.214 0.009 43.1);
-	--sidebar-primary-foreground: oklch(0.986 0.002 67.8);
-	--sidebar-accent: oklch(0.96 0.002 17.2);
-	--sidebar-accent-foreground: oklch(0.214 0.009 43.1);
-	--sidebar-border: oklch(0.922 0.005 34.3);
-	--sidebar-ring: oklch(0.714 0.014 41.2);
-}
-
-html[data-route-kind='admin'].dark {
-	--background: oklch(0.147 0.004 49.3);
-	--foreground: oklch(0.986 0.002 67.8);
-	--card: oklch(0.214 0.009 43.1);
-	--card-foreground: oklch(0.986 0.002 67.8);
-	--popover: oklch(0.214 0.009 43.1);
-	--popover-foreground: oklch(0.986 0.002 67.8);
-	--primary: oklch(0.922 0.005 34.3);
-	--primary-foreground: oklch(0.214 0.009 43.1);
-	--secondary: oklch(0.268 0.011 36.5);
-	--secondary-foreground: oklch(0.986 0.002 67.8);
-	--muted: oklch(0.268 0.011 36.5);
-	--muted-foreground: oklch(0.714 0.014 41.2);
-	--accent: oklch(0.268 0.011 36.5);
-	--accent-foreground: oklch(0.986 0.002 67.8);
-	--destructive: oklch(0.704 0.191 22.216);
-	--border: oklch(1 0 0 / 10%);
-	--input: oklch(1 0 0 / 15%);
-	--ring: oklch(0.547 0.021 43.1);
-	--chart-1: oklch(0.865 0.127 207.078);
-	--chart-2: oklch(0.715 0.143 215.221);
-	--chart-3: oklch(0.609 0.126 221.723);
-	--chart-4: oklch(0.52 0.105 223.128);
-	--chart-5: oklch(0.45 0.085 224.283);
-	--sidebar: oklch(0.214 0.009 43.1);
-	--sidebar-foreground: oklch(0.986 0.002 67.8);
-	--sidebar-primary: oklch(0.488 0.243 264.376);
-	--sidebar-primary-foreground: oklch(0.986 0.002 67.8);
-	--sidebar-accent: oklch(0.268 0.011 36.5);
-	--sidebar-accent-foreground: oklch(0.986 0.002 67.8);
-	--sidebar-border: oklch(1 0 0 / 10%);
-	--sidebar-ring: oklch(0.547 0.021 43.1);
+	--radius: 0.5rem;
+	--sidebar: oklch(0.98 0.003 75);
+	--sidebar-foreground: oklch(0.17 0.012 75);
+	--sidebar-primary: oklch(0.205 0.012 60);
+	--sidebar-primary-foreground: oklch(0.985 0.002 75);
+	--sidebar-accent: oklch(0.945 0.005 75);
+	--sidebar-accent-foreground: oklch(0.205 0.012 60);
+	--sidebar-border: oklch(0.915 0.005 75);
+	--sidebar-ring: oklch(0.52 0.016 60);
 }
 
 @theme inline {
-	--font-sans: 'Inter Variable', sans-serif;
+	--font-sans: 'DM Sans Variable', ui-sans-serif, system-ui, sans-serif;
 	--color-sidebar-ring: var(--sidebar-ring);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -197,99 +162,102 @@ html[data-route-kind='admin'].dark {
 }
 
 @layer components {
+	/* ─── Page containers ─── */
 	.admin-page {
 		@apply mx-auto flex w-full flex-col gap-6;
 		max-width: 72rem;
 	}
 
 	.admin-page-narrow {
-		@apply mx-auto flex w-full flex-col gap-6;
-		max-width: 48rem;
+		@apply mx-auto flex w-full flex-col gap-5;
+		max-width: 40rem;
 	}
 
 	.admin-page-medium {
-		@apply mx-auto flex w-full flex-col gap-6;
-		max-width: 64rem;
+		@apply mx-auto flex w-full flex-col gap-5;
+		max-width: 56rem;
 	}
 
-	.admin-surface {
-		@apply border-border/70 bg-card/95 rounded-3xl border shadow-sm backdrop-blur;
-	}
-
+	/* ─── Page header ─── */
 	.admin-header {
-		@apply flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between;
+		@apply flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between;
 	}
 
 	.admin-title {
-		@apply text-foreground text-2xl font-semibold tracking-tight sm:text-3xl;
+		@apply text-foreground text-xl font-semibold tracking-tight sm:text-2xl;
 	}
 
 	.admin-description {
-		@apply text-muted-foreground max-w-2xl text-sm leading-6;
+		@apply text-muted-foreground text-[0.8125rem] leading-relaxed;
 	}
 
-	.admin-icon-shell {
-		@apply border-border/70 bg-background/85 text-muted-foreground flex size-11 items-center justify-center rounded-2xl border shadow-sm;
-	}
-
-	.admin-back-link {
-		@apply text-muted-foreground hover:text-foreground inline-flex w-fit items-center gap-2 text-sm font-medium transition-colors;
-	}
-
-	.admin-form-grid {
-		@apply grid gap-4 md:grid-cols-2;
-	}
-
-	.admin-form-span {
-		@apply md:col-span-2;
-	}
-
-	.admin-empty {
-		@apply border-border/70 bg-background/60 flex flex-col items-center justify-center gap-3 rounded-3xl border border-dashed px-6 py-12 text-center;
-	}
-
-	.admin-table-card {
-		@apply border-border/70 bg-card/95 overflow-hidden rounded-3xl border shadow-sm;
-	}
-
-	.admin-collection-stack {
-		@apply grid gap-4;
-	}
-
-	.admin-collection-card {
-		@apply border-border/70 bg-card/95 relative overflow-hidden rounded-[1.75rem] border shadow-sm transition-all duration-200;
-	}
-
-	.admin-collection-card:hover {
-		@apply border-border shadow-lg;
-		transform: translateY(-1px);
-	}
-
-	.admin-collection-card-active {
-		@apply border-primary/45 ring-primary/15 shadow-lg ring-4;
-	}
-
-	.admin-collection-handle {
-		@apply border-border/70 bg-background/85 text-muted-foreground hover:text-foreground inline-flex size-10 cursor-grab items-center justify-center rounded-2xl border shadow-sm transition-colors active:cursor-grabbing;
-	}
-
-	.admin-collection-meta {
-		@apply text-muted-foreground flex flex-wrap items-center gap-2 text-xs;
-	}
-
-	.admin-collection-meta-pill {
-		@apply border-border/70 bg-background/80 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5;
-	}
-
-	.admin-collection-action-rail {
-		@apply flex flex-col items-stretch gap-2 sm:flex-row sm:items-center lg:flex-col lg:items-stretch;
-	}
-
-	.admin-collection-nav-hint {
-		@apply text-muted-foreground/80 group-hover:text-foreground inline-flex items-center gap-1.5 text-sm font-medium transition-colors;
+	/* ─── Cards & surfaces ─── */
+	.admin-surface {
+		@apply border-border bg-card rounded-xl border;
 	}
 
 	.admin-hero-surface {
-		@apply border-border/70 bg-card/95 relative overflow-hidden rounded-[2rem] border shadow-sm;
+		@apply border-border bg-card rounded-xl border;
+	}
+
+	/* ─── Back link ─── */
+	.admin-back-link {
+		@apply text-muted-foreground hover:text-foreground inline-flex w-fit items-center gap-1.5 text-[0.8125rem] font-medium transition-colors;
+	}
+
+	/* ─── Form layouts ─── */
+	.admin-form-grid {
+		@apply grid gap-5 sm:grid-cols-2;
+	}
+
+	.admin-form-span {
+		@apply sm:col-span-2;
+	}
+
+	/* ─── Empty state ─── */
+	.admin-empty {
+		@apply border-border bg-card flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed px-6 py-14 text-center;
+	}
+
+	/* ─── Icon shell (used in page headers) ─── */
+	.admin-icon-shell {
+		@apply bg-muted text-muted-foreground flex size-9 items-center justify-center rounded-lg;
+	}
+
+	/* ─── Collection cards (list items) ─── */
+	.admin-collection-stack {
+		@apply grid gap-2;
+	}
+
+	.admin-collection-card {
+		@apply border-border bg-card relative rounded-xl border transition-colors duration-150;
+	}
+
+	.admin-collection-card:hover {
+		@apply border-border bg-accent/40;
+	}
+
+	.admin-collection-card-active {
+		@apply border-primary/40 ring-primary/10 ring-2;
+	}
+
+	.admin-collection-handle {
+		@apply bg-muted text-muted-foreground hover:text-foreground inline-flex size-8 cursor-grab items-center justify-center rounded-lg transition-colors active:cursor-grabbing;
+	}
+
+	.admin-collection-meta {
+		@apply text-muted-foreground flex flex-wrap items-center gap-1.5 text-xs;
+	}
+
+	.admin-collection-meta-pill {
+		@apply bg-muted inline-flex items-center gap-1 rounded-md px-2 py-1;
+	}
+
+	.admin-collection-action-rail {
+		@apply flex shrink-0 items-center gap-2;
+	}
+
+	.admin-collection-nav-hint {
+		@apply text-muted-foreground/70 group-hover:text-foreground inline-flex items-center gap-1 text-[0.8125rem] font-medium transition-colors;
 	}
 }
