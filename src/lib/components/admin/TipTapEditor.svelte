@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { Editor } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
+	import Underline from '@tiptap/extension-underline';
+	import Link from '@tiptap/extension-link';
 	import { Markdown, type MarkdownStorage } from 'tiptap-markdown';
 	import MarkdownImage from '$lib/components/admin/tiptap/MarkdownImage.js';
 	import {
@@ -12,12 +14,14 @@
 		Heading3,
 		ImagePlus,
 		Italic,
+		Link2,
 		List,
 		ListOrdered,
 		Minus,
 		Quote,
 		Redo,
 		Strikethrough,
+		UnderlineIcon,
 		Undo
 	} from 'lucide-svelte';
 	import { Button } from '$lib/components/admin/ui/button/index.js';
@@ -53,7 +57,13 @@
 	onMount(() => {
 		editor = new Editor({
 			element,
-			extensions: [StarterKit, MarkdownImage, Markdown],
+			extensions: [
+				StarterKit,
+				MarkdownImage,
+				Markdown,
+				Underline,
+				Link.configure({ openOnClick: false, autolink: true })
+			],
 			content,
 			editorProps: {
 				attributes: {
@@ -116,6 +126,9 @@
 				case 'toggleCode':
 					chain.toggleCode().run();
 					break;
+				case 'toggleUnderline':
+					chain.toggleUnderline().run();
+					break;
 				case 'toggleBulletList':
 					chain.toggleBulletList().run();
 					break;
@@ -139,6 +152,17 @@
 					break;
 			}
 		};
+	}
+
+	function toggleLink() {
+		if (!editor) return;
+		if (editor.isActive('link')) {
+			editor.chain().focus().unsetLink().run();
+			return;
+		}
+		const url = window.prompt('Enter URL');
+		if (!url) return;
+		editor.chain().focus().setLink({ href: url }).run();
 	}
 
 	function isActive(name: string, attrs?: Record<string, unknown>): boolean {
@@ -248,6 +272,32 @@
 					title="Code"
 				>
 					<Code class="size-4" />
+				</Button>
+				<Button
+					type="button"
+					variant="ghost"
+					size="icon-sm"
+					class={cn(
+						toolbarButtonClass,
+						isActive('underline') && 'border-border bg-background text-foreground shadow-sm'
+					)}
+					onclick={runCommand('toggleUnderline')}
+					title="Underline"
+				>
+					<UnderlineIcon class="size-4" />
+				</Button>
+				<Button
+					type="button"
+					variant="ghost"
+					size="icon-sm"
+					class={cn(
+						toolbarButtonClass,
+						isActive('link') && 'border-border bg-background text-foreground shadow-sm'
+					)}
+					onclick={toggleLink}
+					title="Link"
+				>
+					<Link2 class="size-4" />
 				</Button>
 			</div>
 
@@ -474,5 +524,15 @@
 		margin: 1.5rem 0;
 		border: 0;
 		border-top: 1px solid var(--border);
+	}
+
+	:global(.tiptap-content u) {
+		text-decoration: underline;
+	}
+
+	:global(.tiptap-content a) {
+		color: var(--primary);
+		text-decoration: underline;
+		text-underline-offset: 2px;
 	}
 </style>
