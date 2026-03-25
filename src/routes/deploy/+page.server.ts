@@ -1,9 +1,6 @@
 import { env } from '$env/dynamic/private';
 import type { PageServerLoad } from './$types';
 
-const FALLBACK_DEPLOY_HOOK_URL =
-	'https://api.vercel.com/v1/integrations/deploy/prj_mO2VHYOkw3YSklG59fGqINJB3GVu/Et0611BKac';
-
 export const prerender = false;
 
 export const load: PageServerLoad = async ({ fetch, setHeaders }) => {
@@ -12,7 +9,17 @@ export const load: PageServerLoad = async ({ fetch, setHeaders }) => {
 		'x-robots-tag': 'noindex, nofollow, noarchive, nosnippet, noimageindex'
 	});
 
-	const deployHookUrl = env.VERCEL_DEPLOY_HOOK_URL || FALLBACK_DEPLOY_HOOK_URL;
+	const deployHookUrl = env.VERCEL_DEPLOY_HOOK_URL;
+
+	if (!deployHookUrl) {
+		return {
+			ok: false,
+			status: 0,
+			statusText: 'Not configured',
+			responseBody: 'VERCEL_DEPLOY_HOOK_URL environment variable is not set.',
+			triggeredAt: new Date().toISOString()
+		};
+	}
 	const triggeredAt = new Date().toISOString();
 
 	try {

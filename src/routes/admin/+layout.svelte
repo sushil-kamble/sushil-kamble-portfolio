@@ -15,7 +15,7 @@
 		if (rebuilding) return;
 		rebuilding = true;
 		try {
-			await fetch('/deploy', { method: 'POST' });
+			await fetch('/admin/api/deploy', { method: 'POST' });
 		} finally {
 			setTimeout(() => (rebuilding = false), 3000);
 		}
