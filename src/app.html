@@ -59,6 +59,11 @@
 			// Prevent flash of default theme on load
 			(function () {
 				try {
+					var isAdminRoute = window.location.pathname.startsWith('/admin');
+					document.documentElement.setAttribute(
+						'data-route-kind',
+						isAdminRoute ? 'admin' : 'portfolio'
+					);
 					var t = localStorage.getItem('portfolio-theme');
 					var f = localStorage.getItem('portfolio-font');
 					if (t && t !== 'dark-default') document.documentElement.setAttribute('data-theme', t);
@@ -242,6 +247,14 @@
 					opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
 					filter 1s cubic-bezier(0.16, 1, 0.3, 1),
 					transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+			}
+			html[data-route-kind='admin'] #splash {
+				display: none;
+			}
+			html[data-route-kind='admin'] #app-content {
+				opacity: 1;
+				filter: none;
+				transform: none;
 			}
 
 			/* ── Keyframes ── */

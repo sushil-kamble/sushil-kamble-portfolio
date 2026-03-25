@@ -46,11 +46,20 @@
 /* Base styles */
 html,
 body {
-	overflow: hidden;
 	background: var(--color-vsc-bg);
 	color: var(--color-vsc-text);
 	font-family: var(--font-mono);
 	font-feature-settings: 'liga' 1;
+}
+
+html,
+body {
+	overflow: hidden;
+}
+
+html[data-route-kind='admin'],
+html[data-route-kind='admin'] body {
+	overflow: auto;
 }
 
 /* Scale up on larger screens — single knob for entire site */

@@ -1,42 +1,57 @@
-# sv
+# New Portfolio
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+SvelteKit portfolio site with:
 
-## Creating a project
+- a public VS Code-inspired portfolio experience under `(portfolio)`
+- an authenticated admin area for managing about, careers, skills, projects, and blogs
+- Turso + Drizzle for persistence
+- optional R2 uploads for project and blog media
+- a one-time Notion to Turso seed script
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```sh
-# create a new project
-npx sv create my-app
-```
-
-To recreate this project with the same configuration:
+## Commands
 
 ```sh
-# recreate this project
-pnpm dlx sv create --template minimal --types ts --add prettier eslint tailwindcss="plugins:typography,forms" sveltekit-adapter="adapter:vercel" mcp="ide:claude-code,gemini,opencode,vscode+setup:local" --install pnpm new-portfolio
+pnpm dev
+pnpm check
+pnpm build
+pnpm lint
+pnpm db:push
+pnpm db:seed
 ```
 
-## Developing
+## Required Environment
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Copy [.env.example](/Users/sushil/Projects/Svelte/new-portfolio/.env.example) to `.env.local` and provide:
 
-```sh
-npm run dev
+- `TURSO_DATABASE_URL`
+- `TURSO_AUTH_TOKEN`
+- `ADMIN_PASSWORD`
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+## Optional Environment
 
-## Building
+Set these if you use the related features:
 
-To create a production version of your app:
+- `R2_ACCOUNT_ID`
+- `R2_ACCESS_KEY_ID`
+- `R2_SECRET_ACCESS_KEY`
+- `R2_BUCKET_NAME`
+- `R2_PUBLIC_URL`
+- `VERCEL_DEPLOY_HOOK_URL`
 
-```sh
-npm run build
-```
+## Seed Migration
 
-You can preview the production build with `npm run preview`.
+`pnpm db:seed` migrates portfolio content from Notion into Turso.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+For that script only, set:
+
+- `INTEGRATION_TOKEN` or `NOTION_TOKEN`
+- `BASE_URL`
+
+## Structure
+
+- `src/routes/(portfolio)` public portfolio routes
+- `src/routes/admin` admin UI
+- `src/routes/api/auth` auth endpoints
+- `src/routes/api/upload` R2 upload endpoint
+- `src/lib/server` database, auth, and storage integration
+- `scripts/seed.ts` migration script
